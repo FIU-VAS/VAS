@@ -183,7 +183,7 @@ render(){
           { (document.body.clientWidth > 750) &&
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/logo_shadow.png")}
+            src ={require("../../images/logo_shadow.png").default}
             alt = "logo"
             />}
             

@@ -128,7 +128,7 @@ class LoginForm extends Component {
 
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/VAS_shadow.png")}
+            src ={require("../../images/VAS_shadow.png").default}
             alt = "logo"
             />
 
