@@ -1,5 +1,5 @@
 const config = {
-	uri: `/api`,
+	uri: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/api' : `${window.location.href}api`,
 	endpoints: {
 		account: {
 			fetch: '/account',
