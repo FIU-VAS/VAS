@@ -102,7 +102,7 @@ class LoginForm extends Component {
 
     submitLogin = async (e) =>{
         e.preventDefault()
-        
+        if(this.validate()){
 
         const userData = {
         email: this.state.email,
@@ -110,14 +110,43 @@ class LoginForm extends Component {
         };
 
         //redirect is handled within loginUser()
-        this.props.loginUser(userData); 
+        this.props.loginUser(userData); }
     }
 
     inputError = (error) => {
-        return (
-        <Alert severity="error">{error}</Alert>
-        )
-    };
+      return (
+      <Alert severity="error">{error}</Alert>
+      )
+  };
+
+    validate = async (e) =>{
+      let email = this.state.email;
+      let password = this.state.password;
+      let errors = {};
+      let isValid = true;
+  
+
+      if (!password) {
+        isValid = false;
+        errors["password"] = "Please enter password.";
+      }
+  
+      if (typeof email !== "undefined") {
+          
+        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        if (!pattern.test(email)) {
+          isValid = false;
+          errors["email"] = "Please enter valid email address.";
+        }
+      }
+      this.setState({
+        errors: errors
+      });
+  
+      return isValid;
+   };
+
+    
 
   render(){   
     return (
