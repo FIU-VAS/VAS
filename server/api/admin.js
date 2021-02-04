@@ -42,7 +42,8 @@ function updateAdmin(request, response) {
 		lastName: admin_req.lastName,
 		email: admin_req.email.toLowerCase(),
 		phoneNumber: admin_req.phoneNumber,
-		prevEmail: admin_req.prevEmail
+		prevEmail: admin_req.prevEmail,
+		password: admin_req.password
 	}
 
 	// Form validation
