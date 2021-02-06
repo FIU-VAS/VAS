@@ -1,4 +1,4 @@
-import request from 'request';
+import axios from 'axios';
 import serverConf from '../config'
 import { GET_ERRORS, TEAMS_LOADING, SET_TEAMS_CALENDAR, SET_VOLUNTEERS_CALENDAR, SET_SCHOOLS_CALENDAR} from './types';
 
@@ -7,38 +7,32 @@ export const getTeams = form => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.fetch}`;
 
-    request.get(endpoint, {form}, (error, response, body) => {
+    axios.get(endpoint, form)
+    .then((res) => {
         
-        const res = JSON.parse(body);
+        let teams = [];
 
-        if (error) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res
-              })
-        }
-        else {
+        teams = res.data.filter(team => team.semester === form.semester && team.year === form.year)
 
-            let teams = [];
+        let allVolunteers = []
+        let allSchools = []
 
-            teams = res.filter( team => team.semester === form.semester && team.year === form.year)
+        teams.forEach(team => {
+            allVolunteers.push(team.volunteerPIs)
+            allSchools.push(team.schoolCode)
+        });
 
-            let allVolunteers = []
-            let allSchools = []
+        let allVolunteers_INT = allVolunteers.map(String).toString().split(',').map(x=>+x)
 
-            teams.forEach(team => {
-                allVolunteers.push(team.volunteerPIs)
-                allSchools.push(team.schoolCode)
-            });
-
-            let allVolunteers_INT = allVolunteers.map(String).toString().split(',').map(x=>+x)
-
-            // set current teams
-            dispatch(setSemesterTeams(teams));
-            dispatch(getVolunteers(allVolunteers_INT))
-            dispatch(getSchools(allSchools))
-        }    
-    });
+        // set current teams
+        dispatch(setSemesterTeams(teams));
+        dispatch(getVolunteers(allVolunteers_INT))
+        dispatch(getSchools(allSchools))    
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
 };
 
 export const getVolunteers = pids => dispatch => {
@@ -47,21 +41,14 @@ export const getVolunteers = pids => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.volunteers.getVolunteerInfo}/${pantherIDs}`;
 
-    request.get(endpoint, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (error) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res
-              })
-        }
-        else {
-            dispatch(setVolunteers(res));
-        }    
-    });
-
+    axios.get(endpoint)
+    .then((res) => {
+        dispatch(setVolunteers(res.data));    
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
 };
 
 export const getSchools = schoolCodes => dispatch => {
@@ -70,21 +57,14 @@ export const getSchools = schoolCodes => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.schools.getSchoolInfo}/${codes}`;
 
-    request.get(endpoint, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (error) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res
-              })
-        }
-        else {
-            dispatch(setSchools(res));
-        }    
-    });
-
+    axios.get(endpoint)
+    .then((res) => {
+        dispatch(setSchools(res.data));
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
 };
 
 // set teams
