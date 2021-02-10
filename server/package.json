@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -r esm server.js"
+    "dev": "nodemon -r esm server.js",
+    "migrate-up": "node -r esm node_modules/migrate/bin/migrate-up",
+    "migrate-down": "node -r esm node_modules/migrate/bin/migrate-down",
+    "migrate-init": "node -r esm node_modules/migrate/bin/migrate-init"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +23,7 @@
     "express": "^4.17.1",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
+    "migrate": "^1.7.0",
     "mongoose": "^5.8.9",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",

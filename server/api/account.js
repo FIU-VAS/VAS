@@ -1,12 +1,12 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import config from '../config/config'
+import config from '../config/config';
 
-const User = require('../models/Users/user_Auth')
-const Admin = require('../models/Users/admin_User')
-const Volunteer = require('../models/Users/volunteer_User')
-const schPersonnel = require('../models/Users/school_User')
+import User from '../models/Users/user_Auth';
+import Admin from '../models/Users/admin_User';
+import Volunteer from '../models/Users/volunteer_User';
+import schPersonnel from '../models/Users/school_User';
 
 // input validation
 import validateLoginInput from '../validation/login';
