@@ -8,7 +8,7 @@ import validateUpdateSchoolPersonnelInput from '../validation/schoolPersonnels/u
 
 const router = new express.Router();
 
-router.post('/update/:id', updateSchoolPersonnel);
+router.put('/update/:id', updateSchoolPersonnel);
 router.get('/', fetchSchoolPersonnels);
 router.get('/:id', fetchSchoolPersonnelById);
 router.get('/getPersonnelInfo/:codes', fetchSchoolPersonnelByCode);

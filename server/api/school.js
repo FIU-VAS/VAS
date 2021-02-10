@@ -9,7 +9,7 @@ import validateUpdateSchoolInput from '../validation/schools/updateSchool';
 const router = new express.Router();
 
 router.post('/create', createSchool);
-router.post('/update/:id', updateSchool);
+router.put('/update/:id', updateSchool);
 router.get('/:id', fetchSchoolById);
 router.get('/getSchoolInfo/:codes', fetchSchoolByCode);
 router.get('/', fetchSchools);
