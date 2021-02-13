@@ -8,6 +8,8 @@ import Admin from '../models/Users/admin_User';
 import Volunteer from '../models/Users/volunteer_User';
 import schPersonnel from '../models/Users/school_User';
 
+import {UserRoles} from '../models/Users/user_Auth';
+
 // input validation
 import validateLoginInput from '../validation/login';
 import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
@@ -24,7 +26,7 @@ router.post('/login', login);
 
 function adminSignUp (req, res) {
     const { body } = req;
-    const { 
+    const {
         firstName,
         lastName,
         password,
@@ -70,7 +72,7 @@ function adminSignUp (req, res) {
         newAdmin.email = email;
         newAdmin.phoneNumber = phoneNumber;
         newAdmin.isActive = 'true';
-        
+
         newAdmin.save((err, admin) => {
             if (err) {
                 return res.send({
@@ -90,7 +92,7 @@ function adminSignUp (req, res) {
         newUser.email = email;
         newUser.password = newUser.generateHash(password);
         newUser.role = 'Admin'
-        
+
         newUser.save((err, user) => {
             if (err) {
                 return res.send({
@@ -104,7 +106,7 @@ function adminSignUp (req, res) {
 
 function volunteerSignUp (req, res) {
     const { body } = req;
-    const { 
+    const {
         firstName,
         lastName,
         password,
@@ -181,7 +183,7 @@ function volunteerSignUp (req, res) {
         newUser.email = email;
         newUser.password = newUser.generateHash(password);
         newUser.role = 'Volunteer'
-        
+
         newUser.save((err, user) => {
             if (err) {
                 return res.send({
@@ -195,7 +197,7 @@ function volunteerSignUp (req, res) {
 
 function schoolPersonnelSignUp (req, res) {
     const { body } = req;
-    const { 
+    const {
         schoolCode,
         firstName,
         lastName,
@@ -212,7 +214,7 @@ function schoolPersonnelSignUp (req, res) {
     // check validation
     if (!isValid) {
         return res.status(400).json({success: false, errors});
-    }  
+    }
 
     email = email.toLowerCase();
 
@@ -244,7 +246,7 @@ function schoolPersonnelSignUp (req, res) {
         newSchPersonnel.schoolCode = schoolCode;
         newSchPersonnel.title = title;
         newSchPersonnel.isActive = true
-        
+
         newSchPersonnel.save((err, schPersonnel) => {
             if (err) {
                 return res.send({
@@ -264,7 +266,7 @@ function schoolPersonnelSignUp (req, res) {
         newUser.email = email;
         newUser.password = newUser.generateHash(password);
         newUser.role = 'School Personnel'
-        
+
         newUser.save((err, user) => {
             if (err) {
                 return res.send({
@@ -302,7 +304,7 @@ function login (req, res) {
                     let payload = {};
 
                     //retrieve users profile information by role
-                    if (user.role === 'Admin') {
+                    if (user.role === UserRoles.Admin) {
                         Admin.findOne({ email }).then(admin => {
                             //create JWT payload
                             payload = {
@@ -313,7 +315,7 @@ function login (req, res) {
                                 email: admin.email,
                                 phoneNumber: admin.phoneNumber
                             }
-                            
+
                             jwt.sign(
                                 payload,
                                 config.secretOrKey,
@@ -327,7 +329,7 @@ function login (req, res) {
                                     });
                                 }
                             );
-                        
+
                         });
                     }
                     else if (user.role === 'Volunteer') {
@@ -360,7 +362,7 @@ function login (req, res) {
                                     });
                                 }
                             );
-                        
+
                         });
                     }
                     else if (user.role === 'School Personnel') {
@@ -390,7 +392,7 @@ function login (req, res) {
                                     });
                                 }
                             );
-                        
+
                         });
                     }
 				}
