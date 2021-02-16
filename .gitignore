@@ -29,3 +29,6 @@ yarn-error.log*
 
 */.eslintcache
 .idea
+
+# database folder
+/server/database/**
