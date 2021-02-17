@@ -39,6 +39,7 @@ checkMigrations({
 });
 
 app.listen(config.port, () => {
+    console.log(process.env);
     log(`VAS server now up on http://localhost:${config.port}`, Severity.Success);
     const dbUri = `mongodb://${config.db.username}:${config.db.password}@${config.db.url}/${config.db.name}`
     db.connect(dbUri);

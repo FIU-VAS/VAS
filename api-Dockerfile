@@ -1,0 +1,11 @@
+FROM node:12.18.4
+USER node
+
+COPY ./server /home/node
+WORKDIR /home/node
+
+RUN npm install
+RUN npm run migrate-up
+
+RUN ls node_modules
+CMD ["npm", "run", "dev"]
