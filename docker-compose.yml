@@ -1,19 +1,19 @@
 version: '3'
 
 services:
-  db:
-    build:
-      context: ./server
-      dockerfile: ./Dockerfile
+  mongo:
+    image: mongo:latest
+    container_name: mongo
     env_file:
       - server/.env
     volumes:
-      - db:/data/dbc
-      - ./db-init:/docker-entrypoint-initdb.d/
+      - db:/data/db
+      - ./db/db-init/:/docker-entrypoint-initdb.d/
+      - ./db/restore:/restore
     networks:
-      - web
+      - vas_web
     ports:
-      - 27017:27017
+      - 27016:27017
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -26,10 +26,24 @@ services:
     restart: always
     entrypoint: /bin/bash -c 'cat /tmp/default.template | sed "s/\\\$$domain/localhostdocke/g" > /etc/nginx/conf.d/default.conf && nginx -g "daemon off;"'
     networks:
-      - web
+      - vas_web
+    links:
+      - mongo
+  api:
+    image: node:12.18.4
+    container_name: api
+    working_dir: /home/node/app
+    volumes:
+      - ./server:/home/node/app
+      - ./db/restore:/home/node/db
+    networks:
+      - vas_web
+    command: "sh -c \"npm install && npm run dev\""
+    depends_on:
+      - mongo
 volumes:
   db:
     driver: local
 networks:
-  web:
+  vas_web:
     driver: bridge
