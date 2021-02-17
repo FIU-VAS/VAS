@@ -93,7 +93,7 @@ const rollbackToDifferentCollections = async () => {
 }
 
 module.exports.up = async function (next) {
-    if (!fs.existsSync('./vas-backup')) {
+    if (!fs.existsSync('../db/vas-backup')) {
         throw new Error("Make sure [vas-backup] file exists in the directory to restore in case of failure")
     }
 
