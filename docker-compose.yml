@@ -7,7 +7,7 @@ services:
     env_file:
       - server/.env
     volumes:
-      - db:/data/db
+      - ./db/data:/data/db
       - ./db/db-init/:/docker-entrypoint-initdb.d/
       - ./db/restore:/restore
     networks:
