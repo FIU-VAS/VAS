@@ -12,7 +12,7 @@ import {checkMigrations} from "./utils/migration";
 const app = express();
 
 // passport middleware
-app.use(passport.initialize());
+app.use(passport.initialize({}));
 
 app.use(cors());
 app.use(bodyParser.json());

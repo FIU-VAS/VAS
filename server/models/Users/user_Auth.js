@@ -21,6 +21,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Role is required for new user'],
         enum: Object.values(UserRoles)
+    },
+    token: {
+        type: String
     }
 });
 

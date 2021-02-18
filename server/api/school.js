@@ -1,6 +1,7 @@
 import express from 'express';
 
 const School = require('../models/Schools/school')
+import mongoose from "mongoose"
 
 // input validation
 import validateCreateSchoolInput from '../validation/schools/createSchool';
@@ -83,10 +84,6 @@ function createSchool (req, res) {
 }
 
 function updateSchool(request, response) {
-	console.log(request.params);
-    console.log(request.body);
-
-
     // form validation
     const { errors, isValid } = validateUpdateSchoolInput(request.body);
     // check validation
@@ -122,9 +119,19 @@ function fetchSchools(request, response) {
 }
 
 function fetchSchoolById(request, response) {
+    if (!request.params.id) {
+        response.statusCode = 400;
+        response.json({
+            message: "Bad Request"
+        })
+    }
+
 	School.findById(request.params.id, (err, result) => {
 		if (err) {
-			console.log(err);
+		    response.statusCode = 400;
+		    response.json({
+                message: "Bad Request"
+            })
 		  } else {
 			response.json(result);
 		  }

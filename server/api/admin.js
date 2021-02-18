@@ -2,15 +2,17 @@ import express from 'express';
 import Admin from '../models/Users/admin_User';
 import User from '../models/Users/user_Auth';
 const bcrypt = require('bcrypt')
+import passport from "../config/passport"
 
 // input validation
 import validateUpdateAdminInput from '../validation/admin/updateAdmin'
+import {checkRole} from "../utils/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', updateAdmin);
-router.get('/', fetchAdmins);
-router.get('/:id', fetchAdminById);
+router.put('/update/:id', passport.authorize('jwt'), updateAdmin);
+router.get('/', passport.authorize('jwt'), checkRole, fetchAdmins);
+router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
 
 //OLD VERSION
 /* function updateAdmin(request, response) {

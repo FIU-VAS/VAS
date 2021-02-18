@@ -1,28 +1,25 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import config from '../config/config';
 
 import User from '../models/Users/user_Auth';
 import Admin from '../models/Users/admin_User';
 import Volunteer from '../models/Users/volunteer_User';
 import schPersonnel from '../models/Users/school_User';
 
-import {UserRoles} from '../models/Users/user_Auth';
 
 // input validation
-import validateLoginInput from '../validation/login';
 import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
 import validateCreateSchoolPersonnelInput from '../validation/schoolPersonnels/createSchoolPersonnel';
 import validateCreateAdminInput from '../validation/admin/createAdmin';
 
+
+import passport from "../config/passport"
 
 const router = new express.Router();
 
 router.post('/admin/signup', adminSignUp);
 router.post('/volunteer/signup', volunteerSignUp);
 router.post('/school-personnel/signup', schoolPersonnelSignUp);
-router.post('/login', login);
+router.post('/login', passport.authenticate('local', {session: false}, null), login);
 
 function adminSignUp (req, res) {
     const { body } = req;
@@ -279,131 +276,11 @@ function schoolPersonnelSignUp (req, res) {
 }
 
 function login (req, res) {
-
-    // form validation
-    const { errors, isValid } = validateLoginInput(req.body);
-
-    // check validation
-	if (!isValid) {
-		return res.status(400).json(errors);
-	}
-
-    const email = req.body.email.toLowerCase();
-    const password = req.body.password;
-
-    // find user by email
-	User.findOne({ email }).then(user => {
-		if (!user) {
-			// return res.status(404).json({ email: 'Email not found' });
-        }
-		else {
-			// check password
-			bcrypt.compare(password, user.password).then(isMatch => {
-				if (isMatch) {
-
-                    let payload = {};
-
-                    //retrieve users profile information by role
-                    if (user.role === UserRoles.Admin) {
-                        Admin.findOne({ email }).then(admin => {
-                            //create JWT payload
-                            payload = {
-                                role: 'Admin',
-                                id: admin.id,
-                                firstName: admin.firstName,
-                                lastName: admin.lastName,
-                                email: admin.email,
-                                phoneNumber: admin.phoneNumber
-                            }
-
-                            jwt.sign(
-                                payload,
-                                config.secretOrKey,
-                                {
-                                    expiresIn: 86400 // 1 day in seconds
-                                },
-                                (err, token) => {
-                                    res.json({
-                                        success: true,
-                                        token: 'Bearer ' + token
-                                    });
-                                }
-                            );
-
-                        });
-                    }
-                    else if (user.role === 'Volunteer') {
-                        Volunteer.findOne({ email }).then(volunteer => {
-                            //create JWT payload
-                            payload = {
-                                role: 'Volunteer',
-                                id: volunteer.id,
-                                firstName: volunteer.firstName,
-                                lastName: volunteer.lastName,
-                                email: volunteer.email,
-                                phoneNumber: volunteer.phoneNumber,
-                                major: volunteer.major,
-                                carAvailable: volunteer.carAvailable,
-                                volunteerStatus: volunteer.volunteerStatus,
-                                MDCPS_ID: volunteer.MDCPS_ID,
-                                pantherID: volunteer.pantherID
-                            }
-
-                            jwt.sign(
-                                payload,
-                                config.secretOrKey,
-                                {
-                                    expiresIn: 86400 // 1 day in seconds
-                                },
-                                (err, token) => {
-                                    res.json({
-                                        success: true,
-                                        token: 'Bearer ' + token
-                                    });
-                                }
-                            );
-
-                        });
-                    }
-                    else if (user.role === 'School Personnel') {
-                        schPersonnel.findOne({ email }).then(personnel => {
-                            //create JWT payload
-                            payload = {
-                                role: 'School Personnel',
-                                id: personnel.id,
-                                firstName: personnel.firstName,
-                                lastName: personnel.lastName,
-                                email: personnel.email,
-                                phoneNumber: personnel.phoneNumber,
-                                title: personnel.title,
-                                schoolCode: personnel.schoolCode
-                            }
-
-                            jwt.sign(
-                                payload,
-                                config.secretOrKey,
-                                {
-                                    expiresIn: 86400 // 1 day in seconds
-                                },
-                                (err, token) => {
-                                    res.json({
-                                        success: true,
-                                        token: 'Bearer ' + token
-                                    });
-                                }
-                            );
-
-                        });
-                    }
-				}
-				else {
-					return res
-						.status(400)
-						.json({ password: 'Email and/or Password invalid' });
-				}
-			});
-		}
-	});
+    // Gets called if passport authorization is successful
+    res.json({
+        success: true,
+        token: req.user.token
+    })
 }
 
 export default {router};
