@@ -1,5 +1,7 @@
+import validator from 'validator';
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+
 
 export const UserRoles = Object.freeze({
     Admin: 'admin',
@@ -11,7 +13,8 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, 'Email is required for new user'],
-        unique: true
+        unique: true,
+        validator: validator.isEmail
     },
     password: {
         type: String,

@@ -1,57 +1,44 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
+// export const Days = {
+//     MONDAY: 'monday',
+//     TUESDAY: 'tuesday',
+//     WEDNESDAY: 'wednesday',
+//     THURSDAY: 'thursday',
+//     FRIDAY: 'friday',
+// };
+
+
 const Team = new mongoose.Schema({
     schoolCode: {
         type: String,
         required: true,
-        default: ''
     },
     semester: {
         type: String,
         required: true,
-        default: ''
     },
     year: {
         type: String,
         required: true
     },
     dayOfWeek: {
-        monday: {
-            type: Boolean,
-            required: true,
-            default: false
-        },
-        tuesday: {
-            type: Boolean,
-            default: false
-        },
-        wednesday: {
-            type: Boolean,
-            default: false
-        },
-        thursday: {
-            type: Boolean,
-            default: false
-        },
-        friday: {
-            type: Boolean,
-            default: false
-        }
+        type: [String],
+        enum: Object.values(Days),
+        required: true
     },
     startTime: {
         type: String,
-        default: ''
+        required: true
     },
     endTime: {
         type: String,
         required: true,
-        default: ''
     },
     volunteerPIs: {
         type: Array,
         required: true,
-        default: ''
     },
     isActive: {
         type: Boolean,
