@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -r esm server.js",
-    "migrate-up": "node -r esm node_modules/migrate/bin/migrate-up",
-    "migrate-down": "node -r esm node_modules/migrate/bin/migrate-down",
-    "migrate-init": "node -r esm node_modules/migrate/bin/migrate-init"
+    "migrate-up": "node -r esm node_modules/migrate/bin/migrate-up --store=\"./config/migration-store.js\"",
+    "migrate-down": "node -r esm node_modules/migrate/bin/migrate-down --store=\"./config/migration-store.js\"",
+    "migrate-init": "node -r esm node_modules/migrate/bin/migrate-init --store=\"./config/migration-store.js\""
   },
   "keywords": [],
   "author": "",
