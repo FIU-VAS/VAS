@@ -8,6 +8,7 @@ import api from './api';
 import config from './config/config';
 import passport from './config/passport'
 import {checkMigrations} from "./utils/migration";
+import MongoStore from "./config/migration-store";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use(express.static("../../html"))
 app.use('/api', api);
 
 checkMigrations({
-    store: path.join(__dirname, '.migrate'),
+    store: new MongoStore(),
     migrationsDir: path.join(__dirname, 'migrations')
 }).then((migrationsRan) => {
     if (!migrationsRan) {
