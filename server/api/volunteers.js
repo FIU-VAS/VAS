@@ -6,14 +6,15 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateVolunteerInput from '../validation/volunteers/updateVolunteer'
+import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', updateVolunteer);
-router.put('/updateProfile/:id', updateVolunteer_Profile);
-router.get('/', fetchVolunteers);
-router.get('/:id', fetchVolunteerById);
-router.get('/getVolunteerInfo/:pids', fetchVolunteerByPID);
+router.put('/update/:id',passport.authorize('jwt'), updateVolunteer);
+router.put('/updateProfile/:id',passport.authorize('jwt'), updateVolunteer_Profile);
+router.get('/',passport.authorize('jwt'), fetchVolunteers);
+router.get('/:id',passport.authorize('jwt'), fetchVolunteerById);
+router.get('/getVolunteerInfo/:pids',passport.authorize('jwt'), fetchVolunteerByPID);
 
 function updateVolunteer_Profile(request, response) {
 	console.log(request.params);
@@ -25,7 +26,7 @@ function updateVolunteer_Profile(request, response) {
 			if (result.n === 1) {
 				//response.json('success');
 				response.json(request.params)
-			
+
 			}
 			else {
 				response.json('failed')
@@ -36,7 +37,7 @@ function updateVolunteer_Profile(request, response) {
 
 function updateVolunteer(request, response) {
 	let volunteer = {};
-	
+
 	let volunteer_req = request.body;
 
 	volunteer = {
@@ -73,14 +74,14 @@ function updateVolunteer(request, response) {
 
 		// both email and password
 		if ((prevEmail != email) && !(volunteer.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
@@ -89,7 +90,7 @@ function updateVolunteer(request, response) {
 					}
 
 					let password = bcrypt.hashSync(volunteer.password, bcrypt.genSaltSync(8), null);
-					
+
 					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
 
 						if (err) {
@@ -128,17 +129,17 @@ function updateVolunteer(request, response) {
 					});
 			});
 		}
-				
+
 		//password
 		if ((prevEmail === email) && !(volunteer.password === '')) {
-			
+
 			let password = bcrypt.hashSync(volunteer.password, bcrypt.genSaltSync(8), null);
-					
+
 			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
 
 				if (err) {
 					console.log(err);
-				} 
+				}
 				else {
 					if (result.n === 1) {
 						delete volunteer.prevEmail;
@@ -147,7 +148,7 @@ function updateVolunteer(request, response) {
 							console.log("hello", result)
 							if (err) {
 								console.log(err);
-							} 
+							}
 							else {
 								if (result.n === 1) {
 									response.json({
@@ -173,29 +174,29 @@ function updateVolunteer(request, response) {
 				}
 			});
 		}
-				
+
 		//email
 		if ((prevEmail != email) && (volunteer.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
 							errors: {email: 'Email already exists'}
 						});
 					}
-					
+
 					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
 
 						if (err) {
 							console.log(err);
-						} 
+						}
 						else {
 							if (result.n === 1) {
 								delete volunteer.prevEmail;
@@ -231,9 +232,9 @@ function updateVolunteer(request, response) {
 			});
 		}
 
-		//PantherID needs to be changed on Teams 
+		//PantherID needs to be changed on Teams
 		if (volunteer.prevPid != volunteer.pantherID) {
-			
+
 			Team.find({volunteerPIs: volunteer.prevPid},
 				(err, teamsWithVolunteer) => {
 					if (err) {
@@ -241,7 +242,7 @@ function updateVolunteer(request, response) {
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (teamsWithVolunteer.length > 0) {
 						Team.updateMany({volunteerPIs: volunteer.prevPid}, { $set: { "volunteerPIs.$" : volunteer.pantherID }}, (err, result) => {
 
@@ -250,11 +251,11 @@ function updateVolunteer(request, response) {
 									success: false,
 									errors: {server: 'Server error'}
 								})
-							} 
+							}
 							else {
 								delete volunteer.prevEmail;
 								delete volunteer.prevPid;
-								
+
 								Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
 
 									if (err) {
@@ -280,12 +281,12 @@ function updateVolunteer(request, response) {
 					else if (teamsWithVolunteer.length === 0) {
 						delete volunteer.prevEmail;
 						delete volunteer.prevPid;
-								
+
 						Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
 
 							if (err) {
 								console.log(err);
-							} 
+							}
 							else {
 								if (result.n === 1) {
 									response.json({
@@ -367,14 +368,14 @@ function fetchVolunteerById(request, response) {
 }
 
   function fetchVolunteerByPID(request, response) {
-	  
+
 
 	const pantherIDs = request.params.pids
 	console.log("PIDs: ", pantherIDs);
 
 	var PIDs = pantherIDs.split(',');
 	//PIDs = PIDs.map(Number)
-	
+
 		 Volunteer.find({
 			pantherID: PIDs
 			}, (err, result) => {

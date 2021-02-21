@@ -5,20 +5,21 @@ const Team = require('../models/Teams/team')
 //input validation
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
+import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.post('/create', createTeam);
-router.put('/update/:id', updateTeam);
-router.get('/:id', fetchTeamById);
-router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
-router.get('/', fetchTeams);
-router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
+router.post('/create',passport.authorize('jwt'),  createTeam);
+router.put('/update/:id',passport.authorize('jwt'), updateTeam);
+router.get('/:id',passport.authorize('jwt'), fetchTeamById);
+router.get('/getTeamInfo/:pid',passport.authorize('jwt'), fetchTeamByPantherID);
+router.get('/',passport.authorize('jwt'), fetchTeams);
+router.get('/getTeamInfoSch/:schoolCode',passport.authorize('jwt'), fetchTeamBySchoolCode);
 
 
 function createTeam (req, res) {
     const { body } = req;
-    let { 
+    let {
         schoolCode,
         semester,
         year,
@@ -27,10 +28,10 @@ function createTeam (req, res) {
         volunteerPIs,
         isActive
         } = body;
-        
+
         //deconstruct PIDs into an array
         volunteerPIs = volunteerPIs.split(',')
-        
+
         // form validation
         const { errors, isValid } = validateCreateTeamInput(req.body);
         // check validation
@@ -66,17 +67,17 @@ function createTeam (req, res) {
                 message: 'Successfully created team!'
             });
         });
-      
+
 }
 
 function updateTeam (request, response) {
   console.log(request.params);
     console.log(request.body);
   let { body } = request;
-      
+
       //deconstruct PIDs into an array
       body.volunteerPIs = body.volunteerPIs.split(',')
-      
+
       // form validation
       const { errors, isValid } = validateUpdateTeamInput(request.body);
       // check validation
@@ -104,7 +105,7 @@ function updateTeam (request, response) {
           }
           }
       });
-    
+
 }
 
 function fetchTeams(request, response) {
