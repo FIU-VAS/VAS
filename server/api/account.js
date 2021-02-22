@@ -277,6 +277,7 @@ function schoolPersonnelSignUp (req, res) {
 
 function login (req, res) {
     // Gets called if passport authorization is successful
+    console.log(req.user)
     res.json({
         success: true,
         token: req.user.token

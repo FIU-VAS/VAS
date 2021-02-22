@@ -14,26 +14,6 @@ router.put('/update/:id', passport.authorize('jwt'), updateAdmin);
 router.get('/', passport.authorize('jwt'), checkRole, fetchAdmins);
 router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
 
-//OLD VERSION
-/* function updateAdmin(request, response) {
-	console.log(request.params);
-	console.log(request.body);
-	Admin.updateOne({_id: request.params.id}, request.body, (err, result) => {
-		if (err) {
-			console.log(err);
-		  } else {
-			if (result.n === 1) {
-                response.json(request.params)
-			}
-			else {
-				response.json('failed')
-			}
-          }
- 
-          
-	});
-} */
-
 function updateAdmin(request, response) {
 	let admin = {};
 	
@@ -135,7 +115,6 @@ function updateAdmin(request, response) {
 						delete admin.prevEmail;
 
 						Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-							console.log("hello", result)
 							if (err) {
 								console.log(err);
 							} 
@@ -271,7 +250,6 @@ function fetchAdminById(request, response) {
                 email: result.email,
                 phoneNumber: result.phoneNumber
             }
-              console.log(payload);
             response.json(payload);
 		  }
 	});

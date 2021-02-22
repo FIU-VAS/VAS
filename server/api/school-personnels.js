@@ -241,7 +241,6 @@ function fetchSchoolPersonnelById(request, response) {
 function fetchSchoolPersonnelByCode(request, response) {
 
     const schoolCodes = request.params.codes
-    console.log("CODEs: ", schoolCodes);
 
     var CODES = schoolCodes.split(',');
   
