@@ -9,7 +9,7 @@ import validateUpdateTeamInput from '../validation/teams/updateTeam';
 const router = new express.Router();
 
 router.post('/create', createTeam);
-router.post('/update/:id', updateTeam);
+router.put('/update/:id', updateTeam);
 router.get('/:id', fetchTeamById);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', fetchTeams);

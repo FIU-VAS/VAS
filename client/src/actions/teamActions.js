@@ -1,4 +1,4 @@
-import request from 'request';
+import axios from 'axios';
 import serverConf from '../config'
 import { GET_ERRORS, SET_TEAMS, TEAMS_LOADING, GET_SUCCESS} from './types';
 
@@ -7,21 +7,15 @@ export const getTeams = () => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.fetch}`;
 
-    request.get(endpoint, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (error) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res
-              })
-        }
-        else {
-            // set current teams
-            dispatch(setCurrentTeams(res));
-        }    
-    });
+    axios.get(endpoint)
+    .then((res) => {
+        // set current teams
+        dispatch(setCurrentTeams(res.data));    
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
 };
 
 // add teams to database and refresh the store
@@ -35,27 +29,18 @@ export const addTeam = uneditedform => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.create}`;
 
-    request.post(endpoint, { form }, (error, response, body) => {
-        const res = JSON.parse(body);
-
-        //REMOVE- only for debugging
-        console.log(res)
-
-        if (!res.success) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res.errors
-              })
-        }
-        else {
-            // set current teams
-            dispatch(getTeams());
-            dispatch({
-                type: GET_SUCCESS,
-                payload: res.message
-            });
-        }   
-    });
+    axios.post(endpoint, form)
+    .then((res) => {
+        dispatch(getTeams());
+        dispatch({
+            type: GET_SUCCESS,
+            payload: res.data.message
+        });   
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
  };
 
  // make changes to teams in the database and refresh the store
@@ -69,28 +54,19 @@ export const editTeam = (id, uneditedform) => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.update}/${id}`;
 
-    request.post(endpoint, { form }, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        //REMOVE- only for debugging
-        console.log(res)
-
-        if (!res.success) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res.errors
-              })
-        }
-        else {
-            // set current teams
-            dispatch(getTeams());
-            dispatch({
-                type: GET_SUCCESS,
-                payload: res.message
-            });
-        }   
-    });
+    axios.put(endpoint, form)
+    .then((res) => {
+        // set current teams
+        dispatch(getTeams());
+        dispatch({
+            type: GET_SUCCESS,
+            payload: res.data.message
+        });   
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
  };
 
 // teams loading

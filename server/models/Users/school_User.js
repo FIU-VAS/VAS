@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+import User from "./user_Auth"
 
 const SchoolPersonnelSchema = new mongoose.Schema({
     schoolCode: {
@@ -14,11 +14,6 @@ const SchoolPersonnelSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    email: {
-        type: String,
-        default: ''
-    },
-    
     phoneNumber: {
         type: String,
         default: ''
@@ -33,4 +28,5 @@ const SchoolPersonnelSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('schoolPersonnel', SchoolPersonnelSchema);
+const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema, 'schoolPersonnel');
+export default mongoose.model('SchoolPersonnel')

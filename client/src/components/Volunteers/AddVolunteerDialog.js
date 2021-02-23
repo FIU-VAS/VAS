@@ -196,7 +196,7 @@ class AddVolunteerDialog extends Component {
                             labelId='car-available'
                             name='carAvailable'
                             onChange={this.handleInput}
-                            defaultValue={''}
+                            value={this.state.carAvailable}
                         >
                             <MenuItem  value={true}>Yes</MenuItem >
                             <MenuItem  value={false}>No</MenuItem >
@@ -209,10 +209,10 @@ class AddVolunteerDialog extends Component {
                             labelId='volunteer-status'
                             name='volunteerStatus'
                             onChange={this.handleInput}
-                            defaultValue={''}
+                            value={this.state.isActive}
                         >
                             <MenuItem value={true}>Approved</MenuItem>
-                            <MenuItem  value={false}>Not yet Approved</MenuItem>
+                            <MenuItem value={false}>Not yet Approved</MenuItem>
                         </Select>
                     </FormControl>
                     

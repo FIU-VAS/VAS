@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import isEmpty from 'is-empty';
 import Admin_Dashboard_MiddleMan from '../components/Dashboards/Admin_DashboarMiddleMan';
 import Volunteer_Dashbaord_MiddleMan from '../components/Dashboards/Volunteer_Dashbaord_MiddleMan';
 import Personnel_Dashbaord_MiddleMan from '../components/Dashboards/Personnel_Dashbaord_MiddleMan'
-import isEmpty from 'is-empty';
+import config from "../config";
 
 const useStyles = {
     all: {
@@ -26,6 +27,18 @@ const useStyles = {
 }
 
 class Dashboard extends Component {
+
+    getPage = () => {
+        const { auth } = this.props;
+        switch (auth.role) {
+            case config.userRoles.admin:
+                return (<Admin_Dashboard_MiddleMan/>);
+            case config.userRoles.volunteer:
+                return (<Volunteer_Dashbaord_MiddleMan/>);
+            case config.userRoles.schoolPersonnel:
+                return (<Personnel_Dashbaord_MiddleMan/>);
+        }
+    }
     
     render(){
         const { auth } = this.props;
@@ -43,9 +56,7 @@ class Dashboard extends Component {
                     justify="center">
 
                     <Grid item className={this.props.classes.cell}>
-                    { auth.role === "Admin" && <Admin_Dashboard_MiddleMan/> }
-                    { !isEmpty(this.props.user) && auth.role === "Volunteer" && <Volunteer_Dashbaord_MiddleMan/> }
-                    { !isEmpty(this.props.user) && auth.role === "School Personnel" && <Personnel_Dashbaord_MiddleMan/> }
+                        {this.getPage()}
                     </Grid>
 
                     
