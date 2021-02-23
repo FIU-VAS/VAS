@@ -41,7 +41,7 @@ function validateUpdateVolunteerInput(data) {
 
 
     // panther ID checks
-    if (isEmpty(data.pantherID)) {
+    if (validator.isEmpty(data.pantherID)) {
 		errors.pantherID = 'Panther ID is required';
     }
     else if (!validator.isInt(data.pantherID, { allow_leading_zeroes: false })) {
@@ -57,7 +57,7 @@ function validateUpdateVolunteerInput(data) {
     } 
 
     // car availability check
-    if (isEmpty(data.carAvailable)) {
+    if (validator.isEmpty(data.carAvailable)) {
 		errors.carAvailable = 'Car avaliability is required';
     } 
 

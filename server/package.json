@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -r esm server.js",
-    "migrate-up": "node -r esm node_modules/migrate/bin/migrate-up --store=\"./config/migration-store.js\"",
-    "migrate-down": "node -r esm node_modules/migrate/bin/migrate-down --store=\"./config/migration-store.js\"",
-    "migrate-init": "node -r esm node_modules/migrate/bin/migrate-init --store=\"./config/migration-store.js\""
+    "dev": "nodemon -r esm server.js"
   },
   "keywords": [],
   "author": "",
@@ -23,12 +20,10 @@
     "express": "^4.17.1",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "migrate": "^1.7.0",
     "mongoose": "^5.8.9",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
     "pm2": "^4.5.1",
     "react-redux": "^7.1.3",
     "redux-thunk": "^2.3.0",

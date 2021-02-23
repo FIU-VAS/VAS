@@ -59,7 +59,7 @@ function validateCreateVolunteerInput(data) {
     } 
 
     // car availability check
-    if (isEmpty(data.carAvailable)) {
+    if (validator.isEmpty(data.carAvailable)) {
 		errors.carAvailable = 'Car avaliability is required';
     } 
 

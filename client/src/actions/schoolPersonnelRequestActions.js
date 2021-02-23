@@ -1,4 +1,4 @@
-import axios from 'axios';
+import request from 'request';
 import serverConf from '../config'
 import { GET_ERRORS, SET_TEAMS_REQ_SCH, SET_VOLUNTEERS_REQ_SCH, SET_SCHOOL_REQ_SCH, SET_SCHOOL_PERSONNEL_REQ_SCH, SET_ADMINS_REQ_SCH} from './types';
 
@@ -8,26 +8,32 @@ export const getTeamRequest = schoolCode => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.getTeamInfoSch}/${schoolCode}`;
 
-    axios.get(endpoint)
-    .then((res) => {
+    request.get(endpoint, (error, response, body) => {
+        
+        const res = JSON.parse(body);
 
-        let allVolunteers = []
+        if (error) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res
+              })
+        }
+        else {
+            let allVolunteers = []
+            console.log(res)
 
-        res.data.forEach(team => {
-            console.log("PID ARRAY: ", team.volunteerPIs)
-            allVolunteers.push(team.volunteerPIs)
-        });
+            res.forEach(team => {
+                console.log("PID ARRAY: ", team.volunteerPIs)
+                allVolunteers.push(team.volunteerPIs)
+            });
 
-        dispatch(setTeams(res.data));
-        dispatch(getVolunteersRequest(allVolunteers))
-        dispatch(getSchoolRequest(schoolCode))
-        dispatch(getSchoolPersonnelsRequest(schoolCode))
-        dispatch(getAdmins())    
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
+            dispatch(setTeams(res));
+            dispatch(getVolunteersRequest(allVolunteers))
+            dispatch(getSchoolRequest(schoolCode))
+            dispatch(getSchoolPersonnelsRequest(schoolCode))
+            dispatch(getAdmins())
+        }    
+    });
 };
 
 export const getVolunteersRequest = pids => dispatch => {
@@ -36,59 +42,90 @@ export const getVolunteersRequest = pids => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.volunteers.getVolunteerInfo}/${pantherIDs}`;
 
-    axios.get(endpoint)
-    .then((res) => {
-        console.log("RES_Volunteers ", res.data)
-        dispatch(setVolunteers(res.data));    
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
+    request.get(endpoint, (error, response, body) => {
+        
+        const res = JSON.parse(body);
+
+        console.log("RES_Volunteers: ", res)
+
+        if (error) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res
+              })
+        }
+        else {
+            dispatch(setVolunteers(res));
+        }    
+    });
+
 };
 
 export const getSchoolRequest = schoolCode => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.schools.getSchoolInfo}/${schoolCode}`;
 
-    axios.get(endpoint)
-    .then((res) => {
-        console.log("RES_Schools ", res.data)
-        dispatch(setSchool(res.data));         
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
+    request.get(endpoint, (error, response, body) => {
+        
+        const res = JSON.parse(body);
+
+        console.log("RES_Schools ", res)
+
+        if (error) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res
+              })
+        }
+        else {
+            dispatch(setSchool(res));
+        }    
+    });
+
 };
 
 export const getSchoolPersonnelsRequest = schoolCode => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.getPersonnelInfo}/${schoolCode}`;
 
-    axios.get(endpoint)
-    .then((res) => {
-        console.log("RES_Personnels ", res.data)
-        dispatch(setSchool_Personnel(res.data));    
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
+    request.get(endpoint, (error, response, body) => {
+        
+        const res = JSON.parse(body);
+
+        console.log("RES_Personnels ", res)
+
+        if (error) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res
+              })
+        }
+        else {
+            dispatch(setSchool_Personnel(res));
+        }    
+    });
+
 };
 
 export const getAdmins = () => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.admin.fetch}`;
 
-    axios.get(endpoint)
-    .then((res) => {
-        dispatch(setAdmins(res.data));
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
+    request.get(endpoint, (error, response, body) => {
+        
+        const res = JSON.parse(body);
+
+        if (error) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res.errors
+              })
+        }
+        else {
+            // set current admins
+            dispatch(setAdmins(res));
+        }    
+    });
 };
 
 // set teams

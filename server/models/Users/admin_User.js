@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-import User from "./user_Auth"
 
 const AdminSchema = new mongoose.Schema({
     firstName: {
@@ -9,6 +8,11 @@ const AdminSchema = new mongoose.Schema({
     lastName: {
         type: String,
         default: ''
+    },
+    email: {
+        type: String,
+        default: '',
+        required: true
     },
     phoneNumber: {
         type: String,
@@ -20,5 +24,4 @@ const AdminSchema = new mongoose.Schema({
     },
 });
 
-const Admin = User.discriminator('Admin', AdminSchema, 'admin');
-export default mongoose.model('Admin')
+module.exports = mongoose.model('admin', AdminSchema);

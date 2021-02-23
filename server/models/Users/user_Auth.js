@@ -1,29 +1,18 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
-export const UserRoles = Object.freeze({
-    Admin: 'admin',
-    Volunteer: 'volunteer',
-    SchoolPersonnel: 'schoolPersonnel'
-})
-
 const UserSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: [true, 'Email is required for new user'],
-        unique: true
+        default: ''
     },
     password: {
         type: String,
-        required: [true, 'Password is required for new user']
+        default: ''
     },
     role: {
         type: String,
-        required: [true, 'Role is required for new user'],
-        enum: Object.values(UserRoles)
-    },
-    token: {
-        type: String
+        default: ''
     }
 });
 
@@ -35,4 +24,5 @@ UserSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-export default mongoose.model('User', UserSchema);
+
+module.exports = mongoose.model('user', UserSchema);
