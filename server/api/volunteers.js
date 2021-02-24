@@ -6,15 +6,16 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateVolunteerInput from '../validation/volunteers/updateVolunteer'
+import {checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id',passport.authorize('jwt'), updateVolunteer);
-router.put('/updateProfile/:id',passport.authorize('jwt'), updateVolunteer_Profile);
-router.get('/',passport.authorize('jwt'), fetchVolunteers);
-router.get('/:id',passport.authorize('jwt'), fetchVolunteerById);
-router.get('/getVolunteerInfo/:pids',passport.authorize('jwt'), fetchVolunteerByPID);
+router.put('/update/:id',passport.authorize('jwt'), checkVolunteerRole, updateVolunteer);
+router.put('/updateProfile/:id',passport.authorize('jwt'), checkVolunteerRole, updateVolunteer_Profile);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchVolunteers);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerById);
+router.get('/getVolunteerInfo/:pids',passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerByPID);
 
 function updateVolunteer_Profile(request, response) {
 	console.log(request.params);

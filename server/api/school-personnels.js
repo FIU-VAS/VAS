@@ -5,14 +5,15 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateSchoolPersonnelInput from '../validation/schoolPersonnels/updateSchoolPersonnel'
+import {checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id',passport.authorize('jwt'),  updateSchoolPersonnel);
-router.get('/',passport.authorize('jwt'),  fetchSchoolPersonnels);
-router.get('/:id',passport.authorize('jwt'), fetchSchoolPersonnelById);
-router.get('/getPersonnelInfo/:codes',passport.authorize('jwt'), fetchSchoolPersonnelByCode);
+router.put('/update/:id',passport.authorize('jwt'), checkSchoolPersonnelRole, updateSchoolPersonnel);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnels);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnelById);
+router.get('/getPersonnelInfo/:codes',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnelByCode);
 
 function updateSchoolPersonnel(request, response) {
 	let schoolPersonnel = {}

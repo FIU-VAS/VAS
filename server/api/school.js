@@ -7,16 +7,16 @@ import mongoose from "mongoose"
 import validateCreateSchoolInput from '../validation/schools/createSchool';
 import validateUpdateSchoolInput from '../validation/schools/updateSchool';
 
-import {checkRole} from "../utils/passport";
+import {checkAdminRole, checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.post('/create',passport.authorize('jwt'), createSchool);
-router.put('/update/:id',passport.authorize('jwt'), updateSchool);
-router.get('/:id',passport.authorize('jwt'), fetchSchoolById);
-router.get('/getSchoolInfo/:codes',passport.authorize('jwt'), fetchSchoolByCode);
-router.get('/',passport.authorize('jwt'), fetchSchools);
+router.post('/create',passport.authorize('jwt'), checkAdminRole, createSchool);
+router.put('/update/:id',passport.authorize('jwt'), checkSchoolPersonnelRole, updateSchool);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolById);
+router.get('/getSchoolInfo/:codes',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolByCode);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchSchools);
 
 
 function createSchool (req, res) {

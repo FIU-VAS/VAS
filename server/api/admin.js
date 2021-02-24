@@ -6,13 +6,13 @@ import passport from "../config/passport"
 
 // input validation
 import validateUpdateAdminInput from '../validation/admin/updateAdmin'
-import {checkRole} from "../utils/passport";
+import {checkAdminRole} from "../utils/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', passport.authorize('jwt'), updateAdmin);
-router.get('/', passport.authorize('jwt'), checkRole, fetchAdmins);
-router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
+router.put('/update/:id', passport.authorize('jwt'), checkAdminRole, updateAdmin);
+router.get('/', passport.authorize('jwt'), checkAdminRole, fetchAdmins);
+router.get('/:id', passport.authorize('jwt'), checkAdminRole, fetchAdminById);
 
 //OLD VERSION
 /* function updateAdmin(request, response) {
@@ -29,14 +29,14 @@ router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
 				response.json('failed')
 			}
           }
- 
-          
+
+
 	});
 } */
 
 function updateAdmin(request, response) {
 	let admin = {};
-	
+
 	let admin_req = request.body;
 
 	admin = {
@@ -61,17 +61,17 @@ function updateAdmin(request, response) {
 	// check if user made changes to email or password to update both auth table and admin table
 	// if no changes to email or password, only update admin table
 	if ((prevEmail != email) || !(admin.password === '')) {
-		
+
 		// both email and password
 		if ((prevEmail != email) && !(admin.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
@@ -80,7 +80,7 @@ function updateAdmin(request, response) {
 					}
 
 					let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-					
+
 					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
 
 						if (err) {
@@ -119,17 +119,17 @@ function updateAdmin(request, response) {
 					});
 			});
 		}
-				
+
 		//password
 		if ((prevEmail === email) && !(admin.password === '')) {
-			
+
 			let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-					
+
 			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
 
 				if (err) {
 					console.log(err);
-				} 
+				}
 				else {
 					if (result.n === 1) {
 						delete admin.prevEmail;
@@ -138,7 +138,7 @@ function updateAdmin(request, response) {
 							console.log("hello", result)
 							if (err) {
 								console.log(err);
-							} 
+							}
 							else {
 								if (result.n === 1) {
 									response.json({
@@ -164,29 +164,29 @@ function updateAdmin(request, response) {
 				}
 			});
 		}
-				
+
 		//email
 		if ((prevEmail != email) && (admin.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
 							errors: {email: 'Email already exists'}
 						});
 					}
-					
+
 					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
 
 						if (err) {
 							console.log(err);
-						} 
+						}
 						else {
 							if (result.n === 1) {
 								delete admin.prevEmail;

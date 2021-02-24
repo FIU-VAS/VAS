@@ -5,17 +5,17 @@ const Team = require('../models/Teams/team')
 //input validation
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
+import {checkAdminRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.post('/create',passport.authorize('jwt'),  createTeam);
-router.put('/update/:id',passport.authorize('jwt'), updateTeam);
-router.get('/:id',passport.authorize('jwt'), fetchTeamById);
-router.get('/getTeamInfo/:pid',passport.authorize('jwt'), fetchTeamByPantherID);
-router.get('/',passport.authorize('jwt'), fetchTeams);
-router.get('/getTeamInfoSch/:schoolCode',passport.authorize('jwt'), fetchTeamBySchoolCode);
-
+router.post('/create',passport.authorize('jwt'), checkAdminRole, createTeam);
+router.put('/update/:id',passport.authorize('jwt'), checkAdminRole, updateTeam);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchTeamById);
+router.get('/getTeamInfo/:pid',passport.authorize('jwt'), checkVolunteerRole, fetchTeamByPantherID);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchTeams);
+router.get('/getTeamInfoSch/:schoolCode',passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
 
 function createTeam (req, res) {
     const { body } = req;
