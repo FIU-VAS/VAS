@@ -25,7 +25,7 @@ const Team = new mongoose.Schema({
     availability: [{
         dayOfWeek: {
             type: String,
-            enum: Array.values(Days)
+            enum: Object.values(Days)
         },
         startTime: {
             type: String
