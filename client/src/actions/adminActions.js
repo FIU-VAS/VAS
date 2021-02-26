@@ -45,7 +45,6 @@ export const editAdmin = (id, form) => dispatch => {
 
     axios.put(endpoint, form)
     .then((res) => {
-        console.log(res);
         dispatch(getAdmins());
         dispatch({
             type: GET_SUCCESS,

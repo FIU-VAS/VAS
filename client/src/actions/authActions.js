@@ -134,3 +134,20 @@ export const requestPasswordReset = form => dispatch => {
         payload: err
     }));
 };
+
+// Reset password
+export const resetPassword = form => dispatch => {
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.account.resetPassword}`;
+
+    axios.post(endpoint, form)
+    .then(res => {
+        dispatch({
+            type: GET_SUCCESS,
+            payload: res.data.message
+        })
+    })
+    .catch(err => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
+};

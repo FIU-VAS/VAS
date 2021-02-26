@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import isEmpty from 'is-empty';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { blueGrey, blue } from '@material-ui/core/colors';
@@ -75,6 +78,9 @@ class ForgotPasswordDialog extends Component {
         if (!isEmpty(this.props.success.message)) {
             return <Alert severity="success">{this.props.success.message}</Alert> 
         }
+        else if (!isEmpty(this.props.errors.message)) {
+            return <Alert severity="error">{this.props.errors.message}</Alert>
+        }
     }
 
     render() {
@@ -87,7 +93,14 @@ class ForgotPasswordDialog extends Component {
             open={open}
             >
                 <DialogTitle>
-                    <Typography align="center">Reset Password</Typography>
+                  <Box display="flex" alignItems="center">
+                    <Box flexGrow={1} >Reset Password</Box>
+                    <Box>
+                      <IconButton onClick={this.exitDialog}>
+                          <CloseIcon />
+                      </IconButton>
+                  </Box>
+                </Box>                
                 </DialogTitle>
                 { this.successMessage() }
                 <DialogContent>
