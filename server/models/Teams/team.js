@@ -25,7 +25,7 @@ const Team = new mongoose.Schema({
     availability: [{
         dayOfWeek: {
             type: String,
-            enum: Array.values(Days)
+            enum: Object.values(Days)
         },
         startTime: {
             type: String
@@ -34,37 +34,6 @@ const Team = new mongoose.Schema({
             type: String
         }
     }],
-    dayOfWeek: {
-        monday: {
-            type: Boolean,
-            required: true,
-            default: false
-        },
-        tuesday: {
-            type: Boolean,
-            default: false
-        },
-        wednesday: {
-            type: Boolean,
-            default: false
-        },
-        thursday: {
-            type: Boolean,
-            default: false
-        },
-        friday: {
-            type: Boolean,
-            default: false
-        }
-    },
-    startTime: {
-        type: String,
-        required: true
-    },
-    endTime: {
-        type: String,
-        required: true,
-    },
     volunteerPIs: {
         type: Array,
         required: true,
