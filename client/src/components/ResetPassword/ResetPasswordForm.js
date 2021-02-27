@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import { resetPassword } from "../../actions/authActions";
+import { Redirect } from "react-router-dom";
 import Alert from '@material-ui/lab/Alert';
 
 const theme = createMuiTheme({
@@ -67,7 +68,6 @@ class ResetPasswordForm extends Component {
     }  
 
     componentDidMount() {
-        // GET query parameters
         var params = new URLSearchParams(window.location.search);
 
         this.setState({
@@ -76,7 +76,7 @@ class ResetPasswordForm extends Component {
         });
     }
     
-    handleInput = (e) =>{
+    handleInput = (e) => {
         const value = e.target.value
         const name = e.target.name
 
@@ -88,14 +88,15 @@ class ResetPasswordForm extends Component {
     submitResetPassword = async (e) => {
         e.preventDefault();
 
-        if(this.validate()) {
+        let valid = await this.validate();
+        if(valid) {
             const resetData = {
                 token: this.state.token,
                 userId: this.state.userId,
                 password: this.state.password
             };
 
-            this.props.resetPassword(resetData); 
+            this.props.resetPassword(resetData);
         }
     }
 
@@ -105,20 +106,28 @@ class ResetPasswordForm extends Component {
         )
     };
 
+    redirect() {
+      if (this.props.success.hasOwnProperty("redirectTo")) {
+          return true;
+      }
+      
+      return false;    
+  }
+
     validate = async (e) => {
         let password = this.state.password;
         let confirm = this.state.confirmPwd;
         let errors = {};
         let isValid = true; 
 
-        if (!password) {
+        if (password.length === 0) {
             isValid = false;
-            errors["password"] = "Please enter password.";
+            errors["password"] = "This field is required.";
         }
 
-        if (!confirm) {
+        if (confirm.length === 0) {
             isValid = false;
-            errors["confirmPwd"] = "Please enter password.";
+            errors["confirmPwd"] = "This field is required.";
         }
   
         if (password !== confirm) {
@@ -133,9 +142,11 @@ class ResetPasswordForm extends Component {
         return isValid;
    };
 
-    
+  render() {   
+    if (this.redirect()) {
+      return <Redirect to={this.props.success.redirectTo} />;
+    }
 
-  render(){   
     return (
       <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -207,6 +218,7 @@ ResetPasswordForm.propTypes = {
 
 // allows us to get our state from Redux and map it to props
 const mapStateToProps = state => ({
+  success: state.success,
   errors: state.errors
 });
 

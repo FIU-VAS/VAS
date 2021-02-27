@@ -14,7 +14,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
@@ -50,6 +49,8 @@ class ForgotPasswordDialog extends Component {
         this.requestPasswordReset = this.requestPasswordReset.bind(this);
         this.handleInput = this.handleInput.bind(this);
         this.exitDialog = this.exitDialog.bind(this);
+        this.props.clearErrors();
+        this.props.clearSuccess();
     }    
 
 
@@ -76,7 +77,7 @@ class ForgotPasswordDialog extends Component {
 
     successMessage() {
         if (!isEmpty(this.props.success.message)) {
-            return <Alert severity="success">{this.props.success.message}</Alert> 
+          return <Alert severity="success">{this.props.success.message}</Alert> 
         }
         else if (!isEmpty(this.props.errors.message)) {
             return <Alert severity="error">{this.props.errors.message}</Alert>

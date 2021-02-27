@@ -2,46 +2,7 @@ import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import serverConf from '../config'
-import { GET_ERRORS, GET_SUCCESS, SET_USER, USER_LOADING, SET_AUTH } from './types';
-
-// login - get user token
-/*
-export const loginUser = form => dispatch => {
-
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.account.login}`;
-
-    axios.post(endpoint, { form }, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-        const token = res.token
-
-        //REMOVE- only for debugging
-        console.log(res)
-
-        if (error || !res.token) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res
-              })
-        }
-        else {
-            // save token to localStorage
-            localStorage.setItem('jwt', token);
-            
-            // set token to auth header
-            setAuthToken(token);
-
-            // decode token to get user data
-            const decoded = jwt_decode(token);
-
-            // set current user
-            dispatch(setAuth(decoded)); // role
-            dispatch(setCurrentUser(decoded)) // add user data
-        }    
-    }).then(res => console.log(res))
-      .catch(err => console.error(err));
- };
- */
+import { GET_ERRORS, GET_SUCCESS, SET_USER, USER_LOADING, SET_AUTH, REDIRECT } from './types';
 
 export const loginUser = form => dispatch => {
 
@@ -144,6 +105,10 @@ export const resetPassword = form => dispatch => {
         dispatch({
             type: GET_SUCCESS,
             payload: res.data.message
+        })
+        dispatch({
+            type: REDIRECT,
+            payload: '/'
         })
     })
     .catch(err => dispatch({
