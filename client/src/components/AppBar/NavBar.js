@@ -24,7 +24,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#455a64"
+            main: "#000000"
         },
         secondary: {
           main: "#FFFFFF"
@@ -35,12 +35,14 @@ const theme = createMuiTheme({
 const useStyles = {
   root: {
     flexGrow: 0,
-    width: '100vw'
+    width: '100vw',
+    backgroundColor: 'black'
     
   },
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
+    backgroundColor: 'black'
   },
   title: {
     flexGrow: 1,
@@ -154,9 +156,9 @@ renderMenu(){
 getTitle(){
   let size = document.body.clientWidth
   if (size < 750) {
-    return ("FIU CS First VAS")
+    return ("FIU VAS")
   } else {
-    return ("FIU CS First Outreach Volunteer Attendance System")
+    return ("FIU Outreach Volunteer Attendance System")
   }
 }
 
@@ -168,12 +170,9 @@ render(){
       <AppBar position='static'>
         <Toolbar className={this.props.classes.toolbar}>
        
-
-
-
-          <Link to='/' className={this.props.classes.link}>
+        <Link to='/' className={this.props.classes.link}>
           
-          <Grid
+        <Grid
           container
           direction="row"
           justify="center"
@@ -183,25 +182,32 @@ render(){
           { (document.body.clientWidth > 750) &&
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/logo_shadow.png").default}
+            src ={require("../../images/VAS_LOGO.png").default}
             alt = "logo"
             />}
             
             <Typography className={this.props.classes.title} variant='h5' >
              &nbsp;
              {this.getTitle()}
-            </Typography></Fragment>
-            </Grid>
-          </Link>
-          
-          
-          {this.state.loggedIn &&
-          <IconButton aria-owns={this.state.open ? 'fade-menu' : undefined} aria-haspopup="true" onClick={this.handleClick}>
-            <MenuIcon className={this.props.classes.icon} />
-          </IconButton>}
-          {this.renderMenu()}
+            </Typography>
+            </Fragment>
+        </Grid>
 
+        </Link>
+
+        <Link to='/about' className={this.props.classes.link} style={{color:'white'}}>About </Link>
+        <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In </Link>
+          
+        {this.state.loggedIn &&
+        <IconButton aria-owns={this.state.open ? 'fade-menu' : undefined} aria-haspopup="true" onClick={this.handleClick}>
+          <MenuIcon className={this.props.classes.icon} />
+        </IconButton>}
+           
+        {this.renderMenu()}
+            
+            
         </Toolbar>
+            
       </AppBar>
     </div>
     </ThemeProvider>

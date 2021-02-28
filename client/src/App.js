@@ -5,10 +5,10 @@ import store from "./store";
 import './App.css';
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { logoutUser, setAuth } from "./actions/authActions"
-import { getAdmin, getVolunteer, getSchoolPersonnel } from "./actions/userActions"
-import Login from './pages/Login'
-import NavBar from './components/AppBar/NavBar';
+import { logoutUser, setAuth } from "./actions/authActions";
+import { getAdmin, getVolunteer, getSchoolPersonnel } from "./actions/userActions";
+import Login from './pages/Login';
+import Home from './pages/Home';
 import Footer from './components/AppBar/Footer';
 import Dashboard from './pages/Dashboard';
 import VolunteerManagement from './pages/VolunteerManagement'
@@ -67,12 +67,12 @@ class App extends Component {
           <div className='.App'>
           
             <Fragment>
-              <NavBar/>
+              
               <Footer/>
               
               <Switch>
               
-                <Route exact path='/' component={Login}/>
+                <Route exact path='/' component={Home}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/about' component={About}/>
                 <PrivateRoute path="/dashboard" component={Dashboard}/>

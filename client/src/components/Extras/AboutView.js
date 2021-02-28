@@ -17,23 +17,23 @@ import Divider from '@material-ui/core/Divider';
 
 const useStyles = {
     all: {
-        backgroundColor: '#fafafa',
+        backgroundColor: '#000000',
         height: '100vh'
     },
     cardHeader: {
         height: 60,
-        backgroundColor: blue[500]
+        backgroundColor: grey[900]
     },
     cardHeaderNames: {
         height: 60,
-        backgroundColor: blueGrey[600]
+        backgroundColor: grey[900]
     },
     card: {
         marginTop: 10,
         minWidth: "80%",
         maxwidth: 100,
         height: 600,
-        backgroundColor: '#fafafa',
+        backgroundColor: '#00000',
         marginBottom: '20px',
         'overflow-x': 'hidden'
     },
@@ -45,12 +45,12 @@ const useStyles = {
     title: {
         fontSize: 20,
         fontWeight: 800,
-        color: grey[800],
+        color: grey[900],
     },
     regular: {
         fontSize: 18,
         fontWeight: 400,
-        color: grey[800],
+        color: grey[900],
     },
     names: {
         fontSize: 20,
@@ -68,7 +68,7 @@ const useStyles = {
       main: {
         fontSize: 30,
         fontWeight: 800,
-        color: grey[1000],
+        color: grey[900],
         alignItems: 'left',
         justify: 'left',
     },

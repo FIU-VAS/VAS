@@ -89,14 +89,14 @@ render(){
                 justify="center">
         <img
             className={this.props.classes.FIU}
-            src ={require("../../images/FIU_hrz_Color.png")}
+            src ={require("../../images/FIU_hrz_Color.png").default}
             alt = "logo"
             />
 
             </Grid>
 
            
-            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="primary" href="#outlined-buttons">
+            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="black" href="#outlined-buttons">
         About
       </Button>
           

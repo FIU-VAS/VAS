@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { blueGrey, grey } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import NavBar from '../components/AppBar/NavBar';
+import CalltoAction from '../components/Home/CalltoAction';
 
 const theme = createMuiTheme({
     palette: {
@@ -14,7 +15,7 @@ const theme = createMuiTheme({
 
 const useStyles = {
     picture: {
-        marginTop: theme.spacing(15),
+        marginTop: theme.spacing(16),
         position: 'absolute',
         right: '3%',
         left: '55%',
@@ -27,7 +28,11 @@ class Login extends Component{
         return (
             <div>
                 <NavBar/>
-                <LoginForm/>
+                <CalltoAction/>
+                <img className={this.props.classes.picture}
+                src ={require("../images/kids_home_page.png").default}
+                alt = "Kids Learning" 
+                />
             </div>
         )
     }

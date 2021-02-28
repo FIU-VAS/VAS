@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockRoundedIcon from '@material-ui/icons/LockRounded';
-import Typography from '@material-ui/core/Typography';
+// import LockRoundedIcon from '@material-ui/icons/LockRounded';
+// import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { blueGrey, blue } from '@material-ui/core/colors';
+import { blueGrey, grey } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,40 +16,53 @@ import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 import Alert from '@material-ui/lab/Alert';
+import { Link } from "react-router-dom";
+
 
 // Login Styling
 const theme = createMuiTheme({
     palette: {
-      primary: blue,
+      primary: grey,
     }
+    
   });
 
 const useStyles = {
+  loginform: {
+
+    
+  },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(15),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: blueGrey[500],
+    alignItems: 'left',
     '&:hover': {
-        backgroundColor: blue[500],
+        backgroundColor: grey[900],
     }
+    
   },
   form: {
     width: '100%',
     marginTop: theme.spacing(1),
+    
+    
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: blueGrey[700],
+    backgroundColor: grey[900],
     color: "white",
     fontWeight: "bold",
     '&:hover': {
-        backgroundColor: blue[500],
+        backgroundColor: grey[900],
     }
+  
   },
   logo: {
     height: '80px',
@@ -151,19 +164,20 @@ class LoginForm extends Component {
   render(){   
     return (
       <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container className={this.props.classes.loginform} component="main" maxWidth="xs" >
         <CssBaseline />
         <div className={this.props.classes.paper}>
 
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/VAS_shadow.png").default}
-            alt = "logo"
+            src ={require("../../images/VAS_LOGO.png").default}
+            alt = "logo" 
+           
             />
 
-          <Typography component="h1" variant="h5">
+          {/* <Typography component="h1" variant="h5">
             Login
-          </Typography>
+          </Typography> */}
           <form className={this.props.classes.form} onSubmit={this.submitLogin.bind(this)} noValidate>
             <div>
             <TextField
@@ -205,12 +219,19 @@ class LoginForm extends Component {
               Login
             </Button>
             
+            
           </form>
 
           
+
+          
         </div>
+        
       </Container>
+            
       </ThemeProvider>
+
+      
       
     );
   }
