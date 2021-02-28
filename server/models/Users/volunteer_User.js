@@ -1,3 +1,5 @@
+import {Days} from "../Teams/team";
+
 const mongoose = require('mongoose')
 import User from "./user_Auth"
 
@@ -37,7 +39,22 @@ const VolunteerSchema = new mongoose.Schema({
     MDCPS_ID: {
         type: String,
         default: ''
-    }
+    },
+    availability: [{
+        dayOfWeek: {
+            type: String,
+            enum: Object.values(Days),
+            required: true
+        },
+        startTime: {
+            type: String,
+            required: true
+        },
+        endTime: {
+            type: String,
+            required: true
+        }
+    }],
 });
 
 const Volunteer = User.discriminator('Volunteer', VolunteerSchema, 'volunteer');

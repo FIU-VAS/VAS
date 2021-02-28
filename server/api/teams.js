@@ -16,9 +16,9 @@ router.get('/', fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
 
 
-function createTeam (req, res) {
-    const { body } = req;
-    let { 
+function createTeam(req, res) {
+    const {body} = req;
+    let {
         schoolCode,
         semester,
         year,
@@ -26,134 +26,132 @@ function createTeam (req, res) {
         endTime,
         volunteerPIs,
         isActive
-        } = body;
-        
-        //deconstruct PIDs into an array
-        volunteerPIs = volunteerPIs.split(',')
-        
-        // form validation
-        const { errors, isValid } = validateCreateTeamInput(req.body);
-        // check validation
-        if (!isValid) {
-            return res.status(400).json({success: false, errors});
-        }
+    } = body;
 
-        const newTeam = new Team;
+    //deconstruct PIDs into an array
+    volunteerPIs = volunteerPIs.split(',')
 
-        newTeam.schoolCode = schoolCode;
-        newTeam.semester = semester;
-        newTeam.year = year;
-        newTeam.dayOfWeek.monday = body['dayOfWeek[monday]'];
-        newTeam.dayOfWeek.tuesday = body['dayOfWeek[tuesday]'];
-        newTeam.dayOfWeek.wednesday = body['dayOfWeek[wednesday]'];
-        newTeam.dayOfWeek.thursday = body['dayOfWeek[thursday]'];
-        newTeam.dayOfWeek.friday = body['dayOfWeek[friday]'];
-        newTeam.startTime = startTime;
-        newTeam.endTime = endTime;
-        newTeam.volunteerPIs = volunteerPIs;
-        newTeam.isActive = 'true';
-        newTeam.timeStamp = Date.now()
+    // form validation
+    const {errors, isValid} = validateCreateTeamInput(req.body);
+    // check validation
+    if (!isValid) {
+        return res.status(400).json({success: false, errors});
+    }
 
-        newTeam.save((err, team) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    errors: 'Error: Server error'
-                });
-            }
+    const newTeam = new Team;
+
+    newTeam.schoolCode = schoolCode;
+    newTeam.semester = semester;
+    newTeam.year = year;
+    newTeam.dayOfWeek.monday = body['dayOfWeek[monday]'];
+    newTeam.dayOfWeek.tuesday = body['dayOfWeek[tuesday]'];
+    newTeam.dayOfWeek.wednesday = body['dayOfWeek[wednesday]'];
+    newTeam.dayOfWeek.thursday = body['dayOfWeek[thursday]'];
+    newTeam.dayOfWeek.friday = body['dayOfWeek[friday]'];
+    newTeam.startTime = startTime;
+    newTeam.endTime = endTime;
+    newTeam.volunteerPIs = volunteerPIs;
+    newTeam.isActive = 'true';
+    newTeam.timeStamp = Date.now()
+
+    newTeam.save((err, team) => {
+        if (err) {
             return res.send({
-                success: true,
-                message: 'Successfully created team!'
+                success: false,
+                errors: 'Error: Server error'
             });
+        }
+        return res.send({
+            success: true,
+            message: 'Successfully created team!'
         });
-      
+    });
+
 }
 
-function updateTeam (request, response) {
-  let { body } = request;
-      
-      //deconstruct PIDs into an array
-      body.volunteerPIs = body.volunteerPIs.split(',')
-      
-      // form validation
-      const { errors, isValid } = validateUpdateTeamInput(request.body);
-      // check validation
-      if (!isValid) {
-          return response.status(400).json({success: false, errors});
-      }
+function updateTeam(request, response) {
+    let {body} = request;
 
-      //check if team is being deativated to change timestamp
-      if(body.isActive === 'false') {
+    //deconstruct PIDs into an array
+    body.volunteerPIs = body.volunteerPIs.split(',')
+
+    // form validation
+    const {errors, isValid} = validateUpdateTeamInput(request.body);
+    // check validation
+    if (!isValid) {
+        return response.status(400).json({success: false, errors});
+    }
+
+    //check if team is being deativated to change timestamp
+    if (body.isActive === 'false') {
         body.timeStamp = Date.now()
-      }
+    }
 
-      Team.updateOne({_id: request.params.id}, body, (err, result) => {
+    Team.updateOne({_id: request.params.id}, body, (err, result) => {
         if (err) {
-          console.log(err);
-          } else {
-          if (result.n === 1) {
-            return response.send({
-                        success: true,
-                        message: 'Successfully updated team!'
-                    });
-          }
-          else {
-            response.json('failed')
-          }
-          }
-      });
-    
+            console.log(err);
+        } else {
+            if (result.n === 1) {
+                return response.send({
+                    success: true,
+                    message: 'Successfully updated team!'
+                });
+            } else {
+                response.json('failed')
+            }
+        }
+    });
+
 }
 
 function fetchTeams(request, response) {
-  const { body } = request;
-	Team.find(body, (err, result) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  response.json(result);
-		}
-	});
+    Team.find({isActive: true}, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            response.json(result);
+        }
+    });
 }
 
 function fetchTeamById(request, response) {
-	Team.findById(request.params.id, (err, result) => {
-		if (err) {
-			console.log(err);
-		  } else {
-			response.json(result);
-		  }
-	});
+    Team.findById(request.params.id, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            response.json(result);
+        }
+    });
 }
 
 function fetchTeamByPantherID(request, response) {
 
-  const pantherID = request.params.pid
+    const pantherID = request.params.pid
 
-	Team.find({
-    volunteerPIs: pantherID
-        }, (err, result) => {
-            if (err) {
-		  console.log(err);
-		} else {
-		  response.json(result);
-		}
-	});
+    Team.find({
+        volunteerPIs: pantherID
+    }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            response.json(result);
+        }
+    });
 }
 
 function fetchTeamBySchoolCode(request, response) {
 
-  const schoolCode = request.params.schoolCode
+    const schoolCode = request.params.schoolCode
 
-	Team.find({
-    schoolCode: schoolCode
-        }, (err, result) => {
-            if (err) {
-		  console.log(err);
-		} else {
-		  response.json(result);
-		}
-	});
+    Team.find({
+        schoolCode: schoolCode
+    }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            response.json(result);
+        }
+    });
 }
 
 export default {router};
