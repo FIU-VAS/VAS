@@ -7,19 +7,22 @@ import mongoose from "mongoose"
 import validateCreateSchoolInput from '../validation/schools/createSchool';
 import validateUpdateSchoolInput from '../validation/schools/updateSchool';
 
+import {checkAdminRole, checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
+import passport from "../config/passport";
+
 const router = new express.Router();
 
-router.post('/create', createSchool);
-router.put('/update/:id', updateSchool);
-router.get('/:id', fetchSchoolById);
-router.get('/getSchoolInfo/:codes', fetchSchoolByCode);
-router.get('/', fetchSchools);
+router.post('/create',passport.authorize('jwt'), checkAdminRole, createSchool);
+router.put('/update/:id',passport.authorize('jwt'), checkSchoolPersonnelRole, updateSchool);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolById);
+router.get('/getSchoolInfo/:codes',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolByCode);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchSchools);
 
 
 function createSchool (req, res) {
 
     const { body } = req;
-    const { 
+    const {
         schoolName,
         schoolCode,
         level,
@@ -53,7 +56,7 @@ function createSchool (req, res) {
                     message: 'Error: A school by this code already exists'
                 });
             }
-        
+
 
         const newSchool = new School;
 
@@ -80,7 +83,7 @@ function createSchool (req, res) {
             });
         });
     });
-      
+
 }
 
 function updateSchool(request, response) {
@@ -145,7 +148,7 @@ function fetchSchoolByCode(request, response) {
 
     var CODES = schoolCodes.split(',');
 	//CODES = CODES.map(Number)
-  
+
     School.find({
         schoolCode: CODES
           }, (err, result) => {

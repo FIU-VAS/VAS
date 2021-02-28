@@ -5,13 +5,15 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateSchoolPersonnelInput from '../validation/schoolPersonnels/updateSchoolPersonnel'
+import {checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
+import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', updateSchoolPersonnel);
-router.get('/', fetchSchoolPersonnels);
-router.get('/:id', fetchSchoolPersonnelById);
-router.get('/getPersonnelInfo/:codes', fetchSchoolPersonnelByCode);
+router.put('/update/:id',passport.authorize('jwt'), checkSchoolPersonnelRole, updateSchoolPersonnel);
+router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnels);
+router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnelById);
+router.get('/getPersonnelInfo/:codes',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolPersonnelByCode);
 
 function updateSchoolPersonnel(request, response) {
 	let schoolPersonnel = {}
@@ -32,17 +34,17 @@ function updateSchoolPersonnel(request, response) {
 	// check if user made changes to email or password to update both auth table and school personnel table
 	// if no changes to email or password, only update school personnel table
 	if ((prevEmail != email) || !(schoolPersonnel.password === '')) {
-		
+
 		// both email and password
 		if ((prevEmail != email) && !(schoolPersonnel.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
@@ -51,7 +53,7 @@ function updateSchoolPersonnel(request, response) {
 					}
 
 					let password = bcrypt.hashSync(schoolPersonnel.password, bcrypt.genSaltSync(8), null);
-					
+
 					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
 
 						if (err) {
@@ -90,17 +92,17 @@ function updateSchoolPersonnel(request, response) {
 					});
 			});
 		}
-				
+
 		//password
 		if ((prevEmail === email) && !(schoolPersonnel.password === '')) {
-			
+
 			let password = bcrypt.hashSync(schoolPersonnel.password, bcrypt.genSaltSync(8), null);
-					
+
 			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
 
 				if (err) {
 					console.log(err);
-				} 
+				}
 				else {
 					if (result.n === 1) {
 						delete schoolPersonnel.prevEmail;
@@ -108,7 +110,7 @@ function updateSchoolPersonnel(request, response) {
 						schPersonnel.updateOne({_id: request.params.id}, schoolPersonnel, (err, result) => {
 							if (err) {
 								console.log(err);
-							} 
+							}
 							else {
 								if (result.n === 1) {
 									response.json({
@@ -134,29 +136,29 @@ function updateSchoolPersonnel(request, response) {
 				}
 			});
 		}
-				
+
 		//email
 		if ((prevEmail != email) && (schoolPersonnel.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
 							errors: {email: 'Email already exists'}
 						});
 					}
-					
+
 					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
 
 						if (err) {
 							console.log(err);
-						} 
+						}
 						else {
 							if (result.n === 1) {
 								delete schoolPersonnel.prevEmail;
@@ -244,7 +246,7 @@ function fetchSchoolPersonnelByCode(request, response) {
     console.log("CODEs: ", schoolCodes);
 
     var CODES = schoolCodes.split(',');
-  
+
     schPersonnel.find({
         schoolCode: CODES
           }, (err, result) => {
