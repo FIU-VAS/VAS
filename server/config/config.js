@@ -1,4 +1,5 @@
-import dotenv from 'dotenv';
+import dotenv, {parse} from 'dotenv';
+import path from "path";
 
 dotenv.config();
 
@@ -11,7 +12,20 @@ const config = {
 		name: process.env.MONGODB_TABLE_NAME || '',
 	},
 	secretOrKey: 'yee',
-
+	mail: {
+		host: process.env.SMTP_HOST,
+		port: parseInt(process.env.SMTP_PORT),
+		secure: Boolean(parseInt(process.env.SMTP_SECURE)),
+		templates: {
+			resetPassword: path.join(__dirname, '../mail/templates/reset-password.html')
+		}
+	},
+	appDomain: process.env.APP_DOMAIN,
+	appProtocol: process.env.APP_PROTOCOL,
 };
+
+if (!!process.env.SMTP_PROXY) {
+	config.mail.proxy = process.env.SMTP_PROXY;
+}
 
 export default config;

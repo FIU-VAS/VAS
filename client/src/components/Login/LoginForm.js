@@ -11,6 +11,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import ForgotPasswordDialog from './ForgotPasswordDialog';
 import './LoginForm.css';
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
@@ -66,8 +67,11 @@ class LoginForm extends Component {
         email: '',
         password: '',
         submitted: false,
+        forgotPasswordDialog: false,
         errors: {}
         };
+
+        this.toggleForgotPasswordDialog = this.toggleForgotPasswordDialog.bind(this);
     }  
 
     componentDidMount() {
@@ -89,6 +93,12 @@ class LoginForm extends Component {
         });
         }
     }
+
+    toggleForgotPasswordDialog() {
+      this.setState(prevState => ({
+        forgotPasswordDialog: !prevState.forgotPasswordDialog
+      }));
+    }
     
     handleInput = (e) =>{
         const value = e.target.value
@@ -98,7 +108,6 @@ class LoginForm extends Component {
         [name]: value 
         })
     }
-
 
     submitLogin = async (e) =>{
         e.preventDefault()
@@ -207,11 +216,13 @@ class LoginForm extends Component {
             
           </form>
 
-          
+          <Button onClick={this.toggleForgotPasswordDialog} color="secondary">
+            Forgot Password?
+          </Button>
         </div>
+        {this.state.forgotPasswordDialog && <ForgotPasswordDialog open={this.state.forgotPasswordDialog} close={this.toggleForgotPasswordDialog} /> }
       </Container>
       </ThemeProvider>
-      
     );
   }
 }
