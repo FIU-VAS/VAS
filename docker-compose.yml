@@ -19,7 +19,6 @@ services:
     container_name: nginx
     ports:
       - 3001:80
-      - 8081:8081
     volumes:
       - ./nginx/default.conf:/tmp/default.template
       - ./client/build:/var/www/html:rw,cached

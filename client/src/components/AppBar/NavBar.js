@@ -36,7 +36,7 @@ const useStyles = {
   root: {
     flexGrow: 0,
     width: '100vw'
-    
+
   },
   toolbar: {
     display: 'flex',
@@ -80,19 +80,19 @@ class NavBar extends Component {
     this.setAnchorEl = this.setAnchorEl.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    
-}  
+
+}
 
  handleClose = () => {
   this.setAnchorEl(null);
 };
 
 redirect_to_Profile = () => {
-  this.props.history.push("/profile"); 
+  this.props.history.push("/profile");
 }
 
 redirect_to_AboutPage = () => {
-  this.props.history.push("/about"); 
+  this.props.history.push("/about");
 }
 
   submitLogout = async (e) =>{
@@ -103,10 +103,10 @@ redirect_to_AboutPage = () => {
       loggedIn: false,
       open: false
     });
-  
+
     this.props.logoutUser();
     this.props.resetState();
-    this.props.history.push("/login"); 
+    this.props.history.push("/login");
   }
 
   componentDidMount() {
@@ -115,7 +115,7 @@ redirect_to_AboutPage = () => {
         loggedIn: true
       })
     }
-    
+
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -167,12 +167,7 @@ render(){
     <div className={this.props.classes.root} >
       <AppBar position='static'>
         <Toolbar className={this.props.classes.toolbar}>
-       
-
-
-
           <Link to='/' className={this.props.classes.link}>
-          
           <Grid
           container
           direction="row"
@@ -186,15 +181,15 @@ render(){
             src ={require("../../images/logo_shadow.png").default}
             alt = "logo"
             />}
-            
+
             <Typography className={this.props.classes.title} variant='h5' >
              &nbsp;
              {this.getTitle()}
             </Typography></Fragment>
             </Grid>
           </Link>
-          
-          
+
+
           {this.state.loggedIn &&
           <IconButton aria-owns={this.state.open ? 'fade-menu' : undefined} aria-haspopup="true" onClick={this.handleClick}>
             <MenuIcon className={this.props.classes.icon} />
@@ -224,5 +219,5 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-  { logoutUser, resetState }  
+  { logoutUser, resetState }
 )(withRouter(withStyles(useStyles)(NavBar)));

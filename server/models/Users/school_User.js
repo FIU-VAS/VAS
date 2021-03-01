@@ -1,7 +1,7 @@
+import User, {UserRoles} from "./user_Auth"
 import {Days} from "../Teams/team";
 
 const mongoose = require('mongoose')
-import User from "./user_Auth"
 
 const SchoolPersonnelSchema = new mongoose.Schema({
     schoolCode: {
@@ -42,5 +42,5 @@ const SchoolPersonnelSchema = new mongoose.Schema({
     }],
 });
 
-const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema, 'schoolPersonnel');
+const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema, {discriminatorKey: UserRoles.SchoolPersonnel});
 export default mongoose.model('SchoolPersonnel')

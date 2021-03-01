@@ -45,14 +45,14 @@ function adminSignUp (req, res) {
 
     // Steps:
     // 1. Verify email doesn't exist
-    // 2. Save to both collections
+    // 2. Save to collection
     User.find({
         email: email
     }, (err, previousUsers) => {
         if (err) {
             return res.send({
                 success: false,
-                message: 'Error: Server error'
+                message: "Error: Server error."
             });
         } else if (previousUsers.length > 0) {
             return res.send({
@@ -68,35 +68,21 @@ function adminSignUp (req, res) {
         newAdmin.lastName = lastName;
         newAdmin.email = email;
         newAdmin.phoneNumber = phoneNumber;
-        newAdmin.isActive = 'true';
+        newAdmin.isActive = true;
+        newAdmin.password = newAdmin.generateHash(password);
+        newAdmin.role = 'admin'
 
         newAdmin.save((err, admin) => {
             if (err) {
                 return res.send({
                     success: false,
-                    message: 'Error: Server error'
+                    message: 'Error: Server error.'
                 });
             }
             return res.send({
                 success: true,
                 message: 'Successfully created administrator!'
             });
-        });
-
-        //Save new user to user auth collection
-        const newUser = new User();
-
-        newUser.email = email;
-        newUser.password = newUser.generateHash(password);
-        newUser.role = 'Admin'
-
-        newUser.save((err, user) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    message: 'Error: Server error'
-                });
-            }
         });
     });
 }
@@ -131,7 +117,7 @@ function volunteerSignUp (req, res) {
 
     // Steps:
     // 1. Verify email doesn't exist
-    // 2. Save to both collections
+    // 2. Save to collection
     User.find({
         email: email
     }, (err, previousUsers) => {
@@ -160,6 +146,8 @@ function volunteerSignUp (req, res) {
         newVolunteer.volunteerStatus = volunteerStatus;
         newVolunteer.isActive = true;
         newVolunteer.MDCPS_ID = MDCPS_ID;
+        newVolunteer.password = newVolunteer.generateHash(password);
+        newVolunteer.role = 'volunteer'
 
         newVolunteer.save((err, volunteer) => {
             if (err) {
@@ -172,22 +160,6 @@ function volunteerSignUp (req, res) {
                 success: true,
                 message: 'Successfully created volunteer!'
             });
-        });
-
-        //Save new user to user auth collection
-        const newUser = new User();
-
-        newUser.email = email;
-        newUser.password = newUser.generateHash(password);
-        newUser.role = 'Volunteer'
-
-        newUser.save((err, user) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    message: {server: 'Server errors'}
-                });
-            }
         });
     });
 }
@@ -217,7 +189,7 @@ function schoolPersonnelSignUp (req, res) {
 
     // Steps:
     // 1. Verify email doesn't exist
-    // 2. Save to both collections
+    // 2. Save to collection
     User.find({
         email: email
     }, (err, previousUsers) => {
@@ -242,7 +214,9 @@ function schoolPersonnelSignUp (req, res) {
         newSchPersonnel.phoneNumber = phoneNumber;
         newSchPersonnel.schoolCode = schoolCode;
         newSchPersonnel.title = title;
-        newSchPersonnel.isActive = true
+        newSchPersonnel.isActive = true;
+        newSchPersonnel.password = newSchPersonnel.generateHash(password);
+        newSchPersonnel.role = 'schoolPersonnel';
 
         newSchPersonnel.save((err, schPersonnel) => {
             if (err) {
@@ -256,27 +230,12 @@ function schoolPersonnelSignUp (req, res) {
                 message: 'Successfully created school personnel!'
             });
         });
-
-        //Save new user to user auth collection
-        const newUser = new User();
-
-        newUser.email = email;
-        newUser.password = newUser.generateHash(password);
-        newUser.role = 'School Personnel'
-
-        newUser.save((err, user) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    message: {server: 'Server errors'}
-                });
-            }
-        });
     });
 }
 
 function login (req, res) {
     // Gets called if passport authorization is successful
+    console.log("Hello?");
     res.json({
         success: true,
         token: req.user.token
