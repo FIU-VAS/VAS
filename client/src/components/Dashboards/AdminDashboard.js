@@ -11,6 +11,7 @@ import { blueGrey, blue, grey } from '@material-ui/core/colors';
 import AdminCalendar from './AdminCalendar'
 import { getTeams } from '../../actions/calendarActions'
 import isEmpty from 'is-empty';
+import TeamCalendar from "../Teams/TeamCalendar";
 
 const useStyles = {
     card: {
@@ -221,7 +222,7 @@ class AdminDashboard extends Component {
                 </Typography>
             </Grid>
 
-            { !isEmpty(this.props.teams) && <AdminCalendar/> }
+            { !isEmpty(this.props.teams) && <TeamCalendar/> }
             
 
             
