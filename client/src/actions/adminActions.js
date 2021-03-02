@@ -1,4 +1,4 @@
-import request from 'request';
+import axios from 'axios';
 import serverConf from '../config'
 import { GET_ERRORS, GET_SUCCESS, ADMINS_LOADING, SET_ADMINS} from './types';
 
@@ -7,21 +7,15 @@ export const getAdmins = () => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.admin.fetch}`;
 
-    request.get(endpoint, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (error) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res.errors
-              })
-        }
-        else {
-            // set current volunteers
-            dispatch(setCurrentAdmins(res));
-        }    
-    });
+    axios.get(endpoint)
+    .then((res) => {
+        // set current volunteers
+        dispatch(setCurrentAdmins(res.data));
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
 };
 
 // add volunteer to database and refresh the store
@@ -29,51 +23,41 @@ export const addAdmin = form => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.admin.signup}`;
 
-    request.post(endpoint, { form }, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (!res.success) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res.errors
-              })
-        }
-        else {
-            // set current volunteers
-            dispatch(getAdmins());
-            dispatch({
-                type: GET_SUCCESS,
-                payload: res.message
-            });
-        }   
-    });
+    axios.post(endpoint, form)
+    .then((res) => {
+        // set current volunteers
+        dispatch(getAdmins());
+        dispatch({
+            type: GET_SUCCESS,
+            payload: res.data.message
+        });   
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
  };
 
-// make chanhes to volunteer in the database and refresh the store
+// make changes to volunteer in the database and refresh the store
 export const editAdmin = (id, form) => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.admin.update}/${id}`;
 
-    request.put(endpoint, { form }, (error, response, body) => {
-        
-        const res = JSON.parse(body);
-
-        if (!res.success) {
-            dispatch({
-                type: GET_ERRORS,
-                payload: res.errors
-              })
-        }
-        else {
-            dispatch(getAdmins());
-            dispatch({
-                type: GET_SUCCESS,
-                payload: res.message
-            });
-        }   
-    });
+    axios.put(endpoint, form)
+    .then((res) => {
+        console.log(res);
+        dispatch(getAdmins());
+        dispatch({
+            type: GET_SUCCESS,
+            payload: res.data.message
+        });  
+    })
+    .catch((err) => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
  };
+ 
 // volunteers loading
 export const setAdminsLoading = () => {
     return {

@@ -20,6 +20,7 @@ import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
 import About from './pages/About'
+import config from "./config";
 
 // check for token to keep user logged in
 if (localStorage.jwt) {
@@ -33,13 +34,13 @@ if (localStorage.jwt) {
 
     // set user
     store.dispatch(setAuth(decoded));
-    if (decoded.role === "Admin") {
+    if (decoded.role === config.userRoles.admin) {
       store.dispatch(getAdmin(decoded.id))
     }
-    if (decoded.role === "Volunteer") {
+    if (decoded.role === config.userRoles.volunteer) {
       store.dispatch(getVolunteer(decoded.id))
     }
-    if (decoded.role === "School Personnel") {
+    if (decoded.role === config.userRoles.schoolPersonnel) {
       store.dispatch(getSchoolPersonnel(decoded.id))
     }
     //store.dispatch(setCurrentUser(decoded));

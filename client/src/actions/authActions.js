@@ -1,15 +1,16 @@
-import request from 'request';
+import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import serverConf from '../config'
 import { GET_ERRORS, SET_USER, USER_LOADING, SET_AUTH } from './types';
 
 // login - get user token
+/*
 export const loginUser = form => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.account.login}`;
 
-    request.post(endpoint, { form }, (error, response, body) => {
+    axios.post(endpoint, { form }, (error, response, body) => {
         
         const res = JSON.parse(body);
         const token = res.token
@@ -37,7 +38,46 @@ export const loginUser = form => dispatch => {
             dispatch(setAuth(decoded)); // role
             dispatch(setCurrentUser(decoded)) // add user data
         }    
-    });
+    }).then(res => console.log(res))
+      .catch(err => console.error(err));
+ };
+ */
+
+export const loginUser = form => dispatch => {
+
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.account.login}`;
+
+    axios.post(endpoint, form)
+    .then((res) => { 
+
+        const token = res.data.token;
+
+        if (!token) {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res
+            })
+        }
+        else {
+            
+            // save token to localStorage
+            localStorage.setItem('jwt', token);
+            
+            // set token to auth header
+            setAuthToken(token);
+
+            // decode token to get user data
+            const decoded = jwt_decode(token);
+
+            // set current user
+            dispatch(setAuth(decoded)); // role
+            dispatch(setCurrentUser(decoded)) // add user data
+        }
+    })
+    .catch(err => dispatch({
+        type: GET_ERRORS,
+        payload: err
+    }));
  };
 
 // set logged in user

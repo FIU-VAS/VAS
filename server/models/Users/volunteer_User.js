@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+import User from "./user_Auth"
 
 const VolunteerSchema = new mongoose.Schema({
     firstName: {
@@ -6,10 +7,6 @@ const VolunteerSchema = new mongoose.Schema({
         default: ''
     },
     lastName: {
-        type: String,
-        default: ''
-    },
-    email: {
         type: String,
         default: ''
     },
@@ -43,4 +40,5 @@ const VolunteerSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('volunteer', VolunteerSchema);
+const Volunteer = User.discriminator('Volunteer', VolunteerSchema, 'volunteer');
+export default mongoose.model('Volunteer')

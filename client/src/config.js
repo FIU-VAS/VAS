@@ -1,5 +1,5 @@
 const config = {
-	uri: process.env.NODE_ENV === 'development' ? 'http://localhost:4000/api' : new URL('/api', window.location.href).href,
+	uri: new URL('/api', window.location.href).href,
 	endpoints: {
 		account: {
 			fetch: '/account',
@@ -42,6 +42,11 @@ const config = {
 			getTeamInfo: '/team/getTeamInfo',
 			getTeamInfoSch: '/team/getTeamInfoSch'
 		},
+	},
+	userRoles: {
+		admin: 'admin',
+		volunteer: 'volunteer',
+		schoolPersonnel: 'schoolPersonnel'
 	}
 };
 

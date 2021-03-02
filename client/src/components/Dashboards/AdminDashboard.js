@@ -212,7 +212,7 @@ class AdminDashboard extends Component {
             className={this.props.classes.custom} 
             >
 
-                <Typography Shadow={3} color="textPrimary" align='center' variant="h6" display="inline" style={{marginTop: '30px', fontSize: 30, fontWeight: 800, /* color: blue[500] */}}  >
+                <Typography shadow={3} color="textPrimary" align='center' variant="h6" display="inline" style={{marginTop: '30px', fontSize: 30, fontWeight: 800, /* color: blue[500] */}}  >
                     {this.props.semesterYear.semester + " " + this.props.semesterYear.year}
                 </Typography>
 
