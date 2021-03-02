@@ -143,15 +143,6 @@ redirect_to_AboutPage = () => {
     this.setAnchorEl(null);
 }
 
-renderMenu(){
-  return(
-  <Menu id="fade-menu" anchorEl={this.state.anchorEl} open={this.state.open} onClose={this.handleClose} TransitionComponent={Fade}>
-        <MenuItem onClick={this.handleClose && this.redirect_to_Profile}>Profile &nbsp; <AccountCircle/></MenuItem>
-        <MenuItem onClick={this.handleClose && this.redirect_to_AboutPage}>About &nbsp; <InfoIcon/></MenuItem>
-        <MenuItem onClick={this.handleClose && this.submitLogout}>Logout &nbsp; <ExitToAppIcon/></MenuItem>
-    </Menu>
-   )
-}
 
 getTitle(){
   let size = document.body.clientWidth
@@ -195,16 +186,11 @@ render(){
 
         </Link>
 
-        <Link to='/about' className={this.props.classes.link} style={{color:'white'}}>About </Link>
-        <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In </Link>
-          
-        {this.state.loggedIn &&
-        <IconButton aria-owns={this.state.open ? 'fade-menu' : undefined} aria-haspopup="true" onClick={this.handleClick}>
-          <MenuIcon className={this.props.classes.icon} />
-        </IconButton>}
-           
-        {this.renderMenu()}
-            
+        <Link to='/about' className={this.props.classes.link} style={{color:'white'}}>About</Link>
+        {this.state.loggedIn && <Link to='/dashboard' className={this.props.classes.link} style={{color:'white'}}>Dashboard</Link>}  
+        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In</Link>}
+        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white'}}>Log Out </Link>}  
+        
             
         </Toolbar>
             

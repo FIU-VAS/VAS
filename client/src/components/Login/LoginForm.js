@@ -194,14 +194,8 @@ class LoginForm extends Component {
            
             />
 
-          {/* <Typography component="h1" variant="h5">
-            Login
-<<<<<<< HEAD
-          </Typography> */}
-=======
-          </Typography>
+
           { this.successMessage() }
->>>>>>> feature/reset-password
           <form className={this.props.classes.form} onSubmit={this.submitLogin.bind(this)} noValidate>
             <div>
             <TextField
@@ -246,28 +240,14 @@ class LoginForm extends Component {
             
           </form>
 
-<<<<<<< HEAD
-          
-
-          
-        </div>
-        
-=======
           <Button onClick={this.toggleForgotPasswordDialog} color="secondary">
             Forgot Password?
           </Button>
         </div>
         {this.state.forgotPasswordDialog && <ForgotPasswordDialog open={this.state.forgotPasswordDialog} close={this.toggleForgotPasswordDialog} /> }
->>>>>>> feature/reset-password
       </Container>
             
       </ThemeProvider>
-<<<<<<< HEAD
-
-      
-      
-=======
->>>>>>> feature/reset-password
     );
   }
 }
