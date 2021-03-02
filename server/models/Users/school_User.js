@@ -8,23 +8,23 @@ const SchoolPersonnelSchema = new mongoose.Schema({
     },
     firstName: {
         type: String,
-        default: ''
+        required: true,
     },
     lastName: {
         type: String,
-        default: ''
+        required: true,
     },
     phoneNumber: {
         type: String,
-        default: ''
+        required: true,
     },
     title: {
         type: String,
-        default: ''
+        required: true,
     },
     isActive: {
         type: Boolean,
-        default: true
+        required: true,
     },
 });
 

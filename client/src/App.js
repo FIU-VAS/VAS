@@ -19,6 +19,7 @@ import AdminRoute from './components/Routes/AdminRoute'
 import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
+import ResetPassword from './pages/ResetPassword';
 import About from './pages/About'
 import config from "./config";
 
@@ -76,6 +77,7 @@ class App extends Component {
                 <Route exact path='/' component={Home}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/about' component={About}/>
+                <Route path="/reset-password" component={ResetPassword}/>
                 <PrivateRoute path="/dashboard" component={Dashboard}/>
                 <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
                 <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>

@@ -70,8 +70,6 @@ function createTeam (req, res) {
 }
 
 function updateTeam (request, response) {
-  console.log(request.params);
-    console.log(request.body);
   let { body } = request;
       
       //deconstruct PIDs into an array
@@ -132,8 +130,6 @@ function fetchTeamByPantherID(request, response) {
 
   const pantherID = request.params.pid
 
-  console.log("PID: ", pantherID);
-
 	Team.find({
     volunteerPIs: pantherID
         }, (err, result) => {
@@ -148,8 +144,6 @@ function fetchTeamByPantherID(request, response) {
 function fetchTeamBySchoolCode(request, response) {
 
   const schoolCode = request.params.schoolCode
-
-  console.log("School Code: ", schoolCode);
 
 	Team.find({
     schoolCode: schoolCode
