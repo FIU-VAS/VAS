@@ -1,5 +1,5 @@
 import User, {UserRoles} from "./user_Auth"
-import {Days} from "../Teams/team";
+import {Days, validateTimeDate} from "../Teams/team";
 
 const mongoose = require('mongoose')
 
@@ -34,10 +34,18 @@ const SchoolPersonnelSchema = new mongoose.Schema({
             enum: Object.values(Days)
         },
         startTime: {
-            type: String
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         },
         endTime: {
-            type: String
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         }
     }],
 });

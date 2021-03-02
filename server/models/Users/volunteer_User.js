@@ -1,4 +1,4 @@
-import {Days} from "../Teams/team";
+import {Days, validateTimeDate} from "../Teams/team";
 
 const mongoose = require('mongoose')
 import User from "./user_Auth"
@@ -43,16 +43,21 @@ const VolunteerSchema = new mongoose.Schema({
     availability: [{
         dayOfWeek: {
             type: String,
-            enum: Object.values(Days),
-            required: true
+            enum: Object.values(Days)
         },
         startTime: {
-            type: String,
-            required: true
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         },
         endTime: {
-            type: String,
-            required: true
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         }
     }],
 });
