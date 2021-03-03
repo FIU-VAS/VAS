@@ -10,14 +10,14 @@ import passport from "../config/passport"
 import validateUpdateAdminInput from '../validation/admin/updateAdmin'
 import {schema as adminSchema} from "../validation-schemas/admin/create";
 
-import {checkRole} from "../utils/passport";
+import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), updateAdmin);
-router.get('/', passport.authorize('jwt'), checkRole, fetchAdmins);
-router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
+router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
+router.get('/', passport.authorize('jwt'), checkAdminRole, fetchAdmins);
+router.get('/:id', passport.authorize('jwt'), checkAdminRole, fetchAdminById);
 
 async function updateAdmin(request, response) {
 
@@ -36,17 +36,17 @@ async function updateAdmin(request, response) {
 	}
 
 	if ((prevEmail != email) || !(admin.password === '')) {
-		
+
 		// both email and password
 		if ((prevEmail != email) && !(admin.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
@@ -55,7 +55,7 @@ async function updateAdmin(request, response) {
 					}
 
 					let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-					
+
 					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
 
 						if (err) {
@@ -94,17 +94,17 @@ async function updateAdmin(request, response) {
 					});
 			});
 		}
-				
+
 		//password
 		if ((prevEmail === email) && !(admin.password === '')) {
-			
+
 			let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-					
+
 			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
 
 				if (err) {
 					console.log(err);
-				} 
+				}
 				else {
 					if (result.n === 1) {
 						delete admin.prevEmail;
@@ -112,7 +112,7 @@ async function updateAdmin(request, response) {
 						Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
 							if (err) {
 								console.log(err);
-							} 
+							}
 							else {
 								if (result.n === 1) {
 									response.json({
@@ -138,29 +138,29 @@ async function updateAdmin(request, response) {
 				}
 			});
 		}
-				
+
 		//email
 		if ((prevEmail != email) && (admin.password === '')) {
-			User.find({email: email}, 
+			User.find({email: email},
 				(err, previousUsers) => {
 					if (err) {
 						return response.send({
 							success: false,
 							errors: {server: 'Server errors'}
 						});
-					} 
+					}
 					else if (previousUsers.length > 0) {
 						return response.send({
 							success: false,
 							errors: {email: 'Email already exists'}
 						});
 					}
-					
+
 					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
 
 						if (err) {
 							console.log(err);
-						} 
+						}
 						else {
 							if (result.n === 1) {
 								delete admin.prevEmail;
