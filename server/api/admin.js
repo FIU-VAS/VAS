@@ -29,7 +29,9 @@ async function updateAdmin(request, response) {
 	}
 
 	// We don't need to update if the passwords are the same
-	if (User.validPassword(properties.password)) {
+	const user = request.account;
+
+	if (user.validPassword(properties.password)) {
 		delete properties.password
 	} else {
 		properties.password = await User.generateHashAsync(properties.password);
@@ -55,32 +57,31 @@ async function updateAdmin(request, response) {
 	}
 }
 
-function fetchAdmins(request, response) {
-	Admin.find({}, (err, result) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  response.json(result);
-		}
-	});
+async function fetchAdmins(request, response) {
+	try {
+		const results = await Admin.find({}, 'id role firstName lastName email phoneNumber');
+		response.json(results);
+	} catch (dbError) {
+		response.statusCode = 500;
+		response.json({
+			message: "Server error while fetching admin"
+		})
+	}
 }
 
-function fetchAdminById(request, response) {
-	Admin.findById(request.params.id, (err, result) => {
-		if (err) {
-			console.log(err);
-		  } else {
-            const payload = {
-                role: 'Admin',
-                id: result.id,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                email: result.email,
-                phoneNumber: result.phoneNumber
-            }
-            response.json(payload);
-		  }
-	});
+async function fetchAdminById(request, response) {
+	try {
+		const result = await Admin.findById(
+			request.params.id,
+			'id role firstName lastName email phoneNumber'
+		);
+		response.json(result);
+	} catch (dbError) {
+		response.statusCode = 500;
+		response.json({
+			message: "Server error while fetching admin"
+		})
+	}
 }
 
 export default {router};
