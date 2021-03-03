@@ -1,4 +1,6 @@
 import express from 'express';
+import {checkSchema} from "express-validator"
+
 import Admin from '../models/Users/admin_User';
 import User from '../models/Users/user_Auth';
 const bcrypt = require('bcrypt')
@@ -6,40 +8,33 @@ import passport from "../config/passport"
 
 // input validation
 import validateUpdateAdminInput from '../validation/admin/updateAdmin'
+import {schema as adminSchema} from "../validation-schemas/admin/create";
+
 import {checkRole} from "../utils/passport";
+import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.put('/update/:id', passport.authorize('jwt'), updateAdmin);
+router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), updateAdmin);
 router.get('/', passport.authorize('jwt'), checkRole, fetchAdmins);
 router.get('/:id', passport.authorize('jwt'), checkRole, fetchAdminById);
 
-function updateAdmin(request, response) {
-	let admin = {};
-	
-	let admin_req = request.body;
+async function updateAdmin(request, response) {
 
-	admin = {
-		firstName: admin_req.firstName,
-		lastName: admin_req.lastName,
-		email: admin_req.email.toLowerCase(),
-		phoneNumber: admin_req.phoneNumber,
-		prevEmail: admin_req.prevEmail,
-		password: admin_req.password
-	}
-
-	// Form validation
-	const { errors, isValid } = validateUpdateAdminInput(admin);
-
-	// Check validation
-	if (!isValid) {
-		return response.status(400).json({success: false, errors});
-	}
-	const email = admin.email.toLowerCase();
-	const prevEmail = admin.prevEmail.toLowerCase();
-
+	const { body } = request;
 	// check if user made changes to email or password to update both auth table and admin table
 	// if no changes to email or password, only update admin table
+	let properties = {
+		...body
+	}
+
+	// We don't need to update if the passwords are the same
+	if (User.validPassword(properties.password)) {
+		delete properties.password
+	} else {
+		// await
+	}
+
 	if ((prevEmail != email) || !(admin.password === '')) {
 		
 		// both email and password
