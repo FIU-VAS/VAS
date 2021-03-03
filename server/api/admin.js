@@ -32,192 +32,25 @@ async function updateAdmin(request, response) {
 	if (User.validPassword(properties.password)) {
 		delete properties.password
 	} else {
-		// await
+		properties.password = await User.generateHashAsync(properties.password);
 	}
 
-	if ((prevEmail != email) || !(admin.password === '')) {
-
-		// both email and password
-		if ((prevEmail != email) && !(admin.password === '')) {
-			User.find({email: email},
-				(err, previousUsers) => {
-					if (err) {
-						return response.send({
-							success: false,
-							errors: {server: 'Server errors'}
-						});
-					}
-					else if (previousUsers.length > 0) {
-						return response.send({
-							success: false,
-							errors: {email: 'Email already exists'}
-						});
-					}
-
-					let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-
-					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
-
-						if (err) {
-							console.log(err);
-						} else {
-							if (result.n === 1) {
-								delete admin.prevEmail;
-
-								Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-
-									if (err) {
-										console.log(err);
-									} else {
-										if (result.n === 1) {
-											response.json({
-												success: true,
-												message: 'Successfully updated administrator!'
-											});
-										}
-										else {
-											response.json({
-												success: false,
-												errors: {server: 'Server error'}
-											})
-										}
-									}
-								});
-							}
-							else {
-								response.json({
-									success: false,
-									errors: {server: 'Server error'}
-								})
-							}
-						}
-					});
-			});
-		}
-
-		//password
-		if ((prevEmail === email) && !(admin.password === '')) {
-
-			let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-
-			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
-
-				if (err) {
-					console.log(err);
-				}
-				else {
-					if (result.n === 1) {
-						delete admin.prevEmail;
-
-						Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-							if (err) {
-								console.log(err);
-							}
-							else {
-								if (result.n === 1) {
-									response.json({
-										success: true,
-										message: 'Successfully updated administrator!'
-									});
-								}
-								else {
-									response.json({
-										success: false,
-										errors: {server: 'Server error'}
-									})
-								}
-							}
-						});
-					}
-					else {
-						response.json({
-							success: false,
-							errors: {server: 'Server error'}
-						})
-					}
-				}
-			});
-		}
-
-		//email
-		if ((prevEmail != email) && (admin.password === '')) {
-			User.find({email: email},
-				(err, previousUsers) => {
-					if (err) {
-						return response.send({
-							success: false,
-							errors: {server: 'Server errors'}
-						});
-					}
-					else if (previousUsers.length > 0) {
-						return response.send({
-							success: false,
-							errors: {email: 'Email already exists'}
-						});
-					}
-
-					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
-
-						if (err) {
-							console.log(err);
-						}
-						else {
-							if (result.n === 1) {
-								delete admin.prevEmail;
-
-								Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-
-									if (err) {
-										console.log(err);
-									} else {
-										if (result.n === 1) {
-											response.json({
-												success: true,
-												message: 'Successfully updated administrator!'
-											});
-										}
-										else {
-											response.json({
-												success: false,
-												errors: {server: 'Server error'}
-											})
-										}
-									}
-								});
-							}
-							else {
-								response.json({
-									success: false,
-									errors: {server: 'Server error'}
-								})
-							}
-						}
-					});
-			});
-		}
-	}
-	else {
-
-		delete admin.prevEmail;
-
-		Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-
-			if (err) {
-				console.log(err);
-			} else {
-				if (result.n === 1) {
-					response.json({
-						success: true,
-						message: 'Successfully updated administrator!'
-					});
-				}
-				else {
-					response.json({
-						success: false,
-						errors: {server: 'Server error'}
-					})
-				}
+	try {
+		await Admin.updateOne({email: request.account.email}, {
+			$set: {
+				...properties
 			}
+		});
+		response.statusCode = 200;
+		response.json({
+			success: true,
+			message: "Admin updated successfully"
+		});
+	} catch (apiError) {
+		response.statusCode = 500;
+		response.json({
+			success: false,
+			message: "Error when updating Admin"
 		});
 	}
 }
