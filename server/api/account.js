@@ -53,9 +53,8 @@ async function adminSignUp(req, res) {
             message: 'Successfully created administrator!'
         });
     } catch (insertError) {
-        console.log(insertError)
         // Means email is duplicated
-        if (insertError.toString().indexOf("E11000") !== -1) {
+        if (insertError.code === 11000) {
             return res.send({
                 success: false,
                 message: 'Error: Account already exists.'

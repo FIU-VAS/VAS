@@ -48,7 +48,7 @@ const SchoolPersonnelSchema = new mongoose.Schema({
             }
         }
     }],
-});
+}, {discriminatorKey: "role"});
 
-const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema, {discriminatorKey: "role"});
+const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema);
 export default mongoose.model('SchoolPersonnel')

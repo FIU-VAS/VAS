@@ -8,7 +8,7 @@ const run = async (upgrade=true) => {
   let updateCollection;
   if (upgrade) {
     updateCollection = async (collection, role) => {
-      await collection.updateMany({__t: role}, {$unset: {role: 1}})
+      await collection.updateMany({__t: role}, {$unset: {__t: 1}})
     }
   } else {
     updateCollection = async (collection, role) => {
