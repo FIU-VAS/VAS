@@ -57,5 +57,5 @@ const VolunteerSchema = new mongoose.Schema({
     }],
 });
 
-const Volunteer = User.discriminator('Volunteer', VolunteerSchema, 'volunteer');
+const Volunteer = User.discriminator('Volunteer', VolunteerSchema, { discriminatorKey: 'role' });
 export default mongoose.model('Volunteer')
