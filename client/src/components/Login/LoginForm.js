@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import isEmpty from 'is-empty';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockRoundedIcon from '@material-ui/icons/LockRounded';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { blueGrey, blue } from '@material-ui/core/colors';
@@ -16,6 +15,7 @@ import './LoginForm.css';
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
+import { clearSuccess } from "../../actions/server/successActions";
 import Alert from '@material-ui/lab/Alert';
 
 // Login Styling
@@ -100,7 +100,7 @@ class LoginForm extends Component {
       }));
     }
     
-    handleInput = (e) =>{
+    handleInput = (e) => {
         const value = e.target.value
         const name = e.target.name
 
@@ -109,9 +109,11 @@ class LoginForm extends Component {
         })
     }
 
-    submitLogin = async (e) =>{
-        e.preventDefault()
-        if(this.validate()){
+    submitLogin = async (e) => {
+      e.preventDefault();
+      this.props.clearSuccess();
+
+      if(this.validate()) {
 
         const userData = {
         email: this.state.email,
@@ -119,16 +121,24 @@ class LoginForm extends Component {
         };
 
         //redirect is handled within loginUser()
-        this.props.loginUser(userData); }
+        this.props.loginUser(userData); 
+      }
     }
 
     inputError = (error) => {
       return (
-      <Alert severity="error">{error}</Alert>
+        <Alert severity="error">{error}</Alert>
       )
-  };
+    };
+    
+    successMessage = () => {
+      if (!isEmpty(this.props.success.message))
+      return (
+        <Alert severity="success">{this.props.success.message}</Alert>
+      )
+    }
 
-    validate = async (e) =>{
+    validate = async (e) => {
       let email = this.state.email;
       let password = this.state.password;
       let errors = {};
@@ -173,6 +183,7 @@ class LoginForm extends Component {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
+          { this.successMessage() }
           <form className={this.props.classes.form} onSubmit={this.submitLogin.bind(this)} noValidate>
             <div>
             <TextField
@@ -231,6 +242,7 @@ class LoginForm extends Component {
 LoginForm.propTypes = {
   classes: PropTypes.object.isRequired,
   loginUser: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -238,10 +250,11 @@ LoginForm.propTypes = {
 // allows us to get our state from Redux and map it to props
 const mapStateToProps = state => ({
   auth: state.auth,
+  success: state.success,
   errors: state.errors
 });
 
 export default connect (
   mapStateToProps,
-  { loginUser }  
+  { loginUser, clearSuccess }  
 )(withRouter(withStyles(useStyles)(LoginForm)));

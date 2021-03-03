@@ -22,6 +22,7 @@ router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode',passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
 router.get('/suggest/:term',passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
 
+
 function createTeam(req, res) {
     const {body} = req;
     let {

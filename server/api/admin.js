@@ -1,4 +1,6 @@
 import express from 'express';
+import {checkSchema} from "express-validator"
+
 import Admin from '../models/Users/admin_User';
 import User from '../models/Users/user_Auth';
 const bcrypt = require('bcrypt')
@@ -6,253 +8,80 @@ import passport from "../config/passport"
 
 // input validation
 import validateUpdateAdminInput from '../validation/admin/updateAdmin'
+import {schema as adminSchema} from "../validation-schemas/admin/create";
+
 import {checkAdminRole} from "../utils/passport";
+import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.put('/update/:id', passport.authorize('jwt'), checkAdminRole, updateAdmin);
+router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
 router.get('/', passport.authorize('jwt'), checkAdminRole, fetchAdmins);
 router.get('/:id', passport.authorize('jwt'), checkAdminRole, fetchAdminById);
 
-function updateAdmin(request, response) {
-	let admin = {};
+async function updateAdmin(request, response) {
 
-	let admin_req = request.body;
-
-	admin = {
-		firstName: admin_req.firstName,
-		lastName: admin_req.lastName,
-		email: admin_req.email.toLowerCase(),
-		phoneNumber: admin_req.phoneNumber,
-		prevEmail: admin_req.prevEmail,
-		password: admin_req.password
-	}
-
-	// Form validation
-	const { errors, isValid } = validateUpdateAdminInput(admin);
-
-	// Check validation
-	if (!isValid) {
-		return response.status(400).json({success: false, errors});
-	}
-	const email = admin.email.toLowerCase();
-	const prevEmail = admin.prevEmail.toLowerCase();
-
+	const { body } = request;
 	// check if user made changes to email or password to update both auth table and admin table
 	// if no changes to email or password, only update admin table
-	if ((prevEmail != email) || !(admin.password === '')) {
-
-		// both email and password
-		if ((prevEmail != email) && !(admin.password === '')) {
-			User.find({email: email},
-				(err, previousUsers) => {
-					if (err) {
-						return response.send({
-							success: false,
-							errors: {server: 'Server errors'}
-						});
-					}
-					else if (previousUsers.length > 0) {
-						return response.send({
-							success: false,
-							errors: {email: 'Email already exists'}
-						});
-					}
-
-					let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-
-					User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
-
-						if (err) {
-							console.log(err);
-						} else {
-							if (result.n === 1) {
-								delete admin.prevEmail;
-
-								Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-
-									if (err) {
-										console.log(err);
-									} else {
-										if (result.n === 1) {
-											response.json({
-												success: true,
-												message: 'Successfully updated administrator!'
-											});
-										}
-										else {
-											response.json({
-												success: false,
-												errors: {server: 'Server error'}
-											})
-										}
-									}
-								});
-							}
-							else {
-								response.json({
-									success: false,
-									errors: {server: 'Server error'}
-								})
-							}
-						}
-					});
-			});
-		}
-
-		//password
-		if ((prevEmail === email) && !(admin.password === '')) {
-
-			let password = bcrypt.hashSync(admin.password, bcrypt.genSaltSync(8), null);
-
-			User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
-
-				if (err) {
-					console.log(err);
-				}
-				else {
-					if (result.n === 1) {
-						delete admin.prevEmail;
-
-						Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-							if (err) {
-								console.log(err);
-							}
-							else {
-								if (result.n === 1) {
-									response.json({
-										success: true,
-										message: 'Successfully updated administrator!'
-									});
-								}
-								else {
-									response.json({
-										success: false,
-										errors: {server: 'Server error'}
-									})
-								}
-							}
-						});
-					}
-					else {
-						response.json({
-							success: false,
-							errors: {server: 'Server error'}
-						})
-					}
-				}
-			});
-		}
-
-		//email
-		if ((prevEmail != email) && (admin.password === '')) {
-			User.find({email: email},
-				(err, previousUsers) => {
-					if (err) {
-						return response.send({
-							success: false,
-							errors: {server: 'Server errors'}
-						});
-					}
-					else if (previousUsers.length > 0) {
-						return response.send({
-							success: false,
-							errors: {email: 'Email already exists'}
-						});
-					}
-
-					User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
-
-						if (err) {
-							console.log(err);
-						}
-						else {
-							if (result.n === 1) {
-								delete admin.prevEmail;
-
-								Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
-
-									if (err) {
-										console.log(err);
-									} else {
-										if (result.n === 1) {
-											response.json({
-												success: true,
-												message: 'Successfully updated administrator!'
-											});
-										}
-										else {
-											response.json({
-												success: false,
-												errors: {server: 'Server error'}
-											})
-										}
-									}
-								});
-							}
-							else {
-								response.json({
-									success: false,
-									errors: {server: 'Server error'}
-								})
-							}
-						}
-					});
-			});
-		}
+	let properties = {
+		...body
 	}
-	else {
 
-		delete admin.prevEmail;
+	// We don't need to update if the passwords are the same
+	const user = request.account;
 
-		Admin.updateOne({_id: request.params.id}, admin, (err, result) => {
+	if (user.validPassword(properties.password)) {
+		delete properties.password
+	} else {
+		properties.password = await User.generateHashAsync(properties.password);
+	}
 
-			if (err) {
-				console.log(err);
-			} else {
-				if (result.n === 1) {
-					response.json({
-						success: true,
-						message: 'Successfully updated administrator!'
-					});
-				}
-				else {
-					response.json({
-						success: false,
-						errors: {server: 'Server error'}
-					})
-				}
+	try {
+		await Admin.updateOne({email: request.account.email}, {
+			$set: {
+				...properties
 			}
+		});
+		response.statusCode = 200;
+		response.json({
+			success: true,
+			message: "Admin updated successfully"
+		});
+	} catch (apiError) {
+		response.statusCode = 500;
+		response.json({
+			success: false,
+			message: "Error when updating Admin"
 		});
 	}
 }
 
-function fetchAdmins(request, response) {
-	Admin.find({}, (err, result) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  response.json(result);
-		}
-	});
+async function fetchAdmins(request, response) {
+	try {
+		const results = await Admin.find({}, 'id role firstName lastName email phoneNumber');
+		response.json(results);
+	} catch (dbError) {
+		response.statusCode = 500;
+		response.json({
+			message: "Server error while fetching admin"
+		})
+	}
 }
 
-function fetchAdminById(request, response) {
-	Admin.findById(request.params.id, (err, result) => {
-		if (err) {
-			console.log(err);
-		  } else {
-            const payload = {
-                role: 'Admin',
-                id: result.id,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                email: result.email,
-                phoneNumber: result.phoneNumber
-            }
-            response.json(payload);
-		  }
-	});
+async function fetchAdminById(request, response) {
+	try {
+		const result = await Admin.findById(
+			request.params.id,
+			'id role firstName lastName email phoneNumber'
+		);
+		response.json(result);
+	} catch (dbError) {
+		response.statusCode = 500;
+		response.json({
+			message: "Server error while fetching admin"
+		})
+	}
 }
 
 export default {router};

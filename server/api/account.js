@@ -17,80 +17,56 @@ import passport from "../config/passport"
 import {sendMail} from "../config/mail";
 import isEmpty from "is-empty";
 import config from "../config/config";
+import {extendedCheckSchema} from "../utils/validation";
+import {schema as adminSchema} from "../validation-schemas/admin/create";
+import {checkAdminRole} from "../utils/passport";
 
 const router = new express.Router();
 
-router.post('/admin/signup', adminSignUp);
+router.post('/admin/signup', passport.authorize('jwt'), checkAdminRole, extendedCheckSchema(adminSchema), adminSignUp);
 router.post('/volunteer/signup', volunteerSignUp);
 router.post('/school-personnel/signup', schoolPersonnelSignUp);
 router.post('/login', passport.authenticate('local', {session: false}, null), login);
 router.post('/send-reset-password', sendResetPassword);
 router.post('/reset-password', resetPassword);
 
-function adminSignUp(req, res) {
+async function adminSignUp(req, res) {
     const {body} = req;
     const {
         firstName,
         lastName,
         password,
         phoneNumber,
-    } = body;
-    let {
         email
     } = body;
 
-    // Form validation
-    const {errors, isValid} = validateCreateAdminInput(req.body);
-
-    // Check validation
-    if (!isValid) {
-        return res.status(400).json({success: false, errors});
-    }
-
-    email = email.toLowerCase();
-
-    // Steps:
-    // 1. Verify email doesn't exist
-    // 2. Save to collection
-    User.find({
-        email: email
-    }, (err, previousUsers) => {
-        if (err) {
-            return res.send({
-                success: false,
-                message: "Error: Server error."
-            });
-        } else if (previousUsers.length > 0) {
+    try {
+        await Admin.create({
+            firstName,
+            lastName,
+            password,
+            phoneNumber,
+            email: email.toLowerCase()
+        })
+        return res.send({
+            success: true,
+            message: 'Successfully created administrator!'
+        });
+    } catch (insertError) {
+        console.log(insertError)
+        // Means email is duplicated
+        if (insertError.toString().indexOf("E11000") !== -1) {
             return res.send({
                 success: false,
                 message: 'Error: Account already exists.'
             });
-        }
-
-        // Save new user to admin collection
-        const newAdmin = new Admin();
-
-        newAdmin.firstName = firstName;
-        newAdmin.lastName = lastName;
-        newAdmin.email = email;
-        newAdmin.phoneNumber = phoneNumber;
-        newAdmin.isActive = true;
-        newAdmin.password = newAdmin.generateHash(password);
-        newAdmin.role = 'admin'
-
-        newAdmin.save((err, admin) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    message: 'Error: Server error.'
-                });
-            }
+        } else {
             return res.send({
-                success: true,
-                message: 'Successfully created administrator!'
+                success: false,
+                message: "Error: Server error."
             });
-        });
-    });
+        }
+    }
 }
 
 function volunteerSignUp(req, res) {
