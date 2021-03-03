@@ -5,7 +5,6 @@ const School = new mongoose.Schema({
     schoolName: {
         type: String,
         required: true,
-        default: ''
     },
     schoolCode: {
         type: String,
@@ -14,31 +13,25 @@ const School = new mongoose.Schema({
     level: { //Elem, K-8, etc.
         type: String,
         required: true,
-        default: ''
     },
     phoneNumber: {
         type: String,
-        default: ''
     },
     address: {
         type: String,
         required: true,
-        default: ''
     },
     city: {
         type: String,
         required: true,
-        default: ''
     },
     state: {
         type: String,
         required: true,
-        default: ''
     },
     zipCode: {
         type: String,
         required: true,
-        default: ''
     },
     isActive: {
         type: Boolean,

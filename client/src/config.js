@@ -6,6 +6,8 @@ const config = {
 			register: '/account/register',
 			login: '/account/login',
 			update: '/account/update',
+			sendResetPassword: '/account/send-reset-password',
+			resetPassword: '/account/reset-password',
 		},
 		admin: {
 			signup: '/account/admin/signup',

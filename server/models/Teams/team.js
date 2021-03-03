@@ -1,21 +1,39 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+
+export const Days = {
+    MONDAY: 'monday',
+    TUESDAY: 'tuesday',
+    WEDNESDAY: 'wednesday',
+    THURSDAY: 'thursday',
+    FRIDAY: 'friday',
+};
+
 
 const Team = new mongoose.Schema({
     schoolCode: {
         type: String,
         required: true,
-        default: ''
     },
     semester: {
         type: String,
         required: true,
-        default: ''
     },
     year: {
         type: String,
         required: true
     },
+    availability: [{
+        dayOfWeek: {
+            type: String,
+            enum: Object.values(Days)
+        },
+        startTime: {
+            type: String
+        },
+        endTime: {
+            type: String
+        }
+    }],
     dayOfWeek: {
         monday: {
             type: Boolean,
@@ -41,17 +59,15 @@ const Team = new mongoose.Schema({
     },
     startTime: {
         type: String,
-        default: ''
+        required: true
     },
     endTime: {
         type: String,
         required: true,
-        default: ''
     },
     volunteerPIs: {
         type: Array,
         required: true,
-        default: ''
     },
     isActive: {
         type: Boolean,
@@ -67,4 +83,6 @@ const Team = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('team', Team);
+let model = mongoose.model('team', Team);
+module.exports = model;
+export default model;

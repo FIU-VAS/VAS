@@ -26,10 +26,8 @@ passport.use(new LocalStrategy({
 		email: user.email,
 		role: user.role
 	}
-	let token = await signJwtPromise(payload)
-	await User.updateOne({email: username}, {
-		token: token
-	})
+	user.token = await signJwtPromise(payload)
+	await user.save();
 	return done(null, user)
 }))
 

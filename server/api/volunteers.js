@@ -18,8 +18,6 @@ router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerB
 router.get('/getVolunteerInfo/:pids',passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerByPID);
 
 function updateVolunteer_Profile(request, response) {
-	console.log(request.params);
-	console.log(request.body);
 	Volunteer.updateOne({_id: request.params.id}, request.body, (err, result) => {
 		if (err) {
 			console.log(err);
@@ -146,7 +144,6 @@ function updateVolunteer(request, response) {
 						delete volunteer.prevEmail;
 
 						Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-							console.log("hello", result)
 							if (err) {
 								console.log(err);
 							}
@@ -372,7 +369,6 @@ function fetchVolunteerById(request, response) {
 
 
 	const pantherIDs = request.params.pids
-	console.log("PIDs: ", pantherIDs);
 
 	var PIDs = pantherIDs.split(',');
 	//PIDs = PIDs.map(Number)
@@ -383,7 +379,6 @@ function fetchVolunteerById(request, response) {
 				if (err) {
 				console.log(err);
 			} else {
-				console.log(result)
 				response.json(result);
 				/* response.json(result); */
 			}
