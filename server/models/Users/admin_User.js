@@ -20,5 +20,5 @@ const AdminSchema = new mongoose.Schema({
     },
 }, { discriminatorKey: 'role' });
 
-const Admin = User.discriminator('Admin', AdminSchema);
-export default mongoose.model('Admin')
+const Admin = User.discriminator('admin', AdminSchema);
+export default mongoose.model('admin')

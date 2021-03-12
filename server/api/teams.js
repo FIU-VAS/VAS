@@ -1,26 +1,32 @@
 import express from 'express';
-import isEmpty from "is-empty";
-import {parse} from "date-fns";
 
 import Team, {Days} from '../models/Teams/team';
-import Volunteer from '../models/Users/volunteer_User';
+import User, {UserRoles} from '../models/Users/user_Auth';
 import SchoolPersonnel from '../models/Users/school_User';
+import Volunteer from '../models/Users/volunteer_User';
 
 //input validation
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
+import {checkSchema} from "express-validator";
+import {getSortedUsersByAvailability, TeamSuggestion} from "../utils/teamSuggestions";
 
 const router = new express.Router();
 
-router.post('/create',passport.authorize('jwt'), checkAdminRole, createTeam);
-router.put('/update/:id',passport.authorize('jwt'), checkAdminRole, updateTeam);
-router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchTeamById);
-router.get('/getTeamInfo/:pid',passport.authorize('jwt'), checkVolunteerRole, fetchTeamByPantherID);
-router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchTeams);
-router.get('/getTeamInfoSch/:schoolCode',passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
-router.get('/suggest/:term',passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
+router.post('/', passport.authorize('jwt'), checkAdminRole, createTeam);
+router.put('/update/:id', passport.authorize('jwt'), checkAdminRole, updateTeam);
+router.get('/:id', passport.authorize('jwt'), checkVolunteerRole, fetchTeamById);
+router.get('/getTeamInfo/:pid', passport.authorize('jwt'), checkVolunteerRole, fetchTeamByPantherID);
+router.get('/', passport.authorize('jwt'), checkVolunteerRole, fetchTeams);
+router.get('/getTeamInfoSch/:schoolCode', passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
+router.get('/suggest/:term', passport.authorize('jwt'), checkVolunteerRole, checkSchema({
+    term: {
+        exists: true,
+        errorMessage: "Term must be defined"
+    }
+}), teamSuggestions);
 
 
 function createTeam(req, res) {
@@ -161,37 +167,19 @@ function fetchTeamBySchoolCode(request, response) {
     });
 }
 
-function teamSuggestions(request, response) {
+async function teamSuggestions(request, response) {
+    // @TODO Improve logic to use less queries to db
     const term = request.params.term;
-    if (isEmpty(term)) {
-        response.statusCode = 400;
-        response.json({
-            message: "Bad request: Term must be defined"
-        })
-    }
 
-    const volunteers = Volunteer.find({isActive: true, year: term})
-    const schoolPersonnel = SchoolPersonnel.find({isActive: true})
+    const schoolPersonnel = await SchoolPersonnel.find().sort("availability.startTime");
+    const users = await Volunteer.find().sort("availability.startTime");
 
-    let schoolPersonnelByDay = [];
+    let teams = [];
 
-    const days = Object.values(Days);
-
-    schoolPersonnel
-    const parseTime = (objs) => {
-        return objs.map(obj => obj.toObject().availability.map(av => ({
-            ...av,
-            startTime: parse(av.startTime, "HH:mm", new Date()),
-            endTime: parse(av.endTime, "HH:mm", new Date())
-        })));
-    }
-
-    let volunteersObj = parseTime(volunteers);
-    let schoolPersonnelObj = parseTime(schoolPersonnel);
-
-    volunteersObj.forEach(volunteer => {
-
+    schoolPersonnel.forEach(user => {
+        
     })
+
 }
 
 export default {router};
