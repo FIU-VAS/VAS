@@ -11,7 +11,6 @@ import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 import {checkSchema} from "express-validator";
-import {getSortedUsersByAvailability, TeamSuggestion} from "../utils/teamSuggestions";
 
 const router = new express.Router();
 
