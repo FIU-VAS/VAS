@@ -76,7 +76,7 @@ const Days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
 const TeamCalendar = (props) => {
 
-    const {teams, schools, volunteers} = props;
+    const {teams, schools, volunteers, hideEmpty} = props;
 
     const getDayColor = (day) => {
         const today = new Date();
@@ -87,6 +87,8 @@ const TeamCalendar = (props) => {
         return "Loading"
     }
 
+    // @TODO Add school personnel to the calendar card
+
     return (
         <Box>
             {Days.map(day => {
@@ -94,13 +96,15 @@ const TeamCalendar = (props) => {
                     return team.availability.some(av => av.dayOfWeek === day)
                 });
 
+                if (dayTeams.length === 0 && hideEmpty) {
+                    return "";
+                }
+
                 return (
                     <Box
                         borderRadius="10px"
                         boxShadow={3}
-                        className={props.classes.card}
-                        variant="outlined"
-                        justify="center">
+                        className={props.classes.card}>
                         {/* CARD HEADING */}
                         <Box
                             borderRadius="10px 10px 0px 0px"

@@ -231,6 +231,7 @@ function fetchSchoolPersonnels(request, response) {
 }
 
 function fetchSchoolPersonnelById(request, response) {
+	console.log(request.params.id);
 	schPersonnel.findById(request.params.id, (err, result) => {
 		if (err) {
 			console.log(err);

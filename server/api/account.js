@@ -10,7 +10,6 @@ import schPersonnel from '../models/Users/school_User';
 // input validation
 import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
 import validateCreateSchoolPersonnelInput from '../validation/schoolPersonnels/createSchoolPersonnel';
-import validateCreateAdminInput from '../validation/admin/createAdmin';
 
 
 import passport from "../config/passport"

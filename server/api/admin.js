@@ -16,7 +16,7 @@ import {extendedCheckSchema} from "../utils/validation";
 const router = new express.Router();
 
 router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
-router.get('/', passport.authorize('jwt'), checkAdminRole, fetchAdmins);
+router.get('/', passport.authorize('jwt'), fetchAdmins);
 router.get('/:id', passport.authorize('jwt'), checkAdminRole, fetchAdminById);
 
 async function updateAdmin(request, response) {
@@ -59,7 +59,7 @@ async function updateAdmin(request, response) {
 
 async function fetchAdmins(request, response) {
 	try {
-		const results = await Admin.find({}, 'id role firstName lastName email phoneNumber');
+		const results = await Admin.find({}, 'id role firstName lastName email phoneNumber isActive');
 		response.json(results);
 	} catch (dbError) {
 		response.statusCode = 500;

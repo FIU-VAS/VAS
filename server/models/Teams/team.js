@@ -13,9 +13,8 @@ export const Days = {
 export const REFERENCE_DATE = new Date(2000, 0, 3);
 
 export const validateTimeDate = (value) => {
-    value = new Date();
     return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
-    && value.getMonth() === 0 && value.getDay() === 1
+    && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
 }
 
 const Team = new mongoose.Schema({

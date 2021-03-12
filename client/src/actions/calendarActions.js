@@ -5,34 +5,7 @@ import { GET_ERRORS, TEAMS_LOADING, SET_TEAMS_CALENDAR, SET_VOLUNTEERS_CALENDAR,
 // get teams from database
 export const getTeams = form => dispatch => {
 
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.team.fetch}`;
 
-    axios.get(endpoint, form)
-    .then((res) => {
-        
-        let teams = [];
-
-        teams = res.data.filter(team => team.semester === form.semester && team.year === form.year)
-
-        let allVolunteers = []
-        let allSchools = []
-
-        teams.forEach(team => {
-            allVolunteers.push(team.volunteerPIs)
-            allSchools.push(team.schoolCode)
-        });
-
-        let allVolunteers_INT = allVolunteers.map(String).toString().split(',').map(x=>+x)
-
-        // set current teams
-        dispatch(setSemesterTeams(teams));
-        dispatch(getVolunteers(allVolunteers_INT))
-        dispatch(getSchools(allSchools))    
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
 };
 
 export const getVolunteers = pids => dispatch => {

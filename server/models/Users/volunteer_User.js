@@ -17,7 +17,7 @@ const VolunteerSchema = new mongoose.Schema({
         default: ''
     },
     pantherID: {
-        type: Number,
+        type: String,
         required: true
     },
     major: {

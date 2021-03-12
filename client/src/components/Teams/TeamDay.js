@@ -8,7 +8,7 @@ export const TeamDay = (props) => {
     const {day, teams, schools, volunteers} = props;
 
     const convertTime = (time) => {
-        return format(parse(time, "HH:mm", new Date()), "HH:mm aa")
+        return format(time, "HH:mm aa")
     }
 
     return (

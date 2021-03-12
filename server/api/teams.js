@@ -117,11 +117,33 @@ function updateTeam(request, response) {
 }
 
 function fetchTeams(request, response) {
-    Team.find({isActive: true}, (err, result) => {
+    let {semester, year} = request.query;
+
+    let conditions = {
+        isActive: true
+    };
+
+    if (semester) {
+        conditions.semester = semester;
+    }
+
+    if (year) {
+        conditions.year = year;
+    }
+
+    if (request.account.role === UserRoles.Volunteer) {
+        conditions.volunteerPIs = request.account.pantherID;
+    }
+
+    console.log(request.account);
+    console.log(conditions);
+
+    Team.find(conditions, (err, result) => {
         if (err) {
             console.log(err);
         } else {
             response.json(result);
+            console.log(result);
         }
     });
 }
