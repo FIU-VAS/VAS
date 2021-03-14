@@ -1,25 +1,23 @@
-import React, {Component, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Switch, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {Grid} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import config from "../config";
 import VolunteerDashboard from "../components/Dashboards/VolunteerDashboard";
 import AdminDashboard from "../components/Admins/AdminDashboard";
 import SchoolPersonnelDashboard from "../components/Dashboards/SchoolPersonnelDashboard";
-import AdminRoute from "../components/Routes/AdminRoute";
-import VolunteerManagement from "./VolunteerManagement";
-import SchoolPersonnelManagement from "./SchoolPersonnelManagement";
-import SchoolManagement from "./SchoolManagement";
-import TeamManagement from "./TeamManagement";
-import AdminManagement from "./AdminManagement";
 import serverConf from "../config";
 import axios from "axios";
 import {parseISO} from "date-fns";
-import {getSchools, getVolunteers, setSemesterTeams} from "../actions/calendarActions";
+import {setSemesterTeams} from "../actions/calendarActions";
 import {setErrors} from "../actions/server/errorActions";
 import {getAdmins} from "../actions/adminActions";
+import {logoutUser} from "../actions/authActions";
+import {getVolunteers} from "../actions/volunteerActions";
+import {getSchools} from "../actions/schoolActions";
+import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
 
 const useStyles = {
     all: {
@@ -78,8 +76,13 @@ const Dashboard = (props) => {
                 props.setSemesterTeams(teams);
                 props.getVolunteers(allVolunteers);
                 props.getSchools(allSchools);
+                props.getSchoolPersonnels(allSchools);
             } catch (httpError) {
                 props.setErrors(httpError)
+                if (httpError.response && httpError.response.status === 401) {
+                    // props.logoutUser();
+                    // window.location.href = "/login";
+                }
             }
         })();
         props.getAdmins();
@@ -134,5 +137,13 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {setSemesterTeams, getVolunteers, getSchools, setErrors, getAdmins}
+    {
+        setSemesterTeams,
+        getVolunteers,
+        getSchools,
+        setErrors,
+        getAdmins,
+        logoutUser,
+        getSchoolPersonnels
+    }
 )(withRouter(withStyles(useStyles)(Dashboard)));

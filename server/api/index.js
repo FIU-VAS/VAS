@@ -5,15 +5,16 @@ import admin from './admin';
 import schoolPersonnels from './school-personnels';
 import school from './school';
 import teams from './teams';
+import passport from "../config/passport";
 
 const router = new express.Router();
 
 router.use('/account', account.router);
-router.use('/volunteers', volunteers.router);
-router.use('/admin', admin.router);
-router.use('/school-personnels', schoolPersonnels.router);
-router.use('/school', school.router);
-router.use('/team', teams.router);
+router.use('/volunteers', passport.authorize('jwt'), volunteers.router);
+router.use('/admin', passport.authorize('jwt'), admin.router);
+router.use('/school-personnels', passport.authorize('jwt'), schoolPersonnels.router);
+router.use('/school', passport.authorize('jwt'), school.router);
+router.use('/team', passport.authorize('jwt'), teams.router);
 
 router.all('*', (req, res) => {
 	res.status(400).json({

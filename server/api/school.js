@@ -12,11 +12,11 @@ import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.post('/create',passport.authorize('jwt'), checkAdminRole, createSchool);
-router.put('/update/:id',passport.authorize('jwt'), checkSchoolPersonnelRole, updateSchool);
-router.get('/:id',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolById);
-router.get('/getSchoolInfo/:codes',passport.authorize('jwt'), checkVolunteerRole, fetchSchoolByCode);
-router.get('/',passport.authorize('jwt'), checkVolunteerRole, fetchSchools);
+router.post('/create',checkAdminRole, createSchool);
+router.put('/update/:id',checkSchoolPersonnelRole, updateSchool);
+router.get('/:id', fetchSchoolById);
+router.get('/getSchoolInfo/:codes', fetchSchoolByCode);
+router.get('/', fetchSchools);
 
 
 function createSchool (req, res) {
@@ -131,10 +131,11 @@ function fetchSchoolById(request, response) {
 
 	School.findById(request.params.id, (err, result) => {
 		if (err) {
-		    response.statusCode = 400;
+		    response.statusCode = 500;
 		    response.json({
-                message: "Bad Request"
-            })
+                message: "Internal Server Error"
+            });
+		    console.log(err);
 		  } else {
 			response.json(result);
 		  }

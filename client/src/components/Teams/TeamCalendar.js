@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
 import {withStyles} from '@material-ui/core/styles';
@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import {blueGrey, blue, grey, yellow} from '@material-ui/core/colors';
 import EventIcon from '@material-ui/icons/Event';
 import {TeamDay} from "./TeamDay";
+import {TeamCard} from "./TeamCard";
+import {TeamAdmin} from "./TeamAdmin";
+import {TeamPersonnel} from "./TeamPersonnel";
 
 const useStyles = {
     all: {
@@ -76,15 +79,11 @@ const Days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
 const TeamCalendar = (props) => {
 
-    const {teams, schools, volunteers, hideEmpty} = props;
+    const {teams, schools, hideEmpty, schoolPersonnels} = props;
 
     const getDayColor = (day) => {
         const today = new Date();
         return today.getDay() < 6 && Days[today.getDay()] === day ? [yellow[600], "black"] : [blue[500], "white"];
-    }
-
-    if (!teams.length || !schools.length || !volunteers.length) {
-        return "Loading"
     }
 
     // @TODO Add school personnel to the calendar card
@@ -101,49 +100,35 @@ const TeamCalendar = (props) => {
                 }
 
                 return (
-                    <Box
-                        borderRadius="10px"
-                        boxShadow={3}
-                        className={props.classes.card}>
-                        {/* CARD HEADING */}
-                        <Box
-                            borderRadius="10px 10px 0px 0px"
-                            boxShadow={2}
-                            className={props.classes.cardHeader}
-                            style={{backgroundColor: getDayColor(day)[0]}}
-                            variant="outlined"
-                            justify="center">
-
-                            <Typography
-                                className={props.classes.cardTitle}
-                                style={{
-                                    textAlign: 'center',
-                                    color: getDayColor(day)[1],
-                                    textTransform: 'capitalize'
-                                }}>
-                                <EventIcon style={{verticalAlign: "text-bottom"}} /> {day + 's'}
+                    <TeamCard
+                        cardHeader={day}
+                        cardHeaderIcon={(<EventIcon style={{verticalAlign: "text-bottom"}}/>)}
+                        headerColor={getDayColor(day)[0]}
+                        alignHeaderCenter={true}
+                    >
+                        {dayTeams.length ? (
+                            <TeamDay
+                                teams={dayTeams}
+                                schools={schools}
+                                volunteers={props.volunteers}
+                                classes={props.classes}
+                                day={day}
+                            />
+                        ) : (
+                            <Typography className={props.classes.body} color="textPrimary" variant="body1"
+                                        display="inline"
+                                        gutterBottom>
+                                &nbsp; &#8226; &nbsp; There are no teams scheduled on {day}s<br/>
                             </Typography>
-                        </Box>
-
-                        <Box p="15px">
-                            {dayTeams.length ? (
-                                <TeamDay
-                                    teams={dayTeams}
-                                    schools={schools}
-                                    volunteers={props.volunteers}
-                                    classes={props.classes}
-                                    day={day}
-                                />
-                            ) : (
-                                <Typography className={props.classes.body} color="textPrimary" variant="body1" display="inline"
-                                            gutterBottom>
-                                    &nbsp; &#8226; &nbsp; There are no teams scheduled on {day}s<br/>
-                                </Typography>
-                            )}
-                        </Box>
-                    </Box>
+                        )}
+                    </TeamCard>
                 )
             })}
+            <TeamPersonnel
+                school={schools.length ? schools[0] : {}}
+                schoolPersonnel={schoolPersonnels.length ? schoolPersonnels[0] : {}}
+            />
+            <TeamAdmin admins={props.admins} />
         </Box>
     )
 }
@@ -152,8 +137,10 @@ TeamCalendar.propTypes = {};
 
 const mapStateToProps = state => ({
     teams: state.calendar.teams,
-    volunteers: state.calendar.volunteers,
-    schools: state.calendar.schools,
+    volunteers: state.volunteers.volunteers,
+    schoolPersonnels: state.schoolPersonnels.schoolPersonnels,
+    schools: state.schoolData.schools,
+    admins: state.adminData.admins
 });
 
 

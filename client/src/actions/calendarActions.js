@@ -1,28 +1,13 @@
 import axios from 'axios';
 import serverConf from '../config'
-import { GET_ERRORS, TEAMS_LOADING, SET_TEAMS_CALENDAR, SET_VOLUNTEERS_CALENDAR, SET_SCHOOLS_CALENDAR} from './types';
-
-// get teams from database
-export const getTeams = form => dispatch => {
-
-
-};
-
-export const getVolunteers = pids => dispatch => {
-
-    let pantherIDs = pids.join()
-
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.volunteers.getVolunteerInfo}/${pantherIDs}`;
-
-    axios.get(endpoint)
-    .then((res) => {
-        dispatch(setVolunteers(res.data));    
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
-};
+import {
+    GET_ERRORS,
+    TEAMS_LOADING,
+    SET_TEAMS_CALENDAR,
+    SET_VOLUNTEERS_CALENDAR,
+    SET_SCHOOLS_CALENDAR,
+    SET_SCHOOL_PERSONNEL_CALENDAR
+} from './types';
 
 export const getSchools = schoolCodes => dispatch => {
 
@@ -39,6 +24,21 @@ export const getSchools = schoolCodes => dispatch => {
         payload: err
     }));
 };
+
+export const getSchoolPersonnel = schoolCodes => dispatch => {
+
+    let codes = schoolCodes.join();
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.getPersonnelInfo}/${codes}`;
+
+    axios.get(endpoint)
+        .then((res) => {
+            dispatch(setSchoolPersonnel(res.data));
+        })
+        .catch((err) => dispatch({
+            type: GET_ERRORS,
+            payload: err
+        }));
+}
 
 // set teams
 export const setSemesterTeams = teams => {
@@ -61,6 +61,13 @@ export const setSchools = schools => {
     return {
         type: SET_SCHOOLS_CALENDAR,
         payload: schools
+    };
+};
+
+// set schoolPersonnel
+export const setSchoolPersonnel = () => {
+    return {
+        type: SET_SCHOOL_PERSONNEL_CALENDAR
     };
 };
 

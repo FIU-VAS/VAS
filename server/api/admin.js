@@ -15,9 +15,9 @@ import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.put('/update/', passport.authorize('jwt'), extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
-router.get('/', passport.authorize('jwt'), fetchAdmins);
-router.get('/:id', passport.authorize('jwt'), checkAdminRole, fetchAdminById);
+router.put('/update/', extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
+router.get('/', fetchAdmins);
+router.get('/:id', checkAdminRole, fetchAdminById);
 
 async function updateAdmin(request, response) {
 

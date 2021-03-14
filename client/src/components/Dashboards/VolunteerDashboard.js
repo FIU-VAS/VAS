@@ -166,64 +166,6 @@ class VolunteerDashboard extends Component {
                 </Grid>
 
                 <TeamCalendar hideEmpty={true}/>
-
-                <Box
-                    borderRadius="10px"
-                    boxShadow={3}
-                    className={this.props.classes.card}
-                >
-
-                    {/* CARD HEADING */}
-                    <Box
-                        borderRadius="10px 10px 0px 0px"
-                        boxShadow={2}
-                        className={this.props.classes.cardHeader}
-                        style={{backgroundColor: blueGrey[700]}}>
-
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            style={{marginLeft: '15px', verticalAlign: 'middle'}}>
-
-                            <Typography
-                                className={this.props.classes.cardTitle}
-                                style={{marginTop: '14px', textAlign: 'center'}}>
-                                Administrators
-
-                            </Typography>
-                        </Grid>
-                    </Box>
-
-
-                    <Grid style={{
-                        paddingLeft: '15px',
-                        paddingTop: '10px',
-                        paddingRight: '15px',
-                        paddingBottom: '15px',
-                    }}>
-
-                        {/* Admins */}
-                        <Typography
-                            className={this.props.classes.body}
-                            display="inline"
-                            style={{marginBottom: '1px', alignItems: 'left'}}>
-                            Have any concerns or questions? You may contact any of the administrators listed
-                            below. <br/><br/>
-                        </Typography>
-                        {/* Team members */}
-                        <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6"
-                                    display="inline">
-                            Admin contact information: &nbsp; <br/>
-                        </Typography>
-                        {this.displayAdmins()}<br/>
-
-
-                    </Grid>
-                </Box>
-
-
             </Fragment>
         )
     }
