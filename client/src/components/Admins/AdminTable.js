@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import isEmpty from 'is-empty';
+import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -95,6 +96,7 @@ class AdminTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedAdmin);
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.admin.update}/${this.state.selectedAdmin._id}` : `${serverConf.uri}${serverConf.endpoints.admin.update}/`;
         const formProps = [
             {
                 label: "First Name",
@@ -206,7 +208,7 @@ class AdminTable extends Component {
                 {this.state.userFormDialog && <UserFormDialog
                                                         open={this.state.userFormDialog} 
                                                         close={this.toggleUserFormDialog} 
-                                                        userId={isEmpty(this.state.selectedAdmin) ? "" : this.state.selectedAdmin.userId}
+                                                        endpoint={endpoint}
                                                         edit={edit}
                                                         role={"Admin"}
                                                         formProps={formProps}

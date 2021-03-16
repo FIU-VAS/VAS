@@ -7,12 +7,13 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateVolunteerInput from '../validation/volunteers/updateVolunteer'
+import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
 import {checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', updateVolunteer);
+router.post('/update/:id', updateVolunteer);
 router.put('/updateProfile/:id', updateVolunteerProfile);
 router.get('/', fetchVolunteers);
 router.get('/:id', fetchVolunteerById);
@@ -35,264 +36,17 @@ function updateVolunteerProfile(request, response) {
 }
 
 function updateVolunteer(request, response) {
-    let volunteer = {};
+    if (request.params.id !== 'null') {
 
-    let volunteer_req = request.body;
-
-    volunteer = {
-        firstName: volunteer_req.firstName,
-        lastName: volunteer_req.lastName,
-        email: volunteer_req.email.toLowerCase(),
-        password: volunteer_req.password,
-        phoneNumber: volunteer_req.phoneNumber,
-        major: volunteer_req.major,
-        isActive: volunteer_req.isActive,
-        carAvailable: volunteer_req.carAvailable,
-        volunteerStatus: volunteer_req.volunteerStatus,
-        MDCPS_ID: volunteer_req.MDCPS_ID,
-        pantherID: volunteer_req.pantherID,
-        prevEmail: volunteer_req.email.toLowerCase(),
-        prevPid: volunteer_req.prevPid
-    }
-
-    // Form validation
-    const {errors, isValid} = validateUpdateVolunteerInput(volunteer);
-
-    // Check validation
-    if (!isValid) {
-        return response.status(400).json({success: false, errors});
-    }
-
-    const email = volunteer.email.toLowerCase();
-    const prevEmail = volunteer.prevEmail.toLowerCase();
-
-    //ADDED changes to Panther ID to both Teams and Volunteer table
-    // check if user made changes to email or password to update both auth table and volunteer table
-    // if no changes to email or password, only update volunteer table
-    if ((prevEmail != email) || !(volunteer.password === '') || (volunteer.prevPid != volunteer.pantherID)) {
-
-        // both email and password
-        if ((prevEmail != email) && !(volunteer.password === '')) {
-            User.find({email: email},
-                (err, previousUsers) => {
-                    if (err) {
-                        return response.send({
-                            success: false,
-                            errors: {server: 'Server errors'}
-                        });
-                    } else if (previousUsers.length > 0) {
-                        return response.send({
-                            success: false,
-                            errors: {email: 'Email already exists'}
-                        });
-                    }
-
-                    let password = bcrypt.hashSync(volunteer.password, bcrypt.genSaltSync(8), null);
-
-                    User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
-
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (result.n === 1) {
-                                delete volunteer.prevEmail;
-
-                                Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        if (result.n === 1) {
-                                            response.json({
-                                                success: true,
-                                                message: 'Successfully updated volunteer!'
-                                            });
-                                        } else {
-                                            response.json({
-                                                success: false,
-                                                errors: {server: 'Server error'}
-                                            })
-                                        }
-                                    }
-                                });
-                            } else {
-                                response.json({
-                                    success: false,
-                                    errors: {server: 'Server error'}
-                                })
-                            }
-                        }
-                    });
-                });
+        // Form validation
+        const {errors, isValid} = validateCreateVolunteerInput(request.body);
+    
+        // Check validation
+        if (!isValid) {
+            return response.status(400).json({success: false, errors});
         }
 
-        //password
-        if ((prevEmail === email) && !(volunteer.password === '')) {
-
-            let password = bcrypt.hashSync(volunteer.password, bcrypt.genSaltSync(8), null);
-
-            User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
-
-                if (err) {
-                    console.log(err);
-                } else {
-                    if (result.n === 1) {
-                        delete volunteer.prevEmail;
-
-                        Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                if (result.n === 1) {
-                                    response.json({
-                                        success: true,
-                                        message: 'Successfully updated volunteer!'
-                                    });
-                                } else {
-                                    response.json({
-                                        success: false,
-                                        errors: {server: 'Server error'}
-                                    })
-                                }
-                            }
-                        });
-                    } else {
-                        response.json({
-                            success: false,
-                            errors: {server: 'Server error'}
-                        })
-                    }
-                }
-            });
-        }
-
-        //email
-        if ((prevEmail != email) && (volunteer.password === '')) {
-            User.find({email: email},
-                (err, previousUsers) => {
-                    if (err) {
-                        return response.send({
-                            success: false,
-                            errors: {server: 'Server errors'}
-                        });
-                    } else if (previousUsers.length > 0) {
-                        return response.send({
-                            success: false,
-                            errors: {email: 'Email already exists'}
-                        });
-                    }
-
-                    User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
-
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (result.n === 1) {
-                                delete volunteer.prevEmail;
-
-                                Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        if (result.n === 1) {
-                                            response.json({
-                                                success: true,
-                                                message: 'Successfully updated volunteer!'
-                                            });
-                                        } else {
-                                            response.json({
-                                                success: false,
-                                                errors: {server: 'Server error'}
-                                            })
-                                        }
-                                    }
-                                });
-                            } else {
-                                response.json({
-                                    success: false,
-                                    errors: {server: 'Server error'}
-                                })
-                            }
-                        }
-                    });
-                });
-        }
-
-        //PantherID needs to be changed on Teams
-        if (volunteer.prevPid != volunteer.pantherID) {
-
-            Team.find({volunteerPIs: volunteer.prevPid},
-                (err, teamsWithVolunteer) => {
-                    if (err) {
-                        return response.send({
-                            success: false,
-                            errors: {server: 'Server errors'}
-                        });
-                    } else if (teamsWithVolunteer.length > 0) {
-                        Team.updateMany({volunteerPIs: volunteer.prevPid}, {$set: {"volunteerPIs.$": volunteer.pantherID}}, (err, result) => {
-
-                            if (err) {
-                                response.json({
-                                    success: false,
-                                    errors: {server: 'Server error'}
-                                })
-                            } else {
-                                delete volunteer.prevEmail;
-                                delete volunteer.prevPid;
-
-                                Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        if (result.n === 1) {
-                                            response.json({
-                                                success: true,
-                                                message: 'Successfully updated volunteer!'
-                                            });
-                                        } else {
-                                            response.json({
-                                                success: false,
-                                                errors: {server: 'Server error'}
-                                            })
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    } else if (teamsWithVolunteer.length === 0) {
-                        delete volunteer.prevEmail;
-                        delete volunteer.prevPid;
-
-                        Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                if (result.n === 1) {
-                                    response.json({
-                                        success: true,
-                                        message: 'Successfully updated volunteer!'
-                                    });
-                                } else {
-                                    response.json({
-                                        success: false,
-                                        errors: {server: 'Server error'}
-                                    })
-                                }
-                            }
-                        });
-                    }
-                }
-            )
-        }
-    } else {
-
-        delete volunteer.prevEmail;
-
-        Volunteer.updateOne({_id: request.params.id}, volunteer, (err, result) => {
-
+        Volunteer.updateOne({_id: request.params.id}, request.body, (err, result) => {
             if (err) {
                 console.log(err);
             } else {
@@ -309,7 +63,82 @@ function updateVolunteer(request, response) {
                 }
             }
         });
+    } else {
+        const {body} = request;
+        const {
+            firstName,
+            lastName,
+            phoneNumber,
+            pantherID,
+            major,
+            isActive,
+            carAvailable,
+            volunteerStatus,
+            MDCPS_ID
+        } = body;
+        let {
+            email
+        } = body;
+    
+        // Form validation
+        const {errors, isValid} = validateCreateVolunteerInput(request.body);
+    
+        // Check validation
+        if (!isValid) {
+            return response.status(400).json({success: false, errors});
+        }
+    
+        email = email.toLowerCase();
+    
+        // Steps:
+        // 1. Verify email doesn't exist
+        // 2. Save to collection
+        User.find({
+            email: email
+        }, (err, previousUsers) => {
+            if (err) {
+                return response.json({
+                    success: false,
+                    errors: {server: 'Server errors'}
+                });
+            } else if (previousUsers.length > 0) {
+                return response.json({
+                    success: false,
+                    errors: {email: 'Account already exists'}
+                });
+            }
+    
+            // Save new user to volunteer collection
+            const newVolunteer = new Volunteer();
+    
+            newVolunteer.firstName = firstName;
+            newVolunteer.lastName = lastName;
+            newVolunteer.email = email;
+            newVolunteer.phoneNumber = phoneNumber;
+            newVolunteer.pantherID = pantherID;
+            newVolunteer.major = major;
+            newVolunteer.carAvailable = carAvailable;
+            newVolunteer.volunteerStatus = volunteerStatus;
+            newVolunteer.isActive = true;
+            newVolunteer.MDCPS_ID = MDCPS_ID;
+            newVolunteer.password = newVolunteer.generateHash("t0_B3_uPD4teD");
+            newVolunteer.role = 'volunteer'
+    
+            newVolunteer.save((err, volunteer) => {
+                if (err) {
+                    return response.json({
+                        success: false,
+                        errors: err
+                    });
+                }
+                return response.json({
+                    success: true,
+                    message: 'Successfully created volunteer!'
+                });
+            });
+        });
     }
+
 }
 
 function fetchVolunteers(request, response) {

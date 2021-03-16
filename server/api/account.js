@@ -23,13 +23,12 @@ import {checkAdminRole} from "../utils/passport";
 const router = new express.Router();
 
 router.post('/admin/signup', passport.authorize('jwt'), checkAdminRole, extendedCheckSchema(adminSchema), adminSignUp);
-router.post('/volunteer/signup', volunteerSignUp);
-router.post('/school-personnel/signup', schoolPersonnelSignUp);
 router.post('/login', passport.authenticate('local', {session: false}, null), login);
 router.post('/send-reset-password', sendResetPassword);
 router.post('/reset-password', resetPassword);
 
 async function adminSignUp(req, res) {
+
     const {body} = req;
     const {
         firstName,
@@ -65,152 +64,6 @@ async function adminSignUp(req, res) {
             });
         }
     }
-}
-
-function volunteerSignUp(req, res) {
-    const {body} = req;
-    const {
-        firstName,
-        lastName,
-        password,
-        phoneNumber,
-        pantherID,
-        major,
-        isActive,
-        carAvailable,
-        volunteerStatus,
-        MDCPS_ID
-    } = body;
-    let {
-        email
-    } = body;
-
-    // Form validation
-    const {errors, isValid} = validateCreateVolunteerInput(req.body);
-
-    // Check validation
-    if (!isValid) {
-        return res.status(400).json({success: false, errors});
-    }
-
-    email = email.toLowerCase();
-
-    // Steps:
-    // 1. Verify email doesn't exist
-    // 2. Save to collection
-    User.find({
-        email: email
-    }, (err, previousUsers) => {
-        if (err) {
-            return res.send({
-                success: false,
-                errors: {server: 'Server errors'}
-            });
-        } else if (previousUsers.length > 0) {
-            return res.send({
-                success: false,
-                errors: {email: 'Account already exists'}
-            });
-        }
-
-        // Save new user to volunteer collection
-        const newVolunteer = new Volunteer();
-
-        newVolunteer.firstName = firstName;
-        newVolunteer.lastName = lastName;
-        newVolunteer.email = email;
-        newVolunteer.phoneNumber = phoneNumber;
-        newVolunteer.pantherID = pantherID;
-        newVolunteer.major = major;
-        newVolunteer.carAvailable = carAvailable;
-        newVolunteer.volunteerStatus = volunteerStatus;
-        newVolunteer.isActive = true;
-        newVolunteer.MDCPS_ID = MDCPS_ID;
-        newVolunteer.password = newVolunteer.generateHash(password);
-        newVolunteer.role = 'volunteer'
-
-        newVolunteer.save((err, volunteer) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    errors: err
-                });
-            }
-            return res.send({
-                success: true,
-                message: 'Successfully created volunteer!'
-            });
-        });
-    });
-}
-
-function schoolPersonnelSignUp(req, res) {
-    const {body} = req;
-    const {
-        schoolCode,
-        firstName,
-        lastName,
-        password,
-        title,
-        phoneNumber,
-    } = body;
-    let {
-        email
-    } = body;
-
-    // form validation
-    const {errors, isValid} = validateCreateSchoolPersonnelInput(req.body);
-    // check validation
-    if (!isValid) {
-        return res.status(400).json({success: false, errors});
-    }
-
-    email = email.toLowerCase();
-
-    // Steps:
-    // 1. Verify email doesn't exist
-    // 2. Save to collection
-    User.find({
-        email: email
-    }, (err, previousUsers) => {
-        if (err) {
-            return res.send({
-                success: false,
-                message: {server: 'Server errors'}
-            });
-        } else if (previousUsers.length > 0) {
-            return res.send({
-                success: false,
-                errors: {email: 'Account already exists'}
-            });
-        }
-
-        // Save new user to school personnel collection
-        const newSchPersonnel = new schPersonnel();
-
-        newSchPersonnel.firstName = firstName;
-        newSchPersonnel.lastName = lastName;
-        newSchPersonnel.email = email;
-        newSchPersonnel.phoneNumber = phoneNumber;
-        newSchPersonnel.schoolCode = schoolCode;
-        newSchPersonnel.title = title;
-        newSchPersonnel.isActive = true;
-        newSchPersonnel.password = newSchPersonnel.generateHash(password);
-        newSchPersonnel.role = 'schoolPersonnel';
-
-        newSchPersonnel.save((err, schPersonnel) => {
-            if (err) {
-                return res.send({
-                    success: false,
-                    message: {server: 'Server errors'}
-                });
-            }
-            return res.send({
-                success: true,
-                message: 'Successfully created school personnel!'
-            });
-        });
-    });
 }
 
 function login(req, res) {

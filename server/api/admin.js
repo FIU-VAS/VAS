@@ -15,7 +15,7 @@ import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.put('/update/', extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
+router.post('/update/:id', extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
 router.get('/', fetchAdmins);
 router.get('/:id', checkAdminRole, fetchAdminById);
 

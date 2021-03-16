@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import isEmpty from 'is-empty';
+import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -74,6 +75,7 @@ class SchoolPersonnelTable extends Component {
                 userFormDialog: false,
                 selectedSchoolPersonnel: {}
             }));
+            this.props.getSchoolPersonnels();
         }
         else {
             this.setState(prevState => ({
@@ -96,6 +98,8 @@ class SchoolPersonnelTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedSchoolPersonnel);
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${this.state.selectedSchoolPersonnel._id}` : `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/null`;
+
         const formProps = [
             {
                 label: "First Name",
@@ -255,7 +259,7 @@ class SchoolPersonnelTable extends Component {
                 {this.state.userFormDialog && <UserFormDialog
                                                         open={this.state.userFormDialog} 
                                                         close={this.toggleUserFormDialog} 
-                                                        userId={isEmpty(this.state.selectedSchoolPersonnel) ? "" : this.state.selectedSchoolPersonnel.userId}
+                                                        endpoint={endpoint}
                                                         edit={edit}
                                                         role={"School Personnel"}
                                                         formProps={formProps}
