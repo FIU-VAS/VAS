@@ -17,6 +17,20 @@ export const updateAdmin = (id, form) => dispatch => {
     }));
  };
 
+export const getUser = () => dispatch => {
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.user.me}/`;
+    console.log(endpoint);
+
+    axios.get(endpoint)
+        .then((res) => {
+            dispatch(setCurrentUser(res.data))
+        })
+        .catch((err) => dispatch({
+            type: GET_ERRORS,
+            payload: err
+        }));
+};
+
  // get admin from database
 export const getAdmin = (id) => dispatch => {
 

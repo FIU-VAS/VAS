@@ -1,5 +1,6 @@
 import express from 'express';
 import {addHours} from "date-fns"
+import {omit} from "lodash";
 
 import User from '../models/Users/user_Auth';
 import Admin from '../models/Users/admin_User';
@@ -28,6 +29,7 @@ router.post('/school-personnel/signup', schoolPersonnelSignUp);
 router.post('/login', passport.authenticate('local', {session: false}, null), login);
 router.post('/send-reset-password', sendResetPassword);
 router.post('/reset-password', resetPassword);
+router.get('/me', passport.authorize('jwt'), getCurrentUser);
 
 async function adminSignUp(req, res) {
     const {body} = req;
@@ -352,6 +354,10 @@ async function resetPassword(req, res) {
             message: "Invalid or expired reset token"
         })
     }
+}
+
+async function getCurrentUser(req, res) {
+    res.json(omit(req.account.toObject(), ['_id', '__v', 'token', 'password']))
 }
 
 export default {router};
