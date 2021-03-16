@@ -44,6 +44,9 @@ const config = {
 			getTeamInfo: '/team/getTeamInfo',
 			getTeamInfoSch: '/team/getTeamInfoSch'
 		},
+		user: {
+			me: '/account/me'
+		}
 	},
 	userRoles: {
 		admin: 'admin',

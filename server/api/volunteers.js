@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateVolunteerInput from '../validation/volunteers/updateVolunteer'
+<<<<<<< HEAD
 import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
 import {checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
@@ -14,10 +15,27 @@ import passport from "../config/passport";
 const router = new express.Router();
 
 router.post('/update/:id', updateVolunteer);
+=======
+import {checkAdminRole} from "../utils/passport";
+import {extendedCheckSchema} from "../utils/validation";
+import {schema as volunteerSchema} from "../validation-schemas/volunteer/create"
+
+const router = new express.Router();
+
+router.post('/', checkAdminRole, extendedCheckSchema(volunteerSchema), createVolunteer);
+router.post('/:id', updateVolunteer);
+router.put('/update/:id', updateVolunteer);
+>>>>>>> 18542a2f59796c41381afc4d8e422149498a13eb
 router.put('/updateProfile/:id', updateVolunteerProfile);
 router.get('/', fetchVolunteers);
 router.get('/:id', fetchVolunteerById);
 router.get('/getVolunteerInfo/:pids', fetchVolunteerByPID);
+
+async function createVolunteer(request, response) {
+    Volunteer.create({
+
+    })
+}
 
 function updateVolunteerProfile(request, response) {
     Volunteer.updateOne({_id: request.params.id}, request.body, (err, result) => {

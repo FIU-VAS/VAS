@@ -6,7 +6,7 @@ import './App.css';
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import {logoutUser, setAuth} from "./actions/authActions"
-import {getAdmin, getVolunteer, getSchoolPersonnel} from "./actions/userActions"
+import {getAdmin, getVolunteer, getSchoolPersonnel, getUser} from "./actions/userActions"
 import Login from './pages/Login'
 import NavBar from './components/AppBar/NavBar';
 import Footer from './components/AppBar/Footer';
@@ -35,15 +35,7 @@ if (localStorage.jwt) {
 
     // set user
     store.dispatch(setAuth(decoded));
-    if (decoded.role === config.userRoles.admin) {
-        store.dispatch(getAdmin(decoded.id))
-    }
-    if (decoded.role === config.userRoles.volunteer) {
-        store.dispatch(getVolunteer(decoded.id))
-    }
-    if (decoded.role === config.userRoles.schoolPersonnel) {
-        store.dispatch(getSchoolPersonnel(decoded.id))
-    }
+    store.dispatch(getUser());
     //store.dispatch(setCurrentUser(decoded));
 
     // check for expired token
