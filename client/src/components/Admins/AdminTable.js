@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import isEmpty from 'is-empty';
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getAdmins } from '../../actions/adminActions';
-import AddAdminDialog from './AddAdminDialog';
-import EditAdminDialog from './EditAdminDialog'
+import { UserFormDialog } from '../Users/UserFormDialog';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -57,28 +57,28 @@ class AdminTable extends Component {
         super(props);
         this.state = {
             selectedAdmin: {},
-            addAdminDialog: false,
-            editAdminDialog: false
+            userFormDialog: false
         }
 
-        this.toggleAddAdminDialog= this.toggleAddAdminDialog.bind(this);
-        this.toggleEditAdminDialog= this.toggleEditAdminDialog.bind(this);
+        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
     }
 
     componentDidMount() {
         this.props.getAdmins();
     }
 
-    toggleAddAdminDialog() {
-        this.setState(prevState => ({
-            addAdminDialog: !prevState.addAdminDialog
-        }));
-    }
-
-    toggleEditAdminDialog() {
-        this.setState(prevState => ({
-            editAdminDialog: !prevState.editAdminDialog
-        }));
+    toggleUserFormDialog() {
+        if (this.state.userFormDialog) {
+            this.setState(prevState => ({
+                userFormDialog: false,
+                selectedAdmin: {}
+            }));
+        }
+        else {
+            this.setState(prevState => ({
+                userFormDialog: true,
+            }));
+        }
     }
 
     setColor(text) {
@@ -94,6 +94,34 @@ class AdminTable extends Component {
     }
 
     render() {
+        const edit = !isEmpty(this.state.selectedAdmin);
+        const formProps = [
+            {
+                label: "First Name",
+                name: "firstName",
+                defaultValue: edit ? this.state.selectedAdmin.firstName : "",
+                type: "text"
+            }, 
+            {
+                label: "Last Name",
+                name: "lastName",
+                defaultValue: edit ? this.state.selectedAdmin.lastName : "",
+                type: "text"
+            },
+            {
+                label: "Email",
+                name: "email",
+                defaultValue: edit ? this.state.selectedAdmin.email : "",
+                type: "email"
+            },
+            {
+                label: "Phone Number",
+                name: "phoneNumber",
+                defaultValue: edit ? this.state.selectedAdmin.phoneNumber : "",
+                type: "tel"
+            }
+        ];
+
         return (
             <Fragment>
                 <MaterialTable
@@ -112,12 +140,12 @@ class AdminTable extends Component {
                         icon: 'person_add',
                         tooltip: 'Add Admin',
                         isFreeAction: true,
-                        onClick: this.toggleAddAdminDialog
+                        onClick: this.toggleUserFormDialog
                         },
                         {
                         icon: 'edit',
                         tooltip: 'Edit Admin',
-                        onClick: (event, rowData) => {this.setState({selectedAdmin: rowData}); this.toggleEditAdminDialog()}
+                        onClick: (event, rowData) => {this.setState({selectedAdmin: rowData}); this.toggleUserFormDialog()}
                         }
                     ]}
                     options={{
@@ -175,8 +203,14 @@ class AdminTable extends Component {
 
                     }}
                 />
-                {this.state.editAdminDialog && <EditAdminDialog open={this.state.editAdminDialog} close={this.toggleEditAdminDialog} admin={this.state.selectedAdmin}/>}
-                {this.state.addAdminDialog && <AddAdminDialog open={this.state.addAdminDialog} close={this.toggleAddAdminDialog}/>}
+                {this.state.userFormDialog && <UserFormDialog
+                                                        open={this.state.userFormDialog} 
+                                                        close={this.toggleUserFormDialog} 
+                                                        userId={isEmpty(this.state.selectedAdmin) ? "" : this.state.selectedAdmin.userId}
+                                                        edit={edit}
+                                                        role={"Admin"}
+                                                        formProps={formProps}
+                                                    />}
             </Fragment>
         );
     }

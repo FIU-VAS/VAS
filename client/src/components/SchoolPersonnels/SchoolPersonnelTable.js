@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
+import isEmpty from 'is-empty';
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getSchoolPersonnels } from '../../actions/schoolPersonnelActions';
 import { getSchools } from '../../actions/schoolActions';
-import AddSchoolPersonnelDialog from './AddSchoolPersonnelDialog';
-import EditSchoolPersonnelDialog from './EditSchoolPersonnelDialog'
+import { UserFormDialog } from '../Users/UserFormDialog';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -57,12 +57,10 @@ class SchoolPersonnelTable extends Component {
         super(props);
         this.state = {
             selectedSchoolPersonnel: {},
-            addSchoolPersonnelDialog: false,
-            editSchoolPeronnelDialog: false
+            userFormDialog: false,
         }
 
-        this.toggleAddSchoolPersonnelDialog= this.toggleAddSchoolPersonnelDialog.bind(this);
-        this.toggleEditSchoolPersonnelDialog= this.toggleEditSchoolPersonnelDialog.bind(this);
+        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
     }
 
     componentDidMount() {
@@ -70,16 +68,18 @@ class SchoolPersonnelTable extends Component {
         this.props.getSchools();
     }
 
-    toggleAddSchoolPersonnelDialog() {
-        this.setState(prevState => ({
-            addSchoolPersonnelDialog: !prevState.addSchoolPersonnelDialog
-        }));
-    }
-
-    toggleEditSchoolPersonnelDialog() {
-        this.setState(prevState => ({
-            editSchoolPersonnelDialog: !prevState.editSchoolPersonnelDialog
-        }));
+    toggleUserFormDialog() {
+        if (this.state.userFormDialog) {
+            this.setState(prevState => ({
+                userFormDialog: false,
+                selectedSchoolPersonnel: {}
+            }));
+        }
+        else {
+            this.setState(prevState => ({
+                userFormDialog: true,
+            }));
+        }
     }
 
     setColor(text) {
@@ -95,6 +95,64 @@ class SchoolPersonnelTable extends Component {
     }
 
     render() {
+        const edit = !isEmpty(this.state.selectedSchoolPersonnel);
+        const formProps = [
+            {
+                label: "First Name",
+                name: "firstName",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.firstName : "",
+                type: "text"
+            }, 
+            {
+                label: "Last Name",
+                name: "lastName",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.lastName : "",
+                type: "text"
+            },
+            {
+                label: "Email",
+                name: "email",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.email : "",
+                type: "email"
+            },
+            {
+                label: "Phone Number",
+                name: "phoneNumber",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.phoneNumber : "",
+                type: "tel"
+            },
+            {
+                label: "Title",
+                name: "title",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.title : "",
+                type: "text"
+            },
+            {
+                label: "School",
+                name: "schoolCode",
+                id: "school-code",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.schoolCode : "",
+                type: "select",
+                options: this.props.schools.map((school) => {
+                    return {
+                        value: school.schoolCode,
+                        label: school.schoolName
+                    }
+                })
+            },
+            {
+                label: "Is Active",
+                name: "isActive",
+                id: "is-active",
+                defaultValue: edit ? this.state.selectedSchoolPersonnel.isActive : true,
+                type: "select",
+                options: [
+                    {value: true, label: "Yes"}, 
+                    {value: false, label: "No"}
+                ]
+            }
+        ];
+
         return (
             <Fragment>
                 <MaterialTable
@@ -113,12 +171,12 @@ class SchoolPersonnelTable extends Component {
                         icon: 'person_add',
                         tooltip: 'Add School Personnel',
                         isFreeAction: true,
-                        onClick: this.toggleAddSchoolPersonnelDialog
+                        onClick: this.toggleUserFormDialog
                         },
                         {
                         icon: 'edit',
                         tooltip: 'Edit School Personnel',
-                        onClick: (event, rowData) => {this.setState({selectedSchoolPersonnel: rowData}); this.toggleEditSchoolPersonnelDialog()}
+                        onClick: (event, rowData) => {this.setState({selectedSchoolPersonnel: rowData}); this.toggleUserFormDialog()}
                         }
                     ]}
                     options={{
@@ -194,8 +252,14 @@ class SchoolPersonnelTable extends Component {
                         )
                     }}
                 />
-                {this.state.editSchoolPersonnelDialog && <EditSchoolPersonnelDialog open={this.state.editSchoolPersonnelDialog} close={this.toggleEditSchoolPersonnelDialog} schoolPersonnel={this.state.selectedSchoolPersonnel}/>}
-                {this.state.addSchoolPersonnelDialog && <AddSchoolPersonnelDialog open={this.state.addSchoolPersonnelDialog} close={this.toggleAddSchoolPersonnelDialog}/>}
+                {this.state.userFormDialog && <UserFormDialog
+                                                        open={this.state.userFormDialog} 
+                                                        close={this.toggleUserFormDialog} 
+                                                        userId={isEmpty(this.state.selectedSchoolPersonnel) ? "" : this.state.selectedSchoolPersonnel.userId}
+                                                        edit={edit}
+                                                        role={"School Personnel"}
+                                                        formProps={formProps}
+                                                    />}
             </Fragment>
         );
     }

@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import isEmpty from 'is-empty';
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getVolunteers } from '../../actions/volunteerActions';
-import AddVolunteerDialog from './AddVolunteerDialog';
-import EditVolunteerDialog from './EditVolunteerDialog'
+import { UserFormDialog } from '../Users/UserFormDialog';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -57,28 +57,29 @@ class VolunteerTable extends Component {
         super(props);
         this.state = {
             selectedVolunteer: {},
-            addVolunteerDialog: false,
-            editVolunteerDialog: false
+            userFormDialog: false,
+            edit: false
         }
 
-        this.toggleAddVolunteerDialog= this.toggleAddVolunteerDialog.bind(this);
-        this.toggleEditVolunteerDialog= this.toggleEditVolunteerDialog.bind(this);
+        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
     }
 
     componentDidMount() {
         this.props.getVolunteers();
     }
 
-    toggleAddVolunteerDialog() {
-        this.setState(prevState => ({
-            addVolunteerDialog: !prevState.addVolunteerDialog
-        }));
-    }
-
-    toggleEditVolunteerDialog() {
-        this.setState(prevState => ({
-            editVolunteerDialog: !prevState.editVolunteerDialog
-        }));
+    toggleUserFormDialog() {
+        if (this.state.userFormDialog) {
+            this.setState(prevState => ({
+                userFormDialog: false,
+                selectedVolunteer: {}
+            }));
+        }
+        else {
+            this.setState(prevState => ({
+                userFormDialog: true,
+            }));
+        }
     }
 
     setColor(text) {
@@ -94,6 +95,79 @@ class VolunteerTable extends Component {
     }
 
     render() {
+        const edit = !isEmpty(this.state.selectedVolunteer);
+        const formProps = [
+            {
+                label: "First Name",
+                name: "firstName",
+                defaultValue: edit ? this.state.selectedVolunteer.firstName : "",
+                type: "text"
+            }, 
+            {
+                label: "Last Name",
+                name: "lastName",
+                defaultValue: edit ? this.state.selectedVolunteer.lastName : "",
+                type: "text"
+            },
+            {
+                label: "Email",
+                name: "email",
+                defaultValue: edit ? this.state.selectedVolunteer.email : "",
+                type: "email"
+            },
+            {
+                label: "Phone Number",
+                name: "phoneNumber",
+                defaultValue: edit ? this.state.selectedVolunteer.phoneNumber : "",
+                type: "tel"
+            },
+            {
+                label: "Major",
+                name: "major",
+                defaultValue: edit ? this.state.selectedVolunteer.major : "",
+                type: "text"
+            },
+            {
+                label: "Is Active",
+                name: "isActive",
+                id: "is-active",
+                defaultValue: edit ? this.state.selectedVolunteer.isActive : true,
+                type: "select",
+                options: [
+                    {value: true, label: "Yes"}, 
+                    {value: false, label: "No"}
+                ]
+            },
+            {
+                label: "Car Available",
+                name: "carAvailable",
+                id: "car-available",
+                defaultValue: edit ? this.state.selectedVolunteer.carAvailable : true,
+                type: "select",
+                options: [
+                    {value: true, label: "Yes"}, 
+                    {value: false, label: "No"}
+                ]
+            },
+            {
+                label: "Volunteer Status",
+                name: "volunteerStatus",
+                id: "volunteer-status",
+                defaultValue: edit ? this.state.selectedVolunteer.volunteerStatus : true,
+                type: "select",
+                options: [
+                    {value: true, label: "Approved"}, 
+                    {value: false, label: "Not Approved"}
+                ]
+            },
+            {
+                label: "MDCPS ID",
+                name: "MDCPS_ID",
+                defaultValue: edit ? this.state.selectedVolunteer.MDCPS_ID : "",
+                type: "text"
+            }
+        ];
+
         return (
             <Fragment>
                 <MaterialTable
@@ -112,12 +186,12 @@ class VolunteerTable extends Component {
                         icon: 'person_add',
                         tooltip: 'Add Volunteer',
                         isFreeAction: true,
-                        onClick: this.toggleAddVolunteerDialog
+                        onClick: this.toggleUserFormDialog
                         },
                         {
                         icon: 'edit',
                         tooltip: 'Edit Volunteer',
-                        onClick: (event, rowData) => {this.setState({selectedVolunteer: rowData}); this.toggleEditVolunteerDialog()}
+                        onClick: (event, rowData) => {this.setState({selectedVolunteer: rowData}); this.toggleUserFormDialog()}
                         }
                     ]}
                     options={{
@@ -215,8 +289,14 @@ class VolunteerTable extends Component {
 
                     }}
                 />
-                {this.state.editVolunteerDialog && <EditVolunteerDialog open={this.state.editVolunteerDialog} close={this.toggleEditVolunteerDialog} volunteer={this.state.selectedVolunteer}/>}
-                {this.state.addVolunteerDialog && <AddVolunteerDialog open={this.state.addVolunteerDialog} close={this.toggleAddVolunteerDialog}/>}
+                {this.state.userFormDialog && <UserFormDialog
+                                                        open={this.state.userFormDialog} 
+                                                        close={this.toggleUserFormDialog} 
+                                                        userId={isEmpty(this.state.selectedVolunteer) ? "" : this.state.selectedVolunteer.userId}
+                                                        edit={edit}
+                                                        role={"Volunteer"}
+                                                        formProps={formProps}
+                                                    />}
             </Fragment>
         );
     }
