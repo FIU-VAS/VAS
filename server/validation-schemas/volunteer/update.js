@@ -10,34 +10,41 @@ const validateAvailability = (values) => {
 
 export const schema = {
     email: {
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
         isEmail: true
     },
-    firstName: {
-        exists: {
-            errorMessage: "First Name is required"
-        }
-    },
-    lastName: {
-        exists: {
-            errorMessage: "Last Name is required"
-        }
-    },
     phoneNumber: {
-        exists: {
-            errorMessage: "Phone Number is required"
+        optional: {
+            nullable: true,
+            checkFalsy: true
         },
         isMobilePhone: {
-            errorMessage: "Invalid phone number"
-        }
+            errorMessage: "Invalid phone number",
+        },
     },
     pantherID: {
-        isNumeric: true,
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
+        isNumeric: {
+            errorMessage: "Panther ID should only have numbers",
+        },
         isLength: {
-            options: {
-                min: 7,
-                max: 7
-            }
-        }
+            errorMessage: "Panther ID should have 7 digits",
+            options: [
+                {
+                    min: 7,
+                    max: 7,
+                },
+                {
+                    checkFalsy: true
+                }
+            ]
+        },
     },
     // availability: {
     //     custom: {

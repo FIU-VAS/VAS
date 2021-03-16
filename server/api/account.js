@@ -268,7 +268,7 @@ async function sendResetPassword(req, res) {
                 from: "no-reply@cs-first.cs.fiu.edu",
                 to: user.email,
                 subject: "FIU VAS Reset Password",
-                text: "Use the following link to reset your password: " + token + "\nExpires in 2 hours!",
+                text: "Use the following link to reset your password: " + resetLink + "\nExpires in 2 hours!",
             },
             config.mail.templates.resetPassword,
             {

@@ -1,21 +1,19 @@
 import express from 'express';
-import {checkSchema} from "express-validator"
 
 import Admin from '../models/Users/admin_User';
 import User from '../models/Users/user_Auth';
-const bcrypt = require('bcrypt')
-import passport from "../config/passport"
 
 // input validation
-import validateUpdateAdminInput from '../validation/admin/updateAdmin'
 import {schema as adminSchema} from "../validation-schemas/admin/create";
+import {schema as adminUpdateSchema} from "../validation-schemas/admin/create"
 
 import {checkAdminRole} from "../utils/passport";
-import {extendedCheckSchema} from "../utils/validation";
+import {createNewUser, updateUser} from "../utils/account";
 
 const router = new express.Router();
 
-router.put('/update/', extendedCheckSchema(adminSchema), checkAdminRole, updateAdmin);
+router.put('/', createNewUser(Admin, adminSchema));
+router.put('/:id', updateUser(Admin, adminUpdateSchema));
 router.get('/', fetchAdmins);
 router.get('/:id', checkAdminRole, fetchAdminById);
 

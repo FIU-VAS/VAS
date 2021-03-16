@@ -6,12 +6,14 @@ const bcrypt = require('bcrypt')
 
 // input validation
 import validateUpdateSchoolPersonnelInput from '../validation/schoolPersonnels/updateSchoolPersonnel'
-import {checkAdminRole, checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
-import passport from "../config/passport";
+import {createNewUser, updateUser} from "../utils/account";
+import {schema as schoolPersonnelSchema} from "../validation-schemas/schoolPersonnel/create"
+import {schema as schoolPersonnelUpdateSchema} from "../validation-schemas/schoolPersonnel/create"
 
 const router = new express.Router();
 
-router.put('/update/:id', checkAdminRole, checkSchoolPersonnelRole, updateSchoolPersonnel);
+router.post('/', createNewUser(schPersonnel, schoolPersonnelSchema));
+router.post('/:id', updateUser(schPersonnel, schoolPersonnelUpdateSchema));
 router.get('/', fetchSchoolPersonnels);
 router.get('/:id', fetchSchoolPersonnelById);
 router.get('/getPersonnelInfo/:codes', fetchSchoolPersonnelByCode);

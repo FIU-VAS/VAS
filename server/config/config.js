@@ -17,7 +17,8 @@ const config = {
 		port: parseInt(process.env.SMTP_PORT),
 		secure: Boolean(parseInt(process.env.SMTP_SECURE)),
 		templates: {
-			resetPassword: path.join(__dirname, '../mail/templates/reset-password.html')
+			resetPassword: path.join(__dirname, '../mail/templates/reset-password.html'),
+			newUser: path.join(__dirname, '../mail/templates/new-account.html')
 		}
 	},
 	appDomain: process.env.APP_DOMAIN,
