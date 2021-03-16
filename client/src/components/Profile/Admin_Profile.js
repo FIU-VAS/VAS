@@ -145,7 +145,7 @@ class Admin_Profile extends Component {
 
   render(){   
 
-    var initials = (this.state.firstName.substring(0, 1) + this.state.lastName.substring(0, 1)).toUpperCase()
+    // var initials = (this.state.firstName.substring(0, 1) + this.state.lastName.substring(0, 1)).toUpperCase()
   
     return (
         <ThemeProvider theme={theme}>
@@ -173,7 +173,7 @@ class Admin_Profile extends Component {
                     alignItems="center"
                     justify="center"
                     >
-                        <Avatar className={this.props.classes.blue} >{initials}</Avatar>
+                        {/* <Avatar className={this.props.classes.blue} >{initials}</Avatar> */}
                     </Grid>
                     <div className={this.props.classes.paper}>
                         <Typography className={this.props.classes.title} color="textPrimary" variant="h4" gutterBottom>

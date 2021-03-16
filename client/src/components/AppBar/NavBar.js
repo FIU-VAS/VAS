@@ -10,16 +10,9 @@ import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { resetState } from '../../actions/logoutAction';
 import Grid from '@material-ui/core/Grid';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import MenuIcon from '@material-ui/icons/Menu';
-import InfoIcon from '@material-ui/icons/Info';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -143,7 +136,6 @@ redirect_to_AboutPage = () => {
     this.setAnchorEl(null);
 }
 
-
 getTitle(){
   let size = document.body.clientWidth
   if (size < 750) {
@@ -188,8 +180,8 @@ render(){
 
         <Link to='/about' className={this.props.classes.link} style={{color:'white'}}>About</Link>
         {this.state.loggedIn && <Link to='/dashboard' className={this.props.classes.link} style={{color:'white'}}>Dashboard</Link>}  
-        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In</Link>}
-        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white'}}>Log Out </Link>}  
+        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In </Link>}
+        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white'}} onClick={this.handleClose && this.submitLogout}>Log Out </Link>}  
         
             
         </Toolbar>

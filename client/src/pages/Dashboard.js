@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import isEmpty from 'is-empty';
 import Admin_Dashboard_MiddleMan from '../components/Dashboards/Admin_DashboarMiddleMan';
 import Volunteer_Dashbaord_MiddleMan from '../components/Dashboards/Volunteer_Dashbaord_MiddleMan';
-import Personnel_Dashbaord_MiddleMan from '../components/Dashboards/Personnel_Dashbaord_MiddleMan'
+import Personnel_Dashbaord_MiddleMan from '../components/Dashboards/Personnel_Dashbaord_MiddleMan';
 import config from "../config";
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     all: {
@@ -43,11 +43,12 @@ class Dashboard extends Component {
     render(){
         const { auth } = this.props;
         return (
+            
             <div className={this.props.classes.all}
                 style={{backgroundImage: 'url(' + require('../images/FIU_1_10.png') + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
-                
+                <SideBar></SideBar>
                 <Grid
                     container
                     spacing={0}

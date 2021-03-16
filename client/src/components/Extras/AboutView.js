@@ -72,6 +72,17 @@ const useStyles = {
         alignItems: 'left',
         justify: 'left',
     },
+    // text:{
+    //     left: '3%',
+    //     right: '35%',
+    //     position: 'absolute',
+    // },
+    // blob: {
+    //     position: 'absolute',
+    //     right: '3%',
+    //     left: '65%',
+    //     height : "350px",
+    // }
 }
 
 function ListItemLink(props) {
@@ -106,51 +117,10 @@ class AboutView extends Component {
                     </Typography>
 
             </Grid>
-
-                <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justify="center">
-                    
-                    {/* CARD */}
-                    <Box 
-                    borderRadius="10px"
-                    boxShadow={3}
-                    className={this.props.classes.card}
-                    style={{width: "380px"}}
-                    variant="outlined"
-                    justify="center">
-
-                        {/* CARD HEADING */}
-                        <Box 
-                        borderRadius="10px 10px 0px 0px"
-                        boxShadow={2}
-                        className={this.props.classes.cardHeader}
-                        style={{backgroundColor: blueGrey[700]}}
-                        variant="outlined"
-                        justify="center">
-
-                            <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="center">
-
-                                <Typography
-                                className={this.props.classes.cardTitle}
-                                style={{marginTop: '14px'}}>
-                                    FIU CS First Outreach Program 
-                                </Typography>
-                            </Grid>
-
-
-                      <Grid style={{paddingLeft: '15px', paddingTop: '10px', paddingRight: '15px', paddingBottom: '15px',}}>
-                            
+            <Grid  >
+            <div className={this.props.classes.text}>
                             <Typography
-                            className={this.props.classes.regular}
-                            style={{marginBottom: '15px', marginTop: '15px', alignItems: 'left'}}>
+                            className={this.props.classes.regular}>
                                 The <strong>CS First</strong> outreach program started at Florida International University's (FIU) School of Computing and Information Sciences (SCIS) 
                                     in the Spring of 2015, as an attempt to spread the knowledge of coding and Computer Science to elementary and middle schools near FIU. 
                                     Initially, only 2 elementary schools were involved, Sweetwater Elementary and Coral Park Elementary, with the Women in Computer Science (WICS ) 
@@ -167,19 +137,19 @@ class AboutView extends Component {
                             </Typography>
 
 
-
-                         </Grid>
-                        </Box>
-                    </Box>
-                   </Grid>
-
+                            </div>
+            </Grid>
+            {/* <img className={this.props.classes.blob}
+                src ={require("../../images/Ignite_4.png").default}
+                alt = "Blob" 
+                /> */}
            <Grid
             container
             direction="column"
             justify="center"
             alignItems="center"
             >
-
+                
                     <Typography
                         className={this.props.classes.main}
                         display="inline"
