@@ -1,26 +1,25 @@
 import express from 'express';
 
-import Team, {Days} from '../models/Teams/team';
-import User, {UserRoles} from '../models/Users/user_Auth';
+import Team from '../models/Teams/team';
+import {UserRoles} from '../models/Users/user_Auth';
 import SchoolPersonnel from '../models/Users/school_User';
 import Volunteer from '../models/Users/volunteer_User';
 
 //input validation
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
-import {checkAdminRole, checkVolunteerRole} from "../utils/passport";
-import passport from "../config/passport";
+import {checkAdminRole} from "../utils/passport";
 import {checkSchema} from "express-validator";
 
 const router = new express.Router();
 
-router.post('/', passport.authorize('jwt'), checkAdminRole, createTeam);
-router.put('/update/:id', passport.authorize('jwt'), checkAdminRole, updateTeam);
-router.get('/:id', passport.authorize('jwt'), checkVolunteerRole, fetchTeamById);
-router.get('/getTeamInfo/:pid', passport.authorize('jwt'), checkVolunteerRole, fetchTeamByPantherID);
-router.get('/', passport.authorize('jwt'), checkVolunteerRole, fetchTeams);
-router.get('/getTeamInfoSch/:schoolCode', passport.authorize('jwt'), checkVolunteerRole, fetchTeamBySchoolCode);
-router.get('/suggest/:term', passport.authorize('jwt'), checkVolunteerRole, checkSchema({
+router.post('/', checkAdminRole, createTeam);
+router.put('/update/:id', checkAdminRole, updateTeam);
+router.get('/:id', fetchTeamById);
+router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
+router.get('/', fetchTeams);
+router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
+router.get('/suggest/:term', checkAdminRole, checkSchema({
     term: {
         exists: true,
         errorMessage: "Term must be defined"
@@ -131,19 +130,20 @@ function fetchTeams(request, response) {
         conditions.year = year;
     }
 
-    if (request.account.role === UserRoles.Volunteer) {
-        conditions.volunteerPIs = request.account.pantherID;
+    switch (request.account.role) {
+        case UserRoles.Volunteer:
+            conditions.volunteerPIs = request.account.pantherID;
+            break;
+        case UserRoles.SchoolPersonnel:
+            conditions.schoolCode = request.account.schoolCode;
+            break;
     }
-
-    console.log(request.account);
-    console.log(conditions);
 
     Team.find(conditions, (err, result) => {
         if (err) {
             console.log(err);
         } else {
             response.json(result);
-            console.log(result);
         }
     });
 }

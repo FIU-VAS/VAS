@@ -3,9 +3,12 @@ import serverConf from '../config'
 import { GET_ERRORS, SET_SCHOOL_PERSONNELS, SCHOOL_PERSONNELS_LOADING, GET_SUCCESS} from './types';
 
 // get school personnels from database
-export const getSchoolPersonnels = () => dispatch => {
+export const getSchoolPersonnels = (code) => dispatch => {
 
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.fetch}`;
+    let endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.fetch}`;
+    if (code) {
+        endpoint += '/getPersonnelInfo/' + code.join()
+    }
 
     axios.get(endpoint)
     .then((res) => {

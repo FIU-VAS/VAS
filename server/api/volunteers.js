@@ -12,11 +12,11 @@ import passport from "../config/passport";
 
 const router = new express.Router();
 
-router.put('/update/:id', passport.authorize('jwt'), checkVolunteerRole, updateVolunteer);
-router.put('/updateProfile/:id', passport.authorize('jwt'), checkVolunteerRole, updateVolunteerProfile);
-router.get('/', passport.authorize('jwt'), checkVolunteerRole, fetchVolunteers);
-router.get('/:id', passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerById);
-router.get('/getVolunteerInfo/:pids', passport.authorize('jwt'), checkVolunteerRole, fetchVolunteerByPID);
+router.put('/update/:id', updateVolunteer);
+router.put('/updateProfile/:id', updateVolunteerProfile);
+router.get('/', fetchVolunteers);
+router.get('/:id', fetchVolunteerById);
+router.get('/getVolunteerInfo/:pids', fetchVolunteerByPID);
 
 function updateVolunteerProfile(request, response) {
     Volunteer.updateOne({_id: request.params.id}, request.body, (err, result) => {
