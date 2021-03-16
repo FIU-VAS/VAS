@@ -13,6 +13,7 @@ import {createMuiTheme} from '@material-ui/core/styles';
 import {blueGrey, blue} from '@material-ui/core/colors';
 import {useForm, FormProvider, useFormContext, Controller} from "react-hook-form";
 import axios from "axios";
+import Alert from '@material-ui/lab/Alert';
 
 const theme = createMuiTheme({
     palette: {
@@ -32,8 +33,8 @@ const useStyles = {
 }
 
 const MuiSelect = (props) => {
-    const {id, label, name, defaultValue, options} = props;
-    console.log(props);
+    const {id, label, name, options} = props;
+
     return (
         <FormControl fullWidth={true} style={{marginBottom: "15px"}} margin="dense">
             <InputLabel id={id}>{label}</InputLabel>
@@ -99,19 +100,20 @@ const MaterialUIField = (props) => {
 }
 
 export const UserFormDialog = (props) => {
+    let [message, setMessage] = useState("");
+    let [success, setSuccess] = useState(false);
 
     const submitForm = (data) => {
-        let response = axios.post(data, props.endpoint)
-            .then(res => {
-                if (res.data.success) {
-
-                }
-            })
-            .catch(err => {
-                console.log(err.response.message);
-
-            })
-
+        let response = axios.post(props.endpoint, data)
+        .then(res => {
+            setMessage(res.data.message);
+            setSuccess(true);
+        })
+        .catch(err => {
+            setMessage(err.message);
+            setSuccess(false);
+        })
+    
         if (props.onSubmit) {
             props.onSubmit(response);
         }
@@ -140,8 +142,8 @@ export const UserFormDialog = (props) => {
                             </IconButton>
                         </Box>
                     </Box>
-                </DialogTitle>
-
+                </DialogTitle>  
+                {message !== "" && <Alert severity={success ? "success" : "error"}>{message}</Alert>}
                 <DialogContent>
                     <DialogContentText>
                         {props.edit ? `To edit a  ${props.role}, modify the following form and click SUBMIT` : `To create a ${props.role}, fill out the following form and click SUBMIT`}

@@ -19,178 +19,16 @@ router.get('/:id', fetchSchoolPersonnelById);
 router.get('/getPersonnelInfo/:codes', fetchSchoolPersonnelByCode);
 
 function updateSchoolPersonnel(request, response) {
-    let schoolPersonnel = {}
+    if (request.params.id !== 'null') {
+        // Form validation
+        const {errors, isValid} = validateUpdateSchoolPersonnelInput(request.body);
 
-    schoolPersonnel = request.body
-
-    // Form validation
-    const {errors, isValid} = validateUpdateSchoolPersonnelInput(schoolPersonnel);
-
-    // Check validation
-    if (!isValid) {
-        return response.status(400).json({success: false, errors});
-    }
-
-    const email = schoolPersonnel.email.toLowerCase();
-    const prevEmail = schoolPersonnel.prevEmail.toLowerCase();
-
-    // check if user made changes to email or password to update both auth table and school personnel table
-    // if no changes to email or password, only update school personnel table
-    if ((prevEmail != email) || !(schoolPersonnel.password === '')) {
-
-        // both email and password
-        if ((prevEmail != email) && !(schoolPersonnel.password === '')) {
-            User.find({email: email},
-                (err, previousUsers) => {
-                    if (err) {
-                        return response.send({
-                            success: false,
-                            errors: {server: 'Server errors'}
-                        });
-                    } else if (previousUsers.length > 0) {
-                        return response.send({
-                            success: false,
-                            errors: {email: 'Email already exists'}
-                        });
-                    }
-
-                    let password = bcrypt.hashSync(schoolPersonnel.password, bcrypt.genSaltSync(8), null);
-
-                    User.updateOne({email: prevEmail}, {email: email, password: password}, (err, result) => {
-
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (result.n === 1) {
-                                delete schoolPersonnel.prevEmail;
-
-                                schPersonnel.updateOne({_id: request.params.id}, schoolPersonnel, (err, result) => {
-
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        if (result.n === 1) {
-                                            response.json({
-                                                success: true,
-                                                message: 'Successfully updated school personnel!'
-                                            });
-                                        } else {
-                                            response.json({
-                                                success: false,
-                                                errors: {server: 'Server error'}
-                                            })
-                                        }
-                                    }
-                                });
-                            } else {
-                                response.json({
-                                    success: false,
-                                    errors: {server: 'Server error'}
-                                })
-                            }
-                        }
-                    });
-                });
+        // Check validation
+        if (!isValid) {
+            return response.status(400).json({success: false, errors});
         }
 
-        //password
-        if ((prevEmail === email) && !(schoolPersonnel.password === '')) {
-
-            let password = bcrypt.hashSync(schoolPersonnel.password, bcrypt.genSaltSync(8), null);
-
-            User.updateOne({email: prevEmail}, {password: password}, (err, result) => {
-
-                if (err) {
-                    console.log(err);
-                } else {
-                    if (result.n === 1) {
-                        delete schoolPersonnel.prevEmail;
-
-                        schPersonnel.updateOne({_id: request.params.id}, schoolPersonnel, (err, result) => {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                if (result.n === 1) {
-                                    response.json({
-                                        success: true,
-                                        message: 'Successfully updated school personnel!'
-                                    });
-                                } else {
-                                    response.json({
-                                        success: false,
-                                        errors: {server: 'Server error'}
-                                    })
-                                }
-                            }
-                        });
-                    } else {
-                        response.json({
-                            success: false,
-                            errors: {server: 'Server error'}
-                        })
-                    }
-                }
-            });
-        }
-
-        //email
-        if ((prevEmail != email) && (schoolPersonnel.password === '')) {
-            User.find({email: email},
-                (err, previousUsers) => {
-                    if (err) {
-                        return response.send({
-                            success: false,
-                            errors: {server: 'Server errors'}
-                        });
-                    } else if (previousUsers.length > 0) {
-                        return response.send({
-                            success: false,
-                            errors: {email: 'Email already exists'}
-                        });
-                    }
-
-                    User.updateOne({email: prevEmail}, {email: email}, (err, result) => {
-
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (result.n === 1) {
-                                delete schoolPersonnel.prevEmail;
-
-                                schPersonnel.updateOne({_id: request.params.id}, schoolPersonnel, (err, result) => {
-
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        if (result.n === 1) {
-                                            response.json({
-                                                success: true,
-                                                message: 'Successfully updated school personnel!'
-                                            });
-                                        } else {
-                                            response.json({
-                                                success: false,
-                                                errors: {server: 'Server error'}
-                                            })
-                                        }
-                                    }
-                                });
-                            } else {
-                                response.json({
-                                    success: false,
-                                    errors: {server: 'Server error'}
-                                })
-                            }
-                        }
-                    });
-                });
-        }
-    } else {
-
-        delete schoolPersonnel.prevEmail;
-
-        schPersonnel.updateOne({_id: request.params.id}, schoolPersonnel, (err, result) => {
-
+        schPersonnel.updateOne({_id: request.params.id}, request.body, (err, result) => {
             if (err) {
                 console.log(err);
             } else {
@@ -207,7 +45,75 @@ function updateSchoolPersonnel(request, response) {
                 }
             }
         });
+    } else {
+        const {body} = request;
+        const {
+            schoolCode,
+            firstName,
+            lastName,
+            title,
+            phoneNumber,
+        } = body;
+        let {
+            email
+        } = body;
+
+        // form validation
+        const {errors, isValid} = validateCreateSchoolPersonnelInput(request.body);
+
+        // check validation
+        if (!isValid) {
+            return response.status(400).json({success: false, errors});
+        }
+
+        email = email.toLowerCase();
+
+        // Steps:
+        // 1. Verify email doesn't exist
+        // 2. Save to collection
+        User.find({
+            email: email
+        }, (err, previousUsers) => {
+            if (err) {
+                return response.json({
+                    success: false,
+                    message: {server: 'Server errors'}
+                });
+            } else if (previousUsers.length > 0) {
+                return response.json({
+                    success: false,
+                    errors: {email: 'Account already exists'}
+                });
+            }
+
+            // Save new user to school personnel collection
+            const newSchPersonnel = new schPersonnel();
+
+            newSchPersonnel.firstName = firstName;
+            newSchPersonnel.lastName = lastName;
+            newSchPersonnel.email = email;
+            newSchPersonnel.phoneNumber = phoneNumber;
+            newSchPersonnel.schoolCode = schoolCode;
+            newSchPersonnel.title = title;
+            newSchPersonnel.isActive = true;
+            newSchPersonnel.password = newSchPersonnel.generateHash("t0_B3_uPD4teD");
+            newSchPersonnel.role = 'schoolPersonnel';
+
+            newSchPersonnel.save((err, schPersonnel) => {
+                if (err) {
+                    return response.json({
+                        success: false,
+                        message: {server: 'Server errors'}
+                    });
+                }
+                return response.json({
+                    success: true,
+                    message: 'Successfully created school personnel!'
+                });
+            });
+        });
     }
+
 }
 
 function fetchSchoolPersonnels(request, response) {
