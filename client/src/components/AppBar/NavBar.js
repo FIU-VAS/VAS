@@ -75,19 +75,19 @@ class NavBar extends Component {
     this.setAnchorEl = this.setAnchorEl.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    
-}  
+
+}
 
  handleClose = () => {
   this.setAnchorEl(null);
 };
 
 redirect_to_Profile = () => {
-  this.props.history.push("/profile"); 
+  this.props.history.push("/profile");
 }
 
 redirect_to_AboutPage = () => {
-  this.props.history.push("/about"); 
+  this.props.history.push("/about");
 }
 
   submitLogout = async (e) =>{
@@ -98,10 +98,10 @@ redirect_to_AboutPage = () => {
       loggedIn: false,
       open: false
     });
-  
+
     this.props.logoutUser();
     this.props.resetState();
-    this.props.history.push("/login"); 
+    this.props.history.push("/login");
   }
 
   componentDidMount() {
@@ -110,7 +110,7 @@ redirect_to_AboutPage = () => {
         loggedIn: true
       })
     }
-    
+
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -168,7 +168,7 @@ render(){
             src ={require("../../images/VAS_LOGO.png").default}
             alt = "logo"
             />}
-            
+
             <Typography className={this.props.classes.title} variant='h5' >
              &nbsp;
              {this.getTitle()}
@@ -208,5 +208,5 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-  { logoutUser, resetState }  
+  { logoutUser, resetState }
 )(withRouter(withStyles(useStyles)(NavBar)));

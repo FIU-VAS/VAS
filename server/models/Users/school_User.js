@@ -1,5 +1,7 @@
+import User, {UserRoles} from "./user_Auth"
+import {Days, validateTimeDate} from "../Teams/team";
+
 const mongoose = require('mongoose')
-import User from "./user_Auth"
 
 const SchoolPersonnelSchema = new mongoose.Schema({
     schoolCode: {
@@ -26,7 +28,27 @@ const SchoolPersonnelSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
-});
+    availability: [{
+        dayOfWeek: {
+            type: String,
+            enum: Object.values(Days)
+        },
+        startTime: {
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
+        },
+        endTime: {
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
+        }
+    }],
+}, {discriminatorKey: "role"});
 
-const SchoolPersonnel = User.discriminator('SchoolPersonnel', SchoolPersonnelSchema, 'schoolPersonnel');
-export default mongoose.model('SchoolPersonnel')
+const SchoolPersonnel = User.discriminator('schoolPersonnel', SchoolPersonnelSchema);
+export default mongoose.model('schoolPersonnel')

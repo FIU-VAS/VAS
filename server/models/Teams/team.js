@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+import {startOfDay, isDate} from "date-fns";
 
 export const Days = {
     MONDAY: 'monday',
@@ -8,6 +9,13 @@ export const Days = {
     FRIDAY: 'friday',
 };
 
+// First monday of 2000
+export const REFERENCE_DATE = new Date(2000, 0, 3);
+
+export const validateTimeDate = (value) => {
+    return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
+    && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
+}
 
 const Team = new mongoose.Schema({
     schoolCode: {
@@ -28,43 +36,20 @@ const Team = new mongoose.Schema({
             enum: Object.values(Days)
         },
         startTime: {
-            type: String
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         },
         endTime: {
-            type: String
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
         }
     }],
-    dayOfWeek: {
-        monday: {
-            type: Boolean,
-            required: true,
-            default: false
-        },
-        tuesday: {
-            type: Boolean,
-            default: false
-        },
-        wednesday: {
-            type: Boolean,
-            default: false
-        },
-        thursday: {
-            type: Boolean,
-            default: false
-        },
-        friday: {
-            type: Boolean,
-            default: false
-        }
-    },
-    startTime: {
-        type: String,
-        required: true
-    },
-    endTime: {
-        type: String,
-        required: true,
-    },
     volunteerPIs: {
         type: Array,
         required: true,

@@ -1,3 +1,5 @@
+import {Days, validateTimeDate} from "../Teams/team";
+
 const mongoose = require('mongoose')
 import User from "./user_Auth"
 
@@ -15,7 +17,7 @@ const VolunteerSchema = new mongoose.Schema({
         default: ''
     },
     pantherID: {
-        type: Number,
+        type: String,
         required: true
     },
     major: {
@@ -37,8 +39,28 @@ const VolunteerSchema = new mongoose.Schema({
     MDCPS_ID: {
         type: String,
         default: ''
-    }
-});
+    },
+    availability: [{
+        dayOfWeek: {
+            type: String,
+            enum: Object.values(Days)
+        },
+        startTime: {
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
+        },
+        endTime: {
+            type: Date,
+            validate: {
+                validator: validateTimeDate,
+                message: "Invalid value for time"
+            }
+        }
+    }],
+}, { discriminatorKey: 'role' });
 
-const Volunteer = User.discriminator('Volunteer', VolunteerSchema, 'volunteer');
-export default mongoose.model('Volunteer')
+const Volunteer = User.discriminator('volunteer', VolunteerSchema);
+export default mongoose.model('volunteer')

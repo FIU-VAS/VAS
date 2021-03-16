@@ -1,6 +1,6 @@
-import React,{Component,Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
-import { Provider } from "react-redux";
+import {Provider} from "react-redux";
 import store from "./store";
 import './App.css';
 import jwt_decode from "jwt-decode";
@@ -36,19 +36,19 @@ if (localStorage.jwt) {
     // set user
     store.dispatch(setAuth(decoded));
     if (decoded.role === config.userRoles.admin) {
-      store.dispatch(getAdmin(decoded.id))
+        store.dispatch(getAdmin(decoded.id))
     }
     if (decoded.role === config.userRoles.volunteer) {
-      store.dispatch(getVolunteer(decoded.id))
+        store.dispatch(getVolunteer(decoded.id))
     }
     if (decoded.role === config.userRoles.schoolPersonnel) {
-      store.dispatch(getSchoolPersonnel(decoded.id))
+        store.dispatch(getSchoolPersonnel(decoded.id))
     }
     //store.dispatch(setCurrentUser(decoded));
 
     // check for expired token
     // to get in milliseconds divide by 1000
-    const currentTime = Date.now() / 1000; 
+    const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
 
         // logout user

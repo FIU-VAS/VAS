@@ -45,9 +45,9 @@ module.exports.up = async (next) => {
     });
   });
 
-  const results = await teams.bulkWrite(updates)
-
-  console.log(results);
+  if (updates.length) {
+    await teams.bulkWrite(updates)
+  }
 
   mongoose.connection.close()
   next()

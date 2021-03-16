@@ -21,11 +21,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Password is required for new user']
     },
-    role: {
-        type: String,
-        required: [true, 'Role is required for new user'],
-        enum: Object.values(UserRoles)
-    },
     token: {
         type: String
     },
@@ -37,7 +32,7 @@ const UserSchema = new mongoose.Schema({
             type: Date
         }
     }
-});
+}, {discriminatorKey: "role"});
 
 UserSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

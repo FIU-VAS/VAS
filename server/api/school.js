@@ -7,10 +7,13 @@ import mongoose from "mongoose"
 import validateCreateSchoolInput from '../validation/schools/createSchool';
 import validateUpdateSchoolInput from '../validation/schools/updateSchool';
 
+import {checkAdminRole, checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
+import passport from "../config/passport";
+
 const router = new express.Router();
 
-router.post('/create', createSchool);
-router.put('/update/:id', updateSchool);
+router.post('/create',checkAdminRole, createSchool);
+router.put('/update/:id',checkSchoolPersonnelRole, updateSchool);
 router.get('/:id', fetchSchoolById);
 router.get('/getSchoolInfo/:codes', fetchSchoolByCode);
 router.get('/', fetchSchools);
@@ -19,7 +22,7 @@ router.get('/', fetchSchools);
 function createSchool (req, res) {
 
     const { body } = req;
-    const { 
+    const {
         schoolName,
         schoolCode,
         level,
@@ -53,7 +56,7 @@ function createSchool (req, res) {
                     message: 'Error: A school by this code already exists'
                 });
             }
-        
+
 
         const newSchool = new School;
 
@@ -80,7 +83,7 @@ function createSchool (req, res) {
             });
         });
     });
-      
+
 }
 
 function updateSchool(request, response) {
@@ -128,10 +131,11 @@ function fetchSchoolById(request, response) {
 
 	School.findById(request.params.id, (err, result) => {
 		if (err) {
-		    response.statusCode = 400;
+		    response.statusCode = 500;
 		    response.json({
-                message: "Bad Request"
-            })
+                message: "Internal Server Error"
+            });
+		    console.log(err);
 		  } else {
 			response.json(result);
 		  }
@@ -144,7 +148,7 @@ function fetchSchoolByCode(request, response) {
 
     var CODES = schoolCodes.split(',');
 	//CODES = CODES.map(Number)
-  
+
     School.find({
         schoolCode: CODES
           }, (err, result) => {

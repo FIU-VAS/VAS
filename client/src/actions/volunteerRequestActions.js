@@ -6,7 +6,6 @@ const _ = require("underscore");
 
 // get teams from database
 export const getTeamRequest = pid => dispatch => {
-    //console.log("pid: ", pid)
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.team.getTeamInfo}/${pid}`;
 
@@ -92,6 +91,7 @@ export const getAdmins = () => dispatch => {
     axios.get(endpoint)
     .then((res) => {
         // set current admins
+        console.log(res);
         dispatch(setAdmins(res.data));    
     })
     .catch((err) => dispatch({

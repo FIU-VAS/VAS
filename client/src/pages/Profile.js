@@ -15,7 +15,7 @@ class Profile extends Component{
         const { auth } = this.props;
         switch (auth.role) {
             case config.userRoles.admin:
-                return (<Admin_Profile/>)
+                return (<Admin_Profile user={auth} />)
             case config.userRoles.volunteer:
                 return (<Volunteer_Profile/>)
             case config.userRoles.schoolPersonnel:
