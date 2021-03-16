@@ -1,5 +1,13 @@
 import {schema as userValidation} from "../common/user";
-import {Days} from "../../models/Teams/team";
+import {Days, REFERENCE_DATE, validateTimeDate} from "../../models/Teams/team";
+
+const validateAvailability = (values) => {
+    return values.every(value => {
+        value.dayOfWeek.toUpperCase() in Days
+        && validateTimeDate(value.startTime)
+        && validateTimeDate(value.endTime);
+    })
+}
 
 export const schema = {
     ...userValidation,
@@ -30,19 +38,12 @@ export const schema = {
             }
         }
     },
-    availability: [{
-        dayOfWeek: {
-            type: String,
-            enum: Object.values(Days),
-            required: true
-        },
-        startTime: {
-            type: String,
-            required: true
-        },
-        endTime: {
-            type: String,
-            required: true
+    availability: {
+        custom: {
+            options: (value) => {
+                return validateAvailability(value)
+            },
+            errorMessage: "Invalid availability configuration"
         }
-    }],
+    },
 }
