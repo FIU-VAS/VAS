@@ -22,6 +22,7 @@ import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
 import About from './pages/About'
 import config from "./config";
+import Availability from './pages/Availability';
 
 // check for token to keep user logged in
 if (localStorage.jwt) {
@@ -82,6 +83,7 @@ class App extends Component {
                 <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
                 <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>
                 <PrivateRoute path="/profile" component={Profile}/>
+                <PrivateRoute path="/availability" component={Availability}/>
                 <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
                 <AdminRoute path="/team-management" component={TeamManagement}/>
                 <AdminRoute path="/admin-management" component={AdminManagement}/>
