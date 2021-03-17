@@ -1,32 +1,32 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import isEmpty from 'is-empty';
 import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getSchoolPersonnels } from '../../actions/schoolPersonnelActions';
-import { getSchools } from '../../actions/schoolActions';
-import { UserFormDialog } from '../Users/UserFormDialog';
-import { withStyles } from '@material-ui/core/styles';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {getSchoolPersonnels} from '../../actions/schoolPersonnelActions';
+import {getSchools} from '../../actions/schoolActions';
+import {UserFormDialog} from '../Users/UserFormDialog';
+import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { green, red } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
+import {green, red} from '@material-ui/core/colors';
+import {createMuiTheme} from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
-      primary: {main: green[600]}, // For isActive is true
-      secondary: {main: red[600]},// For isActive is false
+        primary: {main: green[600]}, // For isActive is true
+        secondary: {main: red[600]},// For isActive is false
     }
-  });
+});
 
 const useStyles = ({
     table: {
-      minWidth: 200,
+        minWidth: 200,
     },
     all: {
         backgroundColor: '#fafafa',
@@ -50,7 +50,7 @@ const useStyles = ({
         fontSize: 13,
         alignItems: 'right'
     }
-  });
+});
 
 
 class SchoolPersonnelTable extends Component {
@@ -61,7 +61,7 @@ class SchoolPersonnelTable extends Component {
             userFormDialog: false,
         }
 
-        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
+        this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
     }
 
     componentDidMount() {
@@ -75,9 +75,7 @@ class SchoolPersonnelTable extends Component {
                 userFormDialog: false,
                 selectedSchoolPersonnel: {}
             }));
-            this.props.getSchoolPersonnels();
-        }
-        else {
+        } else {
             this.setState(prevState => ({
                 userFormDialog: true,
             }));
@@ -87,11 +85,9 @@ class SchoolPersonnelTable extends Component {
     setColor(text) {
         if (text === true) {
             return "primary";
-        }
-        else if (text === false) {
+        } else if (text === false) {
             return "secondary";
-        }
-        else {
+        } else {
             return "textPrimary";
         }
     }
@@ -106,7 +102,7 @@ class SchoolPersonnelTable extends Component {
                 name: "firstName",
                 defaultValue: edit ? this.state.selectedSchoolPersonnel.firstName : "",
                 type: "text"
-            }, 
+            },
             {
                 label: "Last Name",
                 name: "lastName",
@@ -151,7 +147,7 @@ class SchoolPersonnelTable extends Component {
                 defaultValue: edit ? this.state.selectedSchoolPersonnel.isActive : true,
                 type: "select",
                 options: [
-                    {value: true, label: "Yes"}, 
+                    {value: true, label: "Yes"},
                     {value: false, label: "No"}
                 ]
             }
@@ -163,24 +159,27 @@ class SchoolPersonnelTable extends Component {
                     title="School Personnels"
                     columns={
                         [
-                            { title: 'First Name', field: 'firstName' },
-                            { title: 'Last Name', field: 'lastName' },
-                            { title: 'Email', field: 'email'},
-                            { title: 'Phone #', field: 'phoneNumber'}
+                            {title: 'First Name', field: 'firstName'},
+                            {title: 'Last Name', field: 'lastName'},
+                            {title: 'Email', field: 'email'},
+                            {title: 'Phone #', field: 'phoneNumber'}
                         ]
                     }
                     data={this.props.schoolPersonnels}
                     actions={[
                         {
-                        icon: 'person_add',
-                        tooltip: 'Add School Personnel',
-                        isFreeAction: true,
-                        onClick: this.toggleUserFormDialog
+                            icon: 'person_add',
+                            tooltip: 'Add School Personnel',
+                            isFreeAction: true,
+                            onClick: this.toggleUserFormDialog
                         },
                         {
-                        icon: 'edit',
-                        tooltip: 'Edit School Personnel',
-                        onClick: (event, rowData) => {this.setState({selectedSchoolPersonnel: rowData}); this.toggleUserFormDialog()}
+                            icon: 'edit',
+                            tooltip: 'Edit School Personnel',
+                            onClick: (event, rowData) => {
+                                this.setState({selectedSchoolPersonnel: rowData});
+                                this.toggleUserFormDialog()
+                            }
                         }
                     ]}
                     options={{
@@ -188,82 +187,92 @@ class SchoolPersonnelTable extends Component {
                         headerStyle: {
                             backgroundColor: '#b0bec5',
                             color: '#212121'
-                          },
+                        },
                         cellStyle: {
                             width: 250,
                             maxWidth: 700
-                          },
-                          searchFieldStyle: {
+                        },
+                        searchFieldStyle: {
                             backgroundColor: '#eeeeee',
                         },
-                          pageSizeOptions: [4, 10, 20, 50, 100],
-                          pageSize: 10,
-                          paging: true,
-                          exportButton: true,
+                        pageSizeOptions: [4, 10, 20, 50, 100],
+                        pageSize: 10,
+                        paging: true,
+                        exportButton: true,
                     }}
                     detailPanel={rowData => {
 
                         return (
 
                             <ThemeProvider theme={theme}>
-                            <div className={this.props.classes.all} >
-                            <Grid
-                            container
-                            spacing={0}
-                            direction="column"
-                            alignItems="center"
-                            justify="center">
-                                <Card 
-                                className={this.props.classes.card} 
-                                variant="outlined"
-                                justify="center">
-                                    <CardContent>
-                                    {/* Title */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Title: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.title}<br/>
-                                    </Typography>
+                                <div className={this.props.classes.all}>
+                                    <Grid
+                                        container
+                                        spacing={0}
+                                        direction="column"
+                                        alignItems="center"
+                                        justify="center">
+                                        <Card
+                                            className={this.props.classes.card}
+                                            variant="outlined"
+                                            justify="center">
+                                            <CardContent>
+                                                {/* Title */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Title: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.title}<br/>
+                                                </Typography>
 
-                                    {/* School Code - School Name*/}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                       Associated School: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                     {rowData.schoolCode} - &nbsp;
-                                        {this.props.schools.map( school => {
-                                            if (school.schoolCode === rowData.schoolCode){
-                                                return school.schoolName 
-                                            }
-                                        })}<br/>
-                                    </Typography>
+                                                {/* School Code - School Name*/}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Associated School: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.schoolCode} - &nbsp;
+                                                    {this.props.schools.map(school => {
+                                                        if (school.schoolCode === rowData.schoolCode) {
+                                                            return school.schoolName
+                                                        }
+                                                    })}<br/>
+                                                </Typography>
 
-                                     {/* is Active*/}
-                                     <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Activation status: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} variant="h6" display="inline" color={this.setColor(rowData.isActive)} gutterBottom>
-                                        {rowData.isActive ? 'Active' : 'Not Active'}<br/>
-                                    </Typography>
+                                                {/* is Active*/}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Activation status: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} variant="h6"
+                                                            display="inline" color={this.setColor(rowData.isActive)}
+                                                            gutterBottom>
+                                                    {rowData.isActive ? 'Active' : 'Not Active'}<br/>
+                                                </Typography>
 
-                                        </CardContent>
-                                </Card>
-                            </Grid>
-                            </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </div>
                             </ThemeProvider>
 
                         )
                     }}
                 />
                 {this.state.userFormDialog && <UserFormDialog
-                                                        open={this.state.userFormDialog} 
-                                                        close={this.toggleUserFormDialog} 
-                                                        endpoint={endpoint}
-                                                        edit={edit}
-                                                        role={"School Personnel"}
-                                                        formProps={formProps}
-                                                    />}
+                    open={this.state.userFormDialog}
+                    close={this.toggleUserFormDialog}
+                    endpoint={endpoint}
+                    edit={edit}
+                    role={"School Personnel"}
+                    formProps={formProps}
+                    title={edit ? "Edit School Personnel" : "Create School Personnel"}
+                    description={edit ? 'To edit a  School Personnel, modify the following form and click SUBMIT'
+                        : 'To create a  School Personnel, modify the following form and click SUBMIT'}
+                />}
             </Fragment>
         );
     }
@@ -283,7 +292,7 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
-    { getSchoolPersonnels, getSchools }  
+    {getSchoolPersonnels, getSchools}
 )(withRouter(withStyles(useStyles)(SchoolPersonnelTable)));

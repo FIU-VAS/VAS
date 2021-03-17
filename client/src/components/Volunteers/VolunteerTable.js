@@ -307,6 +307,9 @@ class VolunteerTable extends Component {
                                                         edit={edit}
                                                         role={"Volunteer"}
                                                         formProps={formProps}
+                                                        title={edit ? "Edit Volunteer" : "Create Volunteer"}
+                                                        description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'
+                                                        : 'To create a  Volunteer, modify the following form and click SUBMIT'}
                                                     />}
             </Fragment>
         );

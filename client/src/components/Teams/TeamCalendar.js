@@ -79,7 +79,7 @@ const Days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
 const TeamCalendar = (props) => {
 
-    const {teams, schools, hideEmpty, schoolPersonnels} = props;
+    const {teams, schools, hideEmpty, schoolPersonnels, onlyTeams} = props;
 
     const getDayColor = (day) => {
         const today = new Date();
@@ -124,11 +124,15 @@ const TeamCalendar = (props) => {
                     </TeamCard>
                 )
             })}
-            <TeamPersonnel
-                school={schools.length ? schools[0] : {}}
-                schoolPersonnel={schoolPersonnels.length ? schoolPersonnels[0] : {}}
-            />
-            <TeamAdmin admins={props.admins} />
+            {!onlyTeams ? (
+                <React.Fragment>
+                    <TeamPersonnel
+                        school={schools.length ? schools[0] : {}}
+                        schoolPersonnel={schoolPersonnels.length ? schoolPersonnels[0] : {}}
+                    />
+                    <TeamAdmin admins={props.admins} />
+                </React.Fragment>
+            ) : ""}
         </Box>
     )
 }
