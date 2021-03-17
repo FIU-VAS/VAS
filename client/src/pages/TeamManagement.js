@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import TeamView from '../components/Teams/teamView'
+import TeamView from '../components/Teams/TeamView';
 
 const useStyles = {
     all: {

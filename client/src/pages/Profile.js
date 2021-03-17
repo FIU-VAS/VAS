@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom';
 import Admin_Profile from '../components/Profile/Admin_Profile'
 import Volunteer_Profile from '../components/Profile/Volunteer_Profile'
 import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile'
 import config from "../config";
 
 
-
-class Profile extends Component{
+class Profile extends Component {
 
     getProfile() {
-        const { auth } = this.props;
+        const {auth} = this.props;
         switch (auth.role) {
             case config.userRoles.admin:
                 return (<Admin_Profile/>)
@@ -23,10 +22,13 @@ class Profile extends Component{
         }
     }
 
-    render(){
+    render() {
+        if (!this.props.user) {
+            return "Loading"
+        }
         return (
             <div>
-                { this.getProfile() }
+                {this.getProfile()}
             </div>
         )
     }
@@ -36,14 +38,15 @@ class Profile extends Component{
 Profile.propTypes = {
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
-  };
-  
-  // allows us to get our state from Redux and map it to props
-  const mapStateToProps = state => ({
+};
+
+// allows us to get our state from Redux and map it to props
+const mapStateToProps = state => ({
     auth: state.auth,
+    user: state.userData.user,
     errors: state.errors
-  });
-  
-  export default connect (
+});
+
+export default connect(
     mapStateToProps,
-  )(withRouter(Profile));
+)(withRouter(Profile));
