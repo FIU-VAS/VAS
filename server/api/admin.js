@@ -1,11 +1,10 @@
 import express from 'express';
 
 import Admin from '../models/Users/admin_User';
-import User from '../models/Users/user_Auth';
 
 // input validation
 import {schema as adminSchema} from "../validation-schemas/admin/create";
-import {schema as adminUpdateSchema} from "../validation-schemas/admin/create"
+import {schema as adminUpdateSchema} from "../validation-schemas/admin/update"
 
 import {checkAdminRole} from "../utils/passport";
 import {createNewUser, updateUser} from "../utils/account";
