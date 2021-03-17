@@ -12,8 +12,8 @@ import {createNewUser, updateUser} from "../utils/account";
 
 const router = new express.Router();
 
-router.put('/', createNewUser(Admin, adminSchema));
-router.put('/:id', updateUser(Admin, adminUpdateSchema));
+router.post('/', createNewUser(Admin, adminSchema));
+router.post('/:id', updateUser(Admin, adminUpdateSchema));
 router.get('/', fetchAdmins);
 router.get('/:id', checkAdminRole, fetchAdminById);
 
