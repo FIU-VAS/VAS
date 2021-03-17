@@ -1,11 +1,10 @@
-import React, {Fragment, useEffect} from 'react';
-import {Switch, withRouter, useRouteMatch, Route} from 'react-router-dom';
+import React, {Fragment} from 'react';
+import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {blueGrey, blue, grey} from '@material-ui/core/colors';
-import {getSchools, getVolunteers, setSemesterTeams} from '../../actions/calendarActions'
+import {blue, blueGrey, grey} from '@material-ui/core/colors';
 import TeamCalendar from "../Teams/TeamCalendar";
 import AdminRoute from "../Routes/AdminRoute";
 import VolunteerManagement from "../../pages/VolunteerManagement";
@@ -14,10 +13,6 @@ import SchoolManagement from "../../pages/SchoolManagement";
 import TeamManagement from "../../pages/TeamManagement";
 import AdminManagement from "../../pages/AdminManagement";
 import {AdminNav} from "./AdminNav";
-import serverConf from "../../config";
-import axios from "axios";
-import {parseISO} from "date-fns";
-import {setErrors} from "../../actions/server/errorActions";
 
 const useStyles = {
     card: {
@@ -69,12 +64,8 @@ const AdminDashboard = (props) => {
 
     return (
         <Fragment>
-            <Grid
-                container
-                style={{marginLeft: '10%'}}>
-                <Typography
-                    className={props.classes.main}
-                    style={{marginBottom: '15px'}}>
+            <Grid container direction="column" justify="center" alignItems="center">
+                <Typography className={props.classes.main} style={{marginBottom: '15px'}}>
                     Admin Dashboard
                 </Typography>
             </Grid>
@@ -83,21 +74,14 @@ const AdminDashboard = (props) => {
 
             <Switch>
                 <Route exact path={path}>
-                    <Grid
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="center"
-                        className={props.classes.custom}
-                    >
+                    <Grid container direction="column" justify="center" alignItems="center" className={props.classes.custom}>
 
                         <Typography shadow={3} color="textPrimary" align='center' variant="h6" display="inline"
                                     style={{marginTop: '30px', fontSize: 30, fontWeight: 800, /* color: blue[500] */}}>
                             {semesterYear.semester + " " + semesterYear.year}
                         </Typography>
 
-                        <Typography color="textPrimary" align='center' variant="h6" display="inline"
-                                    style={{marginTop: '5px'}}>
+                        <Typography color="textPrimary" align='center' variant="h6" display="inline" style={{marginTop: '5px'}}>
                             {getTodaysDate()} &nbsp;
                         </Typography>
                     </Grid>

@@ -154,9 +154,9 @@ renderMenu(){
 getTitle(){
   let size = document.body.clientWidth
   if (size < 750) {
-    return ("FIU CS First VAS")
+    return ("FIU CS VAS")
   } else {
-    return ("FIU CS First Outreach Volunteer Attendance System")
+    return ("FIU CS Volunteer Attendance System")
   }
 }
 
