@@ -1,6 +1,6 @@
 import util from "util";
 import crypto from "crypto";
-import User from "../models/Users/user_Auth";
+import User, {UserRoles} from "../models/Users/user_Auth";
 import {addHours} from "date-fns";
 import {map} from "lodash";
 import config from "../config/config";
@@ -71,7 +71,7 @@ export const createNewUser = (Schema, validationSchema) => {
             if (emailResponse.accepted.indexOf(user.email) !== -1) {
                 response.json({
                     success: true,
-                    message: "Volunteer created successfully"
+                    message: `${user.role} created successfully`
                 })
             } else {
                 response.json({
@@ -96,6 +96,16 @@ export const updateUser = (Schema, validationSchema) => {
         const userId = request.params.id;
 
         const updateProps = {};
+
+        if (request.account.role !== UserRoles.Admin) {
+            if (request.account.email !== request.body.email) {
+                response.statusCode = 401;
+                return response.json({
+                    success: false,
+                    message: "Forbidden Action"
+                })
+            }
+        }
 
         map(Schema.schema.obj, (value, key) => {
             if (key in ['_id', 'password', 'resetPassword', 'token']) {
@@ -122,5 +132,5 @@ export const updateUser = (Schema, validationSchema) => {
             });
         }
     }
-    return [checkAdminRole, extendedCheckSchema(validationSchema), updateUser]
+    return [extendedCheckSchema(validationSchema), updateUser]
 }
