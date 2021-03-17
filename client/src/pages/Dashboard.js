@@ -104,7 +104,7 @@ const Dashboard = (props) => {
     return (
         <div className={props.classes.all}
              style={{
-                 backgroundImage: 'url(' + require('../images/FIU_1_10.png') + ')',
+                 backgroundImage: 'url(' + require('../images/FIU_1_10.png').default + ')',
                  backgroundPosition: 'center',
                  backgroundSize: 'cover'
              }}>
