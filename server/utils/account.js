@@ -84,7 +84,8 @@ export const createNewUser = (Schema, validationSchema) => {
             response.json({
                 success: false,
                 message: "Error sending email: " + emailError.toString()
-            })
+            });
+            user.delete();
         }
     }
 

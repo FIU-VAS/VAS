@@ -163,40 +163,39 @@ export const UserFormDialog = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <Dialog open={props.open} maxWidth="sm">
-                <form onSubmit={handleSubmit((data, event) => {
-                    submitForm(data, props.role, props.edit, props.userId);
-                })}><DialogTitle>
-                    <Box display="flex" alignItems="center">
-                        <Box flexGrow={1}>{props.title}</Box>
-                        <Box>
-                            <IconButton onClick={props.close}>
-                                <CloseIcon/>
-                            </IconButton>
+                <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit((data, event) => {
+                        submitForm(data, props.role, props.edit, props.userId);
+                    })}><DialogTitle>
+                        <Box display="flex" alignItems="center">
+                            <Box flexGrow={1}>{props.title}</Box>
+                            <Box>
+                                <IconButton onClick={props.close}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
                         </Box>
-                    </Box>
-                </DialogTitle>
-                {message !== "" && <Alert severity={success ? "success" : "error"}>{message}</Alert>}
-                <DialogContent>
-                    <DialogContentText>
-                        {props.description}
-                    </DialogContentText>
-                    <FormProvider {...methods}>
-
-                        {FormWrapper ? (
-                            <FormWrapper {...formWrapperProps}>
-                                {getFormFields()}
-                            </FormWrapper>
-                        ) : getFormFields()}
-                    </FormProvider>
-                </DialogContent>
-                <DialogActions>
-                    <Button className={useStyles.bottomButtons} onClick={props.close} variant="contained"
-                            color="primary">Cancel</Button>
-                    <Button className={useStyles.bottomButtons} type="submit" variant="contained"
-                            color="primary">Submit</Button>
-                </DialogActions>
-            </form>
-        </Dialog>
-</ThemeProvider>
-)
+                    </DialogTitle>
+                        {message !== "" && <Alert severity={success ? "success" : "error"}>{message}</Alert>}
+                        <DialogContent>
+                            <DialogContentText>
+                                {props.description}
+                            </DialogContentText>
+                            {FormWrapper ? (
+                                <FormWrapper {...formWrapperProps}>
+                                    {getFormFields()}
+                                </FormWrapper>
+                            ) : getFormFields()}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button className={useStyles.bottomButtons} onClick={props.close} variant="contained"
+                                    color="primary">Cancel</Button>
+                            <Button className={useStyles.bottomButtons} type="submit" variant="contained"
+                                    color="primary">Submit</Button>
+                        </DialogActions>
+                    </form>
+                </FormProvider>
+            </Dialog>
+        </ThemeProvider>
+    )
 }
