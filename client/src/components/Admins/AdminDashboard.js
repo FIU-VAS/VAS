@@ -79,8 +79,6 @@ const AdminDashboard = (props) => {
                 </Typography>
             </Grid>
 
-            <AdminNav/>
-
             <Switch>
                 <Route exact path={path}>
                     <Grid

@@ -72,17 +72,17 @@ const useStyles = {
         alignItems: 'left',
         justify: 'left',
     },
-    // text:{
-    //     left: '3%',
-    //     right: '35%',
-    //     position: 'absolute',
-    // },
-    // blob: {
-    //     position: 'absolute',
-    //     right: '3%',
-    //     left: '65%',
-    //     height : "350px",
-    // }
+    text:{
+        left: '3%',
+        right: '35%',
+        position: 'absolute',
+    },
+    blob: {
+        position: 'absolute',
+        right: '3%',
+        left: '65%',
+        height : "350px",
+    }
 }
 
 function ListItemLink(props) {
@@ -138,17 +138,20 @@ class AboutView extends Component {
 
 
                             </div>
+                            <img className={this.props.classes.blob}
+                                src ={require("../../images/Ignite_4.png").default}
+                                alt = "Blob" 
+                            />
             </Grid>
-            {/* <img className={this.props.classes.blob}
-                src ={require("../../images/Ignite_4.png").default}
-                alt = "Blob" 
-                /> */}
+            
            <Grid
             container
             direction="column"
             justify="center"
             alignItems="center"
+            paddingTop="50px"
             >
+                <div>
                 
                     <Typography
                         className={this.props.classes.main}
@@ -156,7 +159,7 @@ class AboutView extends Component {
                         style={{marginBottom: '5px'}}>
                             Project Credits 
                     </Typography>
-
+                </div>
             </Grid>
 
                 <Grid
@@ -181,20 +184,17 @@ class AboutView extends Component {
                         boxShadow={2}
                         className={this.props.classes.cardHeader}
                         variant="outlined"
-                        justify="center">
+                        justify="center"
+>
 
-                            <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="center">
+                            
 
                                 <Typography
                                 className={this.props.classes.cardTitle}
                                 style={{marginTop: '14px'}}>
                                     Version 1 
                                 </Typography>
-                            </Grid>
+                            
 
                       <Grid style={{paddingLeft: '15px', paddingTop: '10px', paddingRight: '15px', paddingBottom: '15px',}}>
                             
