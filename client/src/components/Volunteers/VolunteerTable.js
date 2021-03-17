@@ -98,7 +98,7 @@ class VolunteerTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedVolunteer);
-        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.volunteers.update}/${this.state.selectedVolunteer._id}` : `${serverConf.uri}${serverConf.endpoints.volunteers.update}/null`;
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.volunteers.update}/${this.state.selectedVolunteer._id}` : `${serverConf.uri}${serverConf.endpoints.volunteers.signup}/`;
 
         const formProps = [
             {

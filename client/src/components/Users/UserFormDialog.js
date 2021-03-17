@@ -120,6 +120,7 @@ export const UserFormDialog = (props) => {
                 setSuccess(true);
             })
             .catch(err => {
+                console.log(err);
                 setMessage(err.message);
                 setSuccess(false);
             })
