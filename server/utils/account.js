@@ -29,9 +29,9 @@ export const createNewUser = (Schema, validationSchema) => {
     let createUser = async (request, response) => {
         const [hash, token] = await User.generateResetToken();
         const randBytes = util.promisify(crypto.randomBytes);
-        let randomPassword = await randBytes(12);
+        let randomPassword = await randBytes(8);
         const createProps = {
-            password: randomPassword,
+            password: randomPassword.toString("hex"),
             resetPassword: {
                 token: hash,
                 expire: addHours(new Date(), 2)

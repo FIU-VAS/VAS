@@ -4,13 +4,6 @@ import {omit} from "lodash";
 
 import User from '../models/Users/user_Auth';
 import Admin from '../models/Users/admin_User';
-import Volunteer from '../models/Users/volunteer_User';
-import schPersonnel from '../models/Users/school_User';
-
-
-// input validation
-import validateCreateVolunteerInput from '../validation/volunteers/createVolunteer';
-import validateCreateSchoolPersonnelInput from '../validation/schoolPersonnels/createSchoolPersonnel';
 
 
 import passport from "../config/passport"
@@ -19,6 +12,7 @@ import isEmpty from "is-empty";
 import config from "../config/config";
 import {extendedCheckSchema} from "../utils/validation";
 import {schema as adminSchema} from "../validation-schemas/admin/create";
+import {schema as authSchema} from "../validation-schemas/auth/user";
 import {checkAdminRole} from "../utils/passport";
 
 const router = new express.Router();
@@ -26,7 +20,7 @@ const router = new express.Router();
 router.post('/admin/signup', passport.authorize('jwt'), checkAdminRole, extendedCheckSchema(adminSchema), adminSignUp);
 router.post('/login', passport.authenticate('local', {session: false}, null), login);
 router.post('/send-reset-password', sendResetPassword);
-router.post('/reset-password', resetPassword);
+router.post('/reset-password', extendedCheckSchema(authSchema), resetPassword);
 router.get('/me', passport.authorize('jwt'), getCurrentUser);
 
 async function adminSignUp(req, res) {
@@ -161,15 +155,6 @@ async function sendResetPassword(req, res) {
 async function resetPassword(req, res) {
     const {body} = req;
     let user, isValid;
-
-    if (isEmpty(body.token) || isEmpty(body.userId)) {
-        res.statusCode = 400;
-        res.json({
-            success: false,
-            message: "Bad request: Missing token, userId, or new password"
-        })
-        return;
-    }
 
     try {
         user = await User.findById(body.userId);
