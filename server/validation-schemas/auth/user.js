@@ -1,8 +1,13 @@
 
 
 export const schema = {
-    email: {
-        isEmail: true
+    userId: {
+        exists: true,
+        errorMessage: "User Id must be defined"
+    },
+    token: {
+        isAlphanumeric: true,
+        errorMessage: "Invalid user token"
     },
     password: {
         isLength: {

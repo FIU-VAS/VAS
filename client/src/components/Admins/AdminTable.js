@@ -73,6 +73,7 @@ class AdminTable extends Component {
                 userFormDialog: false,
                 selectedAdmin: {}
             }));
+            this.props.getAdmins();
         } else {
             this.setState(prevState => ({
                 userFormDialog: true,
@@ -92,7 +93,8 @@ class AdminTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedAdmin);
-        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.admin.update}/${this.state.selectedAdmin._id}` : `${serverConf.uri}${serverConf.endpoints.admin.update}/`;
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.admin.update}/${this.state.selectedAdmin._id}` : `${serverConf.uri}${serverConf.endpoints.admin.signup}/`;
+        console.log(endpoint);
         const formProps = [
             {
                 label: "First Name",

@@ -1,7 +1,8 @@
-import {schema as userValidation} from "../common/user";
 
 export const schema = {
-    ...userValidation,
+    email: {
+        isEmail: true
+    },
     firstName: {
         exists: {
             errorMessage: "First Name is required"
