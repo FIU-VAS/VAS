@@ -11,8 +11,9 @@ import Login from './pages/Login'
 import NavBar from './components/AppBar/NavBar';
 import Footer from './components/AppBar/Footer';
 import Dashboard from './pages/Dashboard';
-import VolunteerManagement from './pages/VolunteerManagement'
-import Profile from './pages/Profile'
+import VolunteerManagement from './pages/VolunteerManagement';
+import Profile from './pages/Profile';
+import Home from './pages/Home';
 import SchoolManagement from './pages/SchoolManagement';
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import AdminRoute from './components/Routes/AdminRoute'
