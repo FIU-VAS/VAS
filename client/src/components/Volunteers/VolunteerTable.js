@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import isEmpty from 'is-empty';
+import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -74,6 +75,7 @@ class VolunteerTable extends Component {
                 userFormDialog: false,
                 selectedVolunteer: {}
             }));
+            this.props.getVolunteers();
         }
         else {
             this.setState(prevState => ({
@@ -96,6 +98,8 @@ class VolunteerTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedVolunteer);
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.volunteers.update}/${this.state.selectedVolunteer._id}` : `${serverConf.uri}${serverConf.endpoints.volunteers.signup}/`;
+
         const formProps = [
             {
                 label: "First Name",
@@ -120,6 +124,13 @@ class VolunteerTable extends Component {
                 name: "phoneNumber",
                 defaultValue: edit ? this.state.selectedVolunteer.phoneNumber : "",
                 type: "tel"
+            },
+            {
+                label: "Panther ID",
+                name: "pantherID",
+                defaultValue: edit ? this.state.selectedVolunteer.pantherID : "",
+                type: "text"
+
             },
             {
                 label: "Major",
@@ -278,7 +289,7 @@ class VolunteerTable extends Component {
 
 
 
-                                        </CardContent>
+                                    </CardContent>
                                 </Card>
                             </Grid>
                             </div>
@@ -292,10 +303,13 @@ class VolunteerTable extends Component {
                 {this.state.userFormDialog && <UserFormDialog
                                                         open={this.state.userFormDialog} 
                                                         close={this.toggleUserFormDialog} 
-                                                        userId={isEmpty(this.state.selectedVolunteer) ? "" : this.state.selectedVolunteer.userId}
+                                                        endpoint={endpoint}
                                                         edit={edit}
                                                         role={"Volunteer"}
                                                         formProps={formProps}
+                                                        title={edit ? "Edit Volunteer" : "Create Volunteer"}
+                                                        description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'
+                                                        : 'To create a  Volunteer, modify the following form and click SUBMIT'}
                                                     />}
             </Fragment>
         );

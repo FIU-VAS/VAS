@@ -31,9 +31,9 @@ function validateCreateSchoolPersonnelInput(data) {
 	  }
 
     // password check
-    if (validator.isEmpty(data.password)) {
-		errors.password = 'Password is required';
-    }
+    // if (validator.isEmpty(data.password)) {
+		// errors.password = 'Password is required';
+    // }
 
     //phonene number check
     if (validator.isEmpty(data.phoneNumber)) {

@@ -1,32 +1,32 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import isEmpty from 'is-empty';
+import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getAdmins } from '../../actions/adminActions';
-import { UserFormDialog } from '../Users/UserFormDialog';
-import { withStyles } from '@material-ui/core/styles';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {getAdmins} from '../../actions/adminActions';
+import {UserFormDialog} from '../Users/UserFormDialog';
+import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { green, red } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
-
+import {green, red} from '@material-ui/core/colors';
+import {createMuiTheme} from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
 
 
 const theme = createMuiTheme({
     palette: {
-      primary: {main: green[600]}, // For isActive is true
-      secondary: {main: red[600]},// For isActive is false
+        primary: {main: green[600]}, // For isActive is true
+        secondary: {main: red[600]},// For isActive is false
     }
-  });
+});
 
 const useStyles = ({
     table: {
-      minWidth: 200,
+        minWidth: 200,
     },
     all: {
         //backgroundColor: '#fafafa',
@@ -50,7 +50,7 @@ const useStyles = ({
         fontSize: 13,
         alignItems: 'right'
     }
-  });
+});
 
 class AdminTable extends Component {
     constructor(props) {
@@ -60,7 +60,7 @@ class AdminTable extends Component {
             userFormDialog: false
         }
 
-        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
+        this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
     }
 
     componentDidMount() {
@@ -73,8 +73,8 @@ class AdminTable extends Component {
                 userFormDialog: false,
                 selectedAdmin: {}
             }));
-        }
-        else {
+            this.props.getAdmins();
+        } else {
             this.setState(prevState => ({
                 userFormDialog: true,
             }));
@@ -84,24 +84,24 @@ class AdminTable extends Component {
     setColor(text) {
         if (text === true) {
             return "primary";
-        }
-        else if (text === false) {
+        } else if (text === false) {
             return "secondary";
-        }
-        else {
+        } else {
             return "textPrimary";
         }
     }
 
     render() {
         const edit = !isEmpty(this.state.selectedAdmin);
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.admin.update}/${this.state.selectedAdmin._id}` : `${serverConf.uri}${serverConf.endpoints.admin.signup}/`;
+        console.log(endpoint);
         const formProps = [
             {
                 label: "First Name",
                 name: "firstName",
                 defaultValue: edit ? this.state.selectedAdmin.firstName : "",
                 type: "text"
-            }, 
+            },
             {
                 label: "Last Name",
                 name: "lastName",
@@ -128,24 +128,27 @@ class AdminTable extends Component {
                     title="Administrators"
                     columns={
                         [
-                            { title: 'First Name', field: 'firstName' },
-                            { title: 'Last Name', field: 'lastName' },
-                            { title: 'Email', field: 'email'},
-                            { title: 'Phone #', field: 'phoneNumber'}
+                            {title: 'First Name', field: 'firstName'},
+                            {title: 'Last Name', field: 'lastName'},
+                            {title: 'Email', field: 'email'},
+                            {title: 'Phone #', field: 'phoneNumber'}
                         ]
                     }
                     data={this.props.admins}
                     actions={[
                         {
-                        icon: 'person_add',
-                        tooltip: 'Add Admin',
-                        isFreeAction: true,
-                        onClick: this.toggleUserFormDialog
+                            icon: 'person_add',
+                            tooltip: 'Add Admin',
+                            isFreeAction: true,
+                            onClick: this.toggleUserFormDialog
                         },
                         {
-                        icon: 'edit',
-                        tooltip: 'Edit Admin',
-                        onClick: (event, rowData) => {this.setState({selectedAdmin: rowData}); this.toggleUserFormDialog()}
+                            icon: 'edit',
+                            tooltip: 'Edit Admin',
+                            onClick: (event, rowData) => {
+                                this.setState({selectedAdmin: rowData});
+                                this.toggleUserFormDialog()
+                            }
                         }
                     ]}
                     options={{
@@ -160,42 +163,45 @@ class AdminTable extends Component {
                         cellStyle: {
                             width: 250,
                             maxWidth: 700
-                          },
-                          pageSizeOptions: [10, 20, 50, 100],
-                          pageSize: 10,
-                          paging: true,
-                          exportButton: true,
+                        },
+                        pageSizeOptions: [10, 20, 50, 100],
+                        pageSize: 10,
+                        paging: true,
+                        exportButton: true,
                     }}
-                    detailPanel={rowData => { 
+                    detailPanel={rowData => {
                         return (
 
                             <ThemeProvider theme={theme}>
-                            <div className={this.props.classes.all} >
-                            <Grid
-                            container
-                            spacing={0}
-                            direction="column"
-                            alignItems="center"
-                            justify="center">
-                                <Card 
-                                className={this.props.classes.card} 
-                                variant="outlined"
-                                justify="center">
-                                    <CardContent>
+                                <div className={this.props.classes.all}>
+                                    <Grid
+                                        container
+                                        spacing={0}
+                                        direction="column"
+                                        alignItems="center"
+                                        justify="center">
+                                        <Card
+                                            className={this.props.classes.card}
+                                            variant="outlined"
+                                            justify="center">
+                                            <CardContent>
 
-                                     {/* is Active*/}
-                                     <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Activation status: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} variant="h6" display="inline" color={this.setColor(rowData.isActive)} gutterBottom>
-                                        {rowData.isActive ? 'Active' : 'Not Active'}<br/>
-                                    </Typography>
+                                                {/* is Active*/}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Activation status: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} variant="h6"
+                                                            display="inline" color={this.setColor(rowData.isActive)}
+                                                            gutterBottom>
+                                                    {rowData.isActive ? 'Active' : 'Not Active'}<br/>
+                                                </Typography>
 
 
-                                        </CardContent>
-                                </Card>
-                            </Grid>
-                            </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </div>
                             </ThemeProvider>
 
                         )
@@ -204,13 +210,16 @@ class AdminTable extends Component {
                     }}
                 />
                 {this.state.userFormDialog && <UserFormDialog
-                                                        open={this.state.userFormDialog} 
-                                                        close={this.toggleUserFormDialog} 
-                                                        userId={isEmpty(this.state.selectedAdmin) ? "" : this.state.selectedAdmin.userId}
-                                                        edit={edit}
-                                                        role={"Admin"}
-                                                        formProps={formProps}
-                                                    />}
+                    open={this.state.userFormDialog}
+                    close={this.toggleUserFormDialog}
+                    endpoint={endpoint}
+                    edit={edit}
+                    role={"Admin"}
+                    formProps={formProps}
+                    title={edit ? "Edit Admin" : "Create Admin"}
+                    description={edit ? 'To edit a  Admin, modify the following form and click SUBMIT'
+                        : 'To create a  Admin, modify the following form and click SUBMIT'}
+                />}
             </Fragment>
         );
     }
@@ -227,7 +236,7 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
-    { getAdmins }  
+    {getAdmins}
 )(withRouter(withStyles(useStyles)(AdminTable)));

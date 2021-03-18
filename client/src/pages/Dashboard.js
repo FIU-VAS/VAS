@@ -41,7 +41,7 @@ const Dashboard = (props) => {
 
     let now = new Date();
     const semesterYear = {
-        semester: now.getDate() > 6 ? "Fall" : "Spring",
+        semester: now.getMonth() > 6 ? "Fall" : "Spring",
         year: now.getFullYear()
     }
 
