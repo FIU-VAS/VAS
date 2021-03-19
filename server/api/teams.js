@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from "mongoose"
 
 import Team from '../models/Teams/team';
 import {UserRoles} from '../models/Users/user_Auth';
@@ -6,10 +7,12 @@ import SchoolPersonnel from '../models/Users/school_User';
 import Volunteer from '../models/Users/volunteer_User';
 
 //input validation
+import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
+import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
-import {checkSchema} from "express-validator";
+import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
@@ -17,9 +20,10 @@ router.post('/', checkAdminRole, createTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
 router.get('/:id', fetchTeamById);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
-router.get('/', fetchTeams);
+router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
-router.get('/suggest/:term', checkAdminRole, checkSchema({
+router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
+router.get('/suggest/:term', checkAdminRole, extendedCheckSchema({
     term: {
         exists: true,
         errorMessage: "Term must be defined"
@@ -188,6 +192,69 @@ function fetchTeamBySchoolCode(request, response) {
     });
 }
 
+async function getTeamData(request, response) {
+    const fieldMaps = {
+        volunteers: {
+            from: "users",
+            localField: "volunteerPIs",
+            foreignField: "pantherID",
+            as: "volunteers"
+        },
+        school: {
+            from: "schools",
+            localField: "schoolCode",
+            foreignField: "schoolCode",
+            as: "school"
+        },
+        schoolPersonnel: {
+            from: "users",
+            localField: "schoolCode",
+            foreignField: "schoolCode",
+            as: "schoolPersonnel"
+        }
+    }
+
+    const {related} = request.query;
+
+    if (!related.every(field => field in fieldMaps)) {
+        response.statusCode = 400;
+        return response.json({
+            success: false,
+            message: "Invalid field provided in request. Allowed [volunteers, school, schoolPersonnel]"
+        });
+    }
+
+    let aggregation = [
+        {
+            $match: {_id: mongoose.Types.ObjectId(request.params.id)}
+        },
+        ...related.map(field => {
+            return {
+                $lookup: fieldMaps[field]
+            }
+        })
+    ];
+
+
+    switch (request.account.role) {
+        case UserRoles.SchoolPersonnel:
+            aggregation[0].$match.schoolCode = request.account.schoolCode
+            break;
+        case UserRoles.Volunteer:
+            aggregation[0].$match.volunteerPIs = request.account.pantherID;
+            break
+    }
+
+    console.log(aggregation);
+
+    const results = await Team.aggregate(aggregation);
+
+    return response.json({
+        success: true,
+        team: results.length ? results[0] : {}
+    });
+}
+
 async function teamSuggestions(request, response) {
     // @TODO Improve logic to use less queries to db
     const term = request.params.term;
@@ -198,7 +265,7 @@ async function teamSuggestions(request, response) {
     let teams = [];
 
     schoolPersonnel.forEach(user => {
-        
+
     })
 
 }
