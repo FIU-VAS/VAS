@@ -21,45 +21,6 @@ export const getSchoolPersonnels = (code) => dispatch => {
     }));
 };
 
-// add school personnel to database and refresh the store
-export const addSchoolPersonnel = form => dispatch => {
-
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.signup}`;
-
-    axios.post(endpoint, form)
-    .then((res) => {
-        // set current school personnels
-        dispatch(getSchoolPersonnels());
-        dispatch({
-            type: GET_SUCCESS,
-            payload: res.data.message
-        });   
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
- };
-
- // make chanhes to school personnel in the database and refresh the store
-export const editSchoolPersonnel = (id, form) => dispatch => {
-
-    const endpoint = `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${id}`;
-
-    axios.put(endpoint, form)
-    .then((res) => {
-        dispatch(getSchoolPersonnels());
-        dispatch({
-            type: GET_SUCCESS,
-            payload: res.data.message
-        });   
-    })
-    .catch((err) => dispatch({
-        type: GET_ERRORS,
-        payload: err
-    }));
- };
-
 // school personnels loading
 export const setSchoolPersonnelsLoading = () => {
     return {

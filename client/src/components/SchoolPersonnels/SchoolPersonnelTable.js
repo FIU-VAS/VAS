@@ -75,6 +75,7 @@ class SchoolPersonnelTable extends Component {
                 userFormDialog: false,
                 selectedSchoolPersonnel: {}
             }));
+            this.props.getSchoolPersonnels();
         } else {
             this.setState(prevState => ({
                 userFormDialog: true,
@@ -94,7 +95,7 @@ class SchoolPersonnelTable extends Component {
 
     render() {
         const edit = !isEmpty(this.state.selectedSchoolPersonnel);
-        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${this.state.selectedSchoolPersonnel._id}` : `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/null`;
+        const endpoint = edit ? `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${this.state.selectedSchoolPersonnel._id}` : `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.signup}/`;
 
         const formProps = [
             {
