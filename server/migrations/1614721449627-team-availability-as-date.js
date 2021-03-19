@@ -1,6 +1,6 @@
 'use strict'
 const mongoose = require('mongoose');
-import {parse, setDay, format} from "date-fns";
+import {parse, setDay, format, addHours} from "date-fns";
 
 const db = require("../services/db.js").default;
 const config = require("../config/config.js").default;
@@ -15,12 +15,20 @@ const updateSchema = async (collection) => {
   let updates = objs.map(obj => {
     if (!obj.availability) return false;
 
+
     let toUpdate = {
       availability: obj.availability.map(av => {
+        let startTime = setDay(parse(av.startTime, "HH:mm", REFERENCE_DATE), days.indexOf(av.dayOfWeek) + 1);
+        let endTime = setDay(parse(av.endTime, "HH:mm", REFERENCE_DATE), days.indexOf(av.dayOfWeek) + 1);
+
+        // Add 5 hours because current date is supposed to be in the eastern timezone
+        startTime = addHours(startTime, 5);
+        endTime = addHours(endTime, 5);
+
         return {
           ...av,
-          startTime: setDay(parse(av.startTime, "HH:mm", REFERENCE_DATE), days.indexOf(av.dayOfWeek) + 1),
-          endTime: setDay(parse(av.endTime, "HH:mm", REFERENCE_DATE), days.indexOf(av.dayOfWeek) + 1)
+          startTime: startTime,
+          endTime: endTime
         }
       })
     }

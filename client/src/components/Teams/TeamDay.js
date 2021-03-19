@@ -20,7 +20,7 @@ export const TeamDay = (props) => {
             )
 
             return (
-                <Box key={team}>
+                <Box key={team.id}>
                     <Typography
                         className={props.classes.title}
                         style={{marginBottom: '1px', alignItems: 'left', marginTop: '1px'}}>

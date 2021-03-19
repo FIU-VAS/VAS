@@ -2,10 +2,8 @@ import Box from "@material-ui/core/Box";
 import {blue, blueGrey, grey} from "@material-ui/core/colors";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import React, {useState} from "react";
-import {FormControl, makeStyles, TextField} from "@material-ui/core";
-import PropTypes from "prop-types";
-import {useForm, FormProvider, useFormContext, Controller} from "react-hook-form";
+import React from "react";
+import {makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     all: {

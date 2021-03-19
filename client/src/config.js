@@ -42,7 +42,8 @@ const config = {
 			fetch: '/team',
 			update: '/team/update',
 			getTeamInfo: '/team/getTeamInfo',
-			getTeamInfoSch: '/team/getTeamInfoSch'
+			getTeamInfoSch: '/team/getTeamInfoSch',
+			getTeamData: '/team/getTeamData'
 		},
 		user: {
 			me: '/account/me'

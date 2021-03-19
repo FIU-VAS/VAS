@@ -24,14 +24,11 @@ const useStyles = {
         //backgroundColor: '#fafafa',
         //background: 'linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%)',
 
-        height: '180vh'
     },
     cell: {
         marginTop: 20,
         minWidth: 200,
         width: '95%',
-        height: 900,
-
     }
 }
 
@@ -100,7 +97,6 @@ const Dashboard = (props) => {
         }
     }
 
-    const {auth} = props;
     return (
         <div className={props.classes.all}
              style={{
