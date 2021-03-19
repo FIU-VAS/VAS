@@ -116,29 +116,6 @@ const TeamDialog = (props) => {
             submitDataOnly={true}
         />
     )
-    // return (
-    //     <Dialog
-    //         open={open}
-    //         maxWidth="sm"
-    //     >
-    //         <DialogTitle>Edit Team</DialogTitle>
-    //         {this.successMessage()}
-    //         <DialogContent>
-    //             <DialogContentText>
-    //                 To edit a team, modify the following form and click UPDATE.
-    //             </DialogContentText>
-    //             <div className={this.props.classes.root}>
-    //
-    //             </div>
-    //         </DialogContent>
-    //         <DialogActions>
-    //             <Button onClick={console.log}
-    //                     variant="contained" color="primary">Cancel</Button>
-    //             <Button onClick={console.log} variant="contained"
-    //                     color="primary">Update</Button>
-    //         </DialogActions>
-    //     </Dialog>
-    // )
 };
 
 

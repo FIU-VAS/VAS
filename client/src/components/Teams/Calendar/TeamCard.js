@@ -204,6 +204,11 @@ let TeamCardComponent = (props) => {
                                    </Typography>
                                </div>
                            </Grid>
+                           <Grid item xs={12}>
+                               <Typography variant="h6" style={{fontWeight: 600, fontSize: "1rem"}}>
+                                   {format(todayAvailability.startTime, "h:mm aa")} – {format(todayAvailability.endTime, "hh:mm aa")}
+                               </Typography>
+                           </Grid>
                            <TeamDetails
                                teamVolunteers={teamData.teamVolunteers}
                                teamPersonnel={teamData.teamPersonnel}
