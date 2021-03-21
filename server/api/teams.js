@@ -13,22 +13,33 @@ import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
+import {buildQuery} from "../utils/team-query";
 
 const router = new express.Router();
 
 router.post('/', checkAdminRole, createTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
-router.get('/:id', fetchTeamById);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
 router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
-router.get('/suggest/:term', checkAdminRole, extendedCheckSchema({
-    term: {
+router.get('/suggest', checkAdminRole, extendedCheckSchema({
+    semester: {
         exists: true,
         errorMessage: "Term must be defined"
+    },
+    year: {
+        isNumeric: true,
+        isLength: {
+            options: {
+                min: 4,
+                max: 4
+            },
+        },
+        errorMessage: "Year must be a number of 4 digits"
     }
 }), teamSuggestions);
+router.get('/:id', fetchTeamById);
 
 
 function createTeam(req, res) {
@@ -257,16 +268,38 @@ async function getTeamData(request, response) {
 
 async function teamSuggestions(request, response) {
     // @TODO Improve logic to use less queries to db
-    const term = request.params.term;
+    const {semester, year} = request.params;
+    let matchesQuery = "";
 
-    const schoolPersonnel = await SchoolPersonnel.find().sort("availability.startTime");
-    const users = await Volunteer.find().sort("availability.startTime");
-
-    let teams = [];
-
-    schoolPersonnel.forEach(user => {
-
-    })
+    try {
+        const schoolPersonnel = await SchoolPersonnel.find({}, "email availability schoolCode");
+        matchesQuery = buildQuery(schoolPersonnel, {isActive: true}, "volunteer", {pantherID: 1, email: 1, firstName: 1, lastName: 1}, 3);
+        console.log(matchesQuery);
+        const matches = await Volunteer.aggregate(matchesQuery);
+        if (matches.length) {
+            const teams = schoolPersonnel.map(personnel => {
+                return {
+                    schoolCode: personnel.schoolCode,
+                    semester: semester,
+                    year: year,
+                    availability: personnel.availability,
+                    volunteers: matches[0][personnel._id],
+                }
+            })
+            return response.json({
+                success: true,
+                teams
+            })
+        }
+        return response.json(matches)
+    } catch (error) {
+        response.statusCode = 500
+        response.json({
+            success: false,
+            message: `Internal Server Error: [${error.toString()}]`,
+            query: matchesQuery
+        })
+    }
 
 }
 
