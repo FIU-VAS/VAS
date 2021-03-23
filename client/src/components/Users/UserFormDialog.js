@@ -141,7 +141,6 @@ export const UserFormDialog = (props) => {
     });
 
     const {handleSubmit, errors} = methods;
-    console.log(errors);
 
     const getFormFields = () => {
         return props.formProps.map(properties => {

@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import serverConf from "../config";
 import { FormControl, Select, InputLabel, MenuItem } from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear"; 
+import ClearIcon from "@material-ui/icons/Clear";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 import { blueGrey, blue } from '@material-ui/core/colors';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -66,15 +67,22 @@ const AvailabilityForm = () => {
     const endpoint = user.role === "volunteer" ? `${serverConf.uri}${serverConf.endpoints.volunteers.update}/${user._id}` : `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${user._id}`;
 
     const [availability, setAvailability] = useState([{ dayOfWeek: "", startTime: "", endTime: "" }]);
+    const [errors, setErrors] = useState([""]);
+    const [response, setResponse] = useState({success: false, message: ""});
 
     const addSlot = () => {
         setAvailability([...availability, { dayOfWeek: "", startTime: "", endTime: "" }]);
+        setErrors([...errors, ""]);
     }
 
     const removeSlot = index => {
         const list = [...availability];
         list.splice(index, 1);
         setAvailability(list);
+
+        const errList = [...errors];
+        errList.splice(index, 1);
+        setErrors(errList);
     }
 
     const handleChange = (event, index) => {
@@ -84,16 +92,35 @@ const AvailabilityForm = () => {
         setAvailability(list);
     }
 
+    const validateForm = () => {
+        let valid = true;
+
+        const errList = [...errors];
+        availability.forEach((timeSlot, index) => {
+            if (timeSlot.dayOfWeek === "" || timeSlot.startTime === "" || timeSlot.endTime === "" || timeSlot.startTime === timeSlot.endTime || timeSlot.startTime > timeSlot.endTime) {
+                valid = false;               
+                errList[index] = "Invalid time slot.";
+            } else {
+                errList[index] = "";
+            }
+        });
+        setErrors(errList);
+
+        if (valid)
+            submitForm();
+    }
+
     const submitForm = () => {
         let data = user;
         data.availability = availability;
 
         axios.post(endpoint, data)
             .then(res => {
-                console.log(res);
+                setResponse({success: true, message: res.data.message});
             })
             .catch(err => {
                 console.log(err);
+                setResponse({success: false, message: err.message});
             })
     }
 
@@ -130,6 +157,7 @@ const AvailabilityForm = () => {
     ]
 
     const classes = useStyles();
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="sm">
@@ -137,13 +165,14 @@ const AvailabilityForm = () => {
                 <div className={classes.paper}>
                     <img
                         className={classes.logo}
-                        src ={require("../images/VAS_shadow.png").default}
-                        alt = "logo"
+                        src={require("../images/VAS_shadow.png").default}
+                        alt="logo"
                     />
 
                     <Typography component="h1" variant="h5">
                         Set Availability
                     </Typography>
+                    {response.message !== "" && <Alert severity={response.success ? "success" : "error"}>{response.message}</Alert>}
                     {availability.map((entry, index) => {
                         return (
                             <div key={index}>
@@ -186,23 +215,27 @@ const AvailabilityForm = () => {
                                         value={entry.endTime}
                                     >
                                         {
-                                        endTimes.map((time) => (
-                                            <MenuItem key={time.value} value={time.value}>
-                                                {time.label}
-                                            </MenuItem>
-                                        ))}
+                                            endTimes.map((time) => (
+                                                <MenuItem key={time.value} value={time.value}>
+                                                    {time.label}
+                                                </MenuItem>
+                                            ))}
                                     </Select>
                                 </FormControl>
 
                                 { availability.length !== 1 && <Button onClick={() => removeSlot(index)}><ClearIcon /></Button>}
+                                { errors[index] !== "" && <div><Alert severity="error">{errors[index]}</Alert></div> } 
                             </div>
+                            
+                                                      
                         )
                     })}
-                    <Button onClick={addSlot}>Add Slot</Button>
+                    <Button onClick={addSlot} color="primary">Add Slot</Button>
                     <Button
-                        onClick={submitForm}
+                        onClick={validateForm}
                         variant="contained"
                         className={classes.submit}
+                        disabled={response.success}
                     >
                         Submit
                     </Button>
