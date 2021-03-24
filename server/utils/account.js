@@ -129,7 +129,7 @@ export const updateUser = (Schema, validationSchema) => {
             response.statusCode = 500
             return response.send({
                 success: false,
-                message: "Error: Server error."
+                message: "Error: Server error.\n" + insertError.toString()
             });
         }
     }

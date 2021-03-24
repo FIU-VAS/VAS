@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-import {startOfDay, isDate} from "date-fns";
+import {startOfDay, isDate, format, parse} from "date-fns";
 
 export const Days = {
     MONDAY: 'monday',
@@ -15,6 +15,14 @@ export const REFERENCE_DATE = new Date(2000, 0, 3);
 export const validateTimeDate = (value) => {
     return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
     && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
+}
+
+export const validateAvailability = (values) => {
+    return values.every(value => {
+        return value.dayOfWeek.toUpperCase() in Days
+            && validateTimeDate(parse(value.startTime, "HH:mm", REFERENCE_DATE))
+            && validateTimeDate(parse(value.endTime, "HH:mm", REFERENCE_DATE));
+    })
 }
 
 const Team = new mongoose.Schema({
