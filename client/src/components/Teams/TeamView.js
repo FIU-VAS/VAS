@@ -1,35 +1,23 @@
 // This component is the equivalent to VolunteerTable etc..
 
-import React, {Component, Fragment} from 'react';
-import MaterialTable from 'material-table';
-import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import React, {useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {green, red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
-import {ThemeProvider} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {blueGrey, blue, grey} from '@material-ui/core/colors';
-import {getTeams} from '../../actions/teamActions';
-import {getSchools} from '../../actions/schoolActions';
-import {getVolunteers} from '../../actions/volunteerActions';
-import {getSchoolPersonnels} from '../../actions/schoolPersonnelActions';
-import AddTeamDialog from './AddTeamDialog';
-import EditTeamDialog from './EditTeamDialog';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Box from '@material-ui/core/Box';
-import SyncIcon from '@material-ui/icons/Sync';
-import AddIcon from '@material-ui/icons/Add';
-import isEmpty from 'is-empty';
-import TeamDialog from "./TeamDialog";
+import {Sync, Add, ArrowUpward} from '@material-ui/icons';
+import {ButtonGroup, Paper} from "@material-ui/core";
+
+import {useForm, Controller} from "react-hook-form";
+import {subYears, eachYearOfInterval, format} from "date-fns";
+import {MuiSelect} from "../Users/UserFormDialog";
+import config from "../../config";
+import axios from "axios";
+import {AppTeamCalendar} from "./TeamCalendar";
 
 const theme = createMuiTheme({
     palette: {
@@ -98,520 +86,149 @@ const useStyles = ({
     }
 });
 
+const teamManagementStyles = makeStyles(theme => ({
+    queryWrapper: {
+        padding: theme.spacing(2),
+        maxWidth: "800px",
+        margin: "0 auto"
+    },
+    query: {},
+    queryButton: {}
+}))
 
-class TeamView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedTeam: {},
-            addTeamDialog: false,
-            editSchoolDialog: false,
-            filteredTeams: [],
-            semester: 'Fall',
-            year: '2030',
-            showTable: false
+const TeamView = (props) => {
+    const [currentTeams, setCurrentTeams] = useState([])
+    const [triedOnce, setTriedOnce] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [newTeam, setNewTeam] = useState(false)
+    const [importTeams, setImportTeams] = useState(false)
+
+    const classes = teamManagementStyles();
+
+    const {handleSubmit, control} = useForm({
+        defaultValues: {
+            semester: '',
+            year: ''
         }
+    });
 
-        this.toggleAddTeamDialog = this.toggleAddTeamDialog.bind(this);
-        this.toggleEditTeamDialog = this.toggleEditTeamDialog.bind(this);
-        //this.clearErrors = this.clearErrors.bind(this);
-        this.teamDisplay = this.teamDisplay.bind(this);
-        this.showTable = this.showTable.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.getTeams();
-        this.props.getSchools();
-        this.props.getVolunteers();
-        this.props.getSchoolPersonnels();
-
-        let dateInfo = this.set_Semester_Year()
-
-        this.setState({
-            semester: dateInfo[0].toString(),
-            year: dateInfo[1].toString()
-        })
-    }
-
-    set_Semester_Year() {
-        let semester, year = '';
-        const date = new Date();
-
-        if (date.getMonth() > 6) {
-            semester = 'Fall'
-        } else {
-            semester = 'Spring'
+    const years = eachYearOfInterval({start: subYears(new Date(), 10), end: new Date()}).map(year => {
+        let formatted = format(year, "yyyy");
+        return {
+            label: formatted,
+            value: formatted
         }
+    });
 
-        year = date.getFullYear()
+    const getTeams = async (data) => {
+        setCurrentTeams([]);
+        setLoading(true);
+        setTriedOnce(true);
 
-        return ([semester, year]);
-
-    }
-
-    toggleAddTeamDialog() {
-        if (this.state.addTeamDialog) {
-            this.teamDisplay() //Resfresh on detailed view
+        try {
+            const response = await axios({
+                method: "GET",
+                url: `${config.uri}${config.endpoints.team.fetch}`,
+                params: {
+                    semester: data.semester,
+                    year: data.year
+                }
+            });
+            setCurrentTeams(response.data)
+        } catch (error) {
+            if (error.response.data) {
+                // Server knows the error
+            }
+            // server doesn't know the error
         }
-        this.setState(prevState => ({
-            addTeamDialog: !prevState.addTeamDialog
-        }));
-    }
+        setLoading(false);
+    };
 
-    toggleEditTeamDialog() {
-        if (this.state.editTeamDialog) {
-            this.teamDisplay() //Resfresh on detailed view
-        }
-        this.setState(prevState => ({
-            editTeamDialog: !prevState.editTeamDialog
-        }));
-    }
-
-    showTable() {
-        this.setState({
-            showTable: true
-        });
-    }
-
-    teamDisplay() {
-        this.showTable()
-
-        // get the teams that match the semester and year
-        let teams = this.props.teams.filter(team => team.semester === this.state.semester && team.year === this.state.year)
-
-        // get the name of the school that matches the teams school code
-        teams.forEach(team => {
-            const school = this.props.schools.find(school => school.schoolCode === team.schoolCode)
-            team.schoolName = school.schoolName
-        })
-
-        this.setState({
-            filteredTeams: teams
-        })
-    }
-
-    handleInput = (e) => {
-        const value = e.target.value
-        const name = e.target.name
-
-        this.setState({
-            [name]: value
-        })
-
-        console.log(this.state)
-    }
-
-    setColor(text) {
-        if (text === true) {
-            return "primary";
-        } else if (text === false) {
-            return "secondary";
-        } else {
-            return "textPrimary";
-        }
-    }
-
-    displayDays(data) {
-        let days = []
-
-        if (data['monday']) days.push('Mondays')
-        if (data['tuesday']) days.push('Tuesdays ')
-        if (data['wednesday']) days.push('Wednesdays')
-        if (data['thursday']) days.push('Thursdays')
-        if (data['friday']) days.push('Fridays')
-
-        return days.join(', ')
-    }
-
-    displayVolunteers(data) {
-        let volunteers = []
-
-        // get the volunteers that matches the volunteers PID
-        data.forEach(id => {
-            const vol = this.props.volunteers.find(volunteer => parseInt(id) === volunteer.pantherID)
-            volunteers.push(vol)
-        })
-
-        return (
-            volunteers.map(volunteer =>
-                <div>
-                    &nbsp; &#8226; &nbsp;
-                    {volunteer.firstName + ' ' + volunteer.lastName} &ensp;-&ensp;
-                    {volunteer.email} &ensp;-&ensp;
-                    {volunteer.phoneNumber} &ensp;-&ensp;
-                    <Typography className={this.props.classes.body} variant="h6" display="inline"
-                                color={this.setColor(volunteer.isActive)} gutterBottom>
-                        {volunteer.isActive ? 'Active' : 'Not Active'}<br/>
-                    </Typography>
-                </div>
-            )
-        )
-    }
-
-    displaySchoolPersonnels(data) {
-        let personnels = []
-
-        // get the School Personnels that are related to the school code and are active.
-        personnels = this.props.schoolPersonnels.filter(personnel => personnel.schoolCode === data && personnel.isActive)
-
-        if (!isEmpty(personnels)) {
-            return (
-                personnels.map(personnel =>
-                    <div>
-                        &nbsp; &#8226; &nbsp;
-                        {personnel.firstName + ' ' + personnel.lastName} &ensp;-&ensp;
-                        {personnel.title} &ensp;-&ensp;
-                        {personnel.email} &ensp;-&ensp;
-                        {personnel.phoneNumber}
-                    </div>
-                )
-            )
-        } else {
-            return (
-                <div>
-                    &#9642; &nbsp; No active personnel at the moment.
-                </div>
-            )
-        }
-    }
-
-    convertTime(time) {
-        // Check correct time format and split into components
-        time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
-        if (time.length > 1) { // If time format correct
-            time = time.slice(1); // Remove full string match value
-            time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-            time[0] = +time[0] % 12 || 12; // Adjust hours
-        }
-        return time.join(''); // return adjusted time or original string
-    }
-
-    displayTimeStamp(stamp) {
-        let date = new Date(stamp)
-
-        return ((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())
-    }
-
-    showClosureNotes(notes) {
-        return (
-            <Fragment>
-                <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline">
-                    Closure Notes: &nbsp;
-                </Typography>
-                <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline"
-                            gutterBottom>
-                    {notes}<br/>
-                </Typography>
-            </Fragment>
-        )
-    }
-
-    render() {
-        return (
-            <Fragment>
-
-                {this.state.addTeamDialog &&
-                <TeamDialog open={this.state.addTeamDialog} close={this.toggleAddTeamDialog}/>}
-
-                {/* QUERY */}
-                <Grid
-                    container
-                    spacing={3}
-                    direction="column"
-                    alignItems="center"
-                    justify="space-evenly">
-                    <Box
-                        borderRadius="3px"
-                        boxShadow={2}
-                        className={this.props.classes.card}
-                        variant="outlined"
-                        justify="center">
-
-                        <Box style={{paddingTop: '18px', paddingLeft: '50px', paddingRight: '50px'}}>
-                            <Grid
-                                container
-                                direction="row-reverse"
-                                justify="flex-start"
-                                alignItems="flex-start">
-                                <div className={this.props.classes.here}>
-                                    <Button
-                                        className={this.props.classes.buttons}
-                                        endIcon={<AddIcon/>}
-                                        onClick={this.toggleAddTeamDialog}
-                                        variant="contained"
-                                        size="small"
-                                        color="primary">
-                                        Create Team
-                                    </Button>
-                                </div>
-                            </Grid>
-                            <Typography className={this.props.classes.title}>Query Teams:</Typography>
-                            <Grid style={{marginBottom: '-10px'}} container wrap="nowrap" spacing={5} justify="center">
-                                <Grid item xs={12} sm={6}>
-
-                                    {/* Semester */}
-                                    <FormControl fullWidth style={{marginBottom: "15px"}} margin='dense'>
-                                        <InputLabel id='semester'>Semester</InputLabel>
-                                        <Select
-                                            labelId='semester'
-                                            name='semester'
-                                            value={this.state.semester}
-                                            onChange={this.handleInput}
-                                        >
-                                            <MenuItem value={'Fall'}>Fall</MenuItem>
-                                            <MenuItem value={'Spring'}>Spring</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={12} sm={6}>
-                                    {/* Year */}
-                                    <FormControl fullWidth style={{marginBottom: "15px"}} margin='dense'>
-                                        <InputLabel id='year'>Year</InputLabel>
-                                        <Select
-                                            labelId='year'
-                                            name='year'
-                                            value={this.state.year}
-                                            onChange={this.handleInput}
-                                        >
-                                            <MenuItem value={"2020"}>2020</MenuItem>
-                                            <MenuItem value={"2021"}>2021</MenuItem>
-                                            <MenuItem value={"2022"}>2022</MenuItem>
-                                            <MenuItem value={"2023"}>2023</MenuItem>
-                                            <MenuItem value={"2024"}>2024</MenuItem>
-                                            <MenuItem value={"2025"}>2025</MenuItem>
-                                            <MenuItem value={"2026"}>2026</MenuItem>
-                                            <MenuItem value={"2027"}>2027</MenuItem>
-                                            <MenuItem value={"2028"}>2028</MenuItem>
-                                            <MenuItem value={"2029"}>2029</MenuItem>
-                                            <MenuItem value={"2030"}>2030</MenuItem>
-                                        </Select>
-                                    </FormControl>
-
-                                </Grid>
-                            </Grid>
-
-                            <Grid container item xs>
+    return (
+        <React.Fragment>
+            <Box mt={4}>
+                <Paper elevation={2} className={classes.queryWrapper}>
+                    <Grid container alignItems="center" justify="center" spacing={2}>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" align="left">
+                                Query Teams:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} style={{textAlign: "right"}}>
+                            <ButtonGroup>
                                 <Button
-                                    className={this.props.classes.buttons}
-                                    endIcon={<SyncIcon/>}
-                                    onClick={this.teamDisplay}
+                                    variant="contained"
+                                    color="primary"
+                                    endIcon={<Add/>}
+                                    onClick={() => setNewTeam(true)}
+                                >Create Team </Button>
+                                <Button
+                                    style={{marginLeft: "0.5rem"}}
+                                    variant="contained"
+                                    color="primary"
+                                    endIcon={<ArrowUpward/>}
+                                    onClick={() => setImportTeams(true)}
+                                >Import Teams</Button>
+                            </ButtonGroup>
+                        </Grid>
+                    </Grid>
+                    <form onSubmit={handleSubmit(getTeams)}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Controller
+                                    as={MuiSelect}
+                                    name="semester"
+                                    control={control}
+                                    label="Semester"
+                                    options={[
+                                        {label: "Spring", value: "Spring"},
+                                        {label: "Fall", value: "Fall"},
+                                    ]}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Controller
+                                    as={MuiSelect}
+                                    label="Year"
+                                    name="year"
+                                    control={control}
+                                    options={years}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button
+                                    className={classes.queryButton}
+                                    endIcon={<Sync/>}
                                     variant="contained"
                                     fullWidth
                                     size="small"
-                                    color="primary">
+                                    color="primary"
+                                    type="submit"
+                                >
                                     Display Teams
                                 </Button>
                             </Grid>
-
-
-                        </Box>
-                    </Box>
-
-                </Grid>
-                {/* END QUERY */}
-
-
-                <br></br><br></br>
-                {this.state.showTable &&
-                <MaterialTable
-                    title="Teams"
-                    columns={
-                        [
-                            {title: 'Semester', field: 'semester'},
-
-                            {title: 'Year', field: 'year'},
-
-                            {
-                                title: 'School',
-                                field: 'school',
-                                render: rowData => {
-                                    return (this.props.schools.map(school => {
-                                        if (school.schoolCode === rowData.schoolCode) {
-                                            return school.schoolName
-                                        }
-                                    }))
-                                }
-                            }
-
-                        ]
-                    }
-                    data={this.state.filteredTeams}
-                    actions={[
-                        rowData => ({
-                            icon: 'edit',
-                            tooltip: 'Edit Team',
-                            onClick: (event, rowData) => {
-                                this.setState({selectedTeam: rowData});
-                                this.toggleEditTeamDialog()
-                            },
-                            disabled: rowData.isActive === false
-                        })
-                    ]}
-                    options={{
-                        actionsColumnIndex: -1,
-                        headerStyle: {
-                            backgroundColor: '#b0bec5',
-                            color: '#212121'
-                        },
-                        searchFieldStyle: {
-                            backgroundColor: '#eeeeee',
-                        },
-                        cellStyle: {
-                            width: 10,
-                            maxWidth: 10
-                        },
-                        pageSizeOptions: [10, 20, 50, 100],
-                        pageSize: 10,
-                        paging: true,
-                        exportButton: true,
-                    }}
-                    detailPanel={rowData => {
-                        return (
-
-                            <ThemeProvider theme={theme}>
-                                <div className={this.props.classes.all}>
-                                    <Grid
-                                        container
-                                        spacing={0}
-                                        direction="column"
-                                        alignItems="center"
-                                        justify="center">
-                                        <Card
-                                            className={this.props.classes.card_details}
-                                            variant="outlined"
-                                            justify="center">
-                                            <CardContent>
-                                                {/* School Code */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Associated School: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {rowData.schoolCode} - &nbsp;
-                                                    {this.props.schools.map(school => {
-                                                        if (school.schoolCode === rowData.schoolCode) {
-                                                            return school.schoolName
-                                                        }
-                                                    })}<br/>
-                                                </Typography>
-
-                                                {/* Days of week */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Days: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.displayDays(rowData.dayOfWeek)}
-                                                    <br/>
-                                                </Typography>
-
-                                                {/* Start Time */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Start Time: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.convertTime(rowData.startTime)}<br/>
-                                                </Typography>
-
-                                                {/* End Time */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    End Time: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.convertTime(rowData.endTime)}<br/>
-                                                </Typography>
-
-                                                {/* Volunteers */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Volunteers: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.displayVolunteers(rowData.volunteerPIs)}
-                                                </Typography>
-
-                                                {/* School Personnels */}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    School Personnels: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.displaySchoolPersonnels(rowData.schoolCode)}
-                                                </Typography>
-
-                                                {/* is Active*/}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Team status: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} variant="h6"
-                                                            display="inline" color={this.setColor(rowData.isActive)}
-                                                            gutterBottom>
-                                                    {rowData.isActive ? 'Active' : 'Not Active'}<br/>
-                                                </Typography>
-
-                                                {/* Time Stamp*/}
-                                                <Typography className={this.props.classes.subHeading}
-                                                            color="textPrimary" variant="h6" display="inline">
-                                                    Time Stamp: &nbsp;
-                                                </Typography>
-                                                <Typography className={this.props.classes.body} color="textPrimary"
-                                                            variant="body1" display="inline" gutterBottom>
-                                                    {this.displayTimeStamp(rowData.timeStamp)}<br/>
-                                                </Typography>
-
-                                                {!rowData.isActive && this.showClosureNotes(rowData.closureNotes)}
-
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                </div>
-                            </ThemeProvider>
-
-                        )
-
-
-                    }}
-                />
-                }
-                {this.state.editTeamDialog &&
-                <EditTeamDialog open={this.state.editTeamDialog} close={this.toggleEditTeamDialog}
-                                team={this.state.selectedTeam}/>}
-            </Fragment>
-            //</ThemeProvider>
-        );
-    }
+                        </Grid>
+                    </form>
+                </Paper>
+            </Box>
+            <Box mt={4}>
+                {!currentTeams.length && !triedOnce && (
+                    <Typography variant="h3" align="center">
+                        Please select a semester and a year
+                    </Typography>
+                )}
+                {triedOnce && !currentTeams.length && !loading && (
+                    <Typography variant="h3" align="center">
+                        No results where found for selected semester and year
+                    </Typography>
+                )}
+                {!!currentTeams.length && triedOnce && (
+                    <AppTeamCalendar teams={currentTeams}/>
+                )}
+            </Box>
+        </React.Fragment>
+    )
 }
 
-TeamView.propTypes = {
-    getTeams: PropTypes.func.isRequired,
-    getVolunteers: PropTypes.func.isRequired,
-    teams: PropTypes.array.isRequired,
-    schools: PropTypes.array.isRequired,
-    volunteers: PropTypes.array.isRequired,
-    schoolPersonnels: PropTypes.array.isRequired,
-    errors: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-    teams: state.teamData.teams,
-    schools: state.schoolData.schools,
-    volunteers: state.volunteers.volunteers,
-    schoolPersonnels: state.schoolPersonnels.schoolPersonnels,
-    errors: state.errors
-});
-
-export default connect(
-    mapStateToProps,
-    {getTeams, getSchools, getVolunteers, getSchoolPersonnels}
-)(withRouter(withStyles(useStyles)(TeamView)));
+export default TeamView;

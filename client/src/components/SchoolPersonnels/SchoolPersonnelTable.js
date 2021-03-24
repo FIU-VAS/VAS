@@ -267,8 +267,6 @@ class SchoolPersonnelTable extends Component {
                     open={this.state.userFormDialog}
                     close={this.toggleUserFormDialog}
                     endpoint={endpoint}
-                    edit={edit}
-                    role={"School Personnel"}
                     formProps={formProps}
                     title={edit ? "Edit School Personnel" : "Create School Personnel"}
                     description={edit ? 'To edit a  School Personnel, modify the following form and click SUBMIT'

@@ -34,7 +34,7 @@ const useStyles = {
 }
 
 // @TODO move component to a shared utils folder
-const MuiSelect = (props) => {
+export const MuiSelect = React.forwardRef((props, ref) => {
     const {id, label, name, options} = props;
 
     return (
@@ -44,6 +44,7 @@ const MuiSelect = (props) => {
                 {...props}
                 labelId={id}
                 name={name}
+                ref={ref}
             >
                 {options.map((item) => (
                     <MenuItem key={item.value} value={item.value}>
@@ -53,7 +54,7 @@ const MuiSelect = (props) => {
             </Select>
         </FormControl>
     );
-};
+});
 
 // @TODO move component to a shared utils folder
 export const MaterialUIField = (props) => {
@@ -140,7 +141,6 @@ export const UserFormDialog = (props) => {
     });
 
     const {handleSubmit, errors} = methods;
-    console.log(errors);
 
     const getFormFields = () => {
         return props.formProps.map(properties => {
