@@ -112,11 +112,6 @@ class Volunteer_Profile extends Component {
         })
     }
 
-    //Supress depricated warning use UNSAFE_
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        
-    }
-
     updateVolunteer_Profile() {
         const form = this.state
         console.log(form)
@@ -143,7 +138,8 @@ class Volunteer_Profile extends Component {
 
   render(){   
     const user = this.props.user;
-    var initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
+
+    let initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
     
     
     return (

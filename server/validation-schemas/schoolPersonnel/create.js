@@ -30,13 +30,19 @@ export const schema = {
             errorMessage: "Invalid phone number"
         }
     },
-    pantherID: {
-        isNumeric: true,
-        isLength: {
-            options: {
-                min: 7,
-                max: 7
-            }
+    title: {
+        exists: {
+            errorMessage: "Title is required"
+        }
+    },
+    isActive: {
+        exists: {
+            errorMessage: "Is Active is required"
+        }
+    },
+    schoolCode: {
+        exists: {
+            errorMessage: "A school code is required"
         }
     },
     // availability: {

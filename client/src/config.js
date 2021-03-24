@@ -10,17 +10,17 @@ const config = {
 			resetPassword: '/account/reset-password',
 		},
 		admin: {
-			signup: '/account/admin/signup',
-			update: '/admin/update',
+			signup: '/admin',
+			update: '/admin',
 			fetch: '/admin',
 			fetchByid: '/admin',
 		},
 		volunteers: {
 			getVolunteerInfo: '/volunteers/getVolunteerInfo',
-			signup: '/account/volunteer/signup',
+			signup: '/volunteers',
 			fetch: '/volunteers',
 			fetchByid: '/volunteers',
-			update: '/volunteers/update',
+			update: '/volunteers',
 			updateProfile: '/volunteers/updateProfile',
 			
 		},
@@ -31,10 +31,10 @@ const config = {
 			getSchoolInfo: '/school/getSchoolInfo'
 		},	
 		schoolPersonnels: {
-			signup: '/account/school-personnel/signup',
+			signup: '/school-personnels',
 			fetch: '/school-personnels',
 			fetchByid: '/school-personnels',
-			update: '/school-personnels/update',
+			update: '/school-personnels',
 			getPersonnelInfo: '/school-personnels/getPersonnelInfo'
 		},
 		team: {
@@ -42,8 +42,12 @@ const config = {
 			fetch: '/team',
 			update: '/team/update',
 			getTeamInfo: '/team/getTeamInfo',
-			getTeamInfoSch: '/team/getTeamInfoSch'
+			getTeamInfoSch: '/team/getTeamInfoSch',
+			getTeamData: '/team/getTeamData'
 		},
+		user: {
+			me: '/account/me'
+		}
 	},
 	userRoles: {
 		admin: 'admin',

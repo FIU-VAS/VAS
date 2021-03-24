@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from "mongoose"
 
 import Team from '../models/Teams/team';
 import {UserRoles} from '../models/Users/user_Auth';
@@ -6,25 +7,39 @@ import SchoolPersonnel from '../models/Users/school_User';
 import Volunteer from '../models/Users/volunteer_User';
 
 //input validation
+import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
+import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
-import {checkSchema} from "express-validator";
+import {extendedCheckSchema} from "../utils/validation";
+import {buildQuery} from "../utils/team-query";
 
 const router = new express.Router();
 
 router.post('/', checkAdminRole, createTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
-router.get('/:id', fetchTeamById);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
-router.get('/', fetchTeams);
+router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
-router.get('/suggest/:term', checkAdminRole, checkSchema({
-    term: {
+router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
+router.get('/suggest', checkAdminRole, extendedCheckSchema({
+    semester: {
         exists: true,
         errorMessage: "Term must be defined"
+    },
+    year: {
+        isNumeric: true,
+        isLength: {
+            options: {
+                min: 4,
+                max: 4
+            },
+        },
+        errorMessage: "Year must be a number of 4 digits"
     }
 }), teamSuggestions);
+router.get('/:id', fetchTeamById);
 
 
 function createTeam(req, res) {
@@ -188,18 +203,103 @@ function fetchTeamBySchoolCode(request, response) {
     });
 }
 
+async function getTeamData(request, response) {
+    const fieldMaps = {
+        volunteers: {
+            from: "users",
+            localField: "volunteerPIs",
+            foreignField: "pantherID",
+            as: "volunteers"
+        },
+        school: {
+            from: "schools",
+            localField: "schoolCode",
+            foreignField: "schoolCode",
+            as: "school"
+        },
+        schoolPersonnel: {
+            from: "users",
+            localField: "schoolCode",
+            foreignField: "schoolCode",
+            as: "schoolPersonnel"
+        }
+    }
+
+    const {related} = request.query;
+
+    if (!related.every(field => field in fieldMaps)) {
+        response.statusCode = 400;
+        return response.json({
+            success: false,
+            message: "Invalid field provided in request. Allowed [volunteers, school, schoolPersonnel]"
+        });
+    }
+
+    let aggregation = [
+        {
+            $match: {_id: mongoose.Types.ObjectId(request.params.id)}
+        },
+        ...related.map(field => {
+            return {
+                $lookup: fieldMaps[field]
+            }
+        })
+    ];
+
+
+    switch (request.account.role) {
+        case UserRoles.SchoolPersonnel:
+            aggregation[0].$match.schoolCode = request.account.schoolCode
+            break;
+        case UserRoles.Volunteer:
+            aggregation[0].$match.volunteerPIs = request.account.pantherID;
+            break
+    }
+
+    console.log(aggregation);
+
+    const results = await Team.aggregate(aggregation);
+
+    return response.json({
+        success: true,
+        team: results.length ? results[0] : {}
+    });
+}
+
 async function teamSuggestions(request, response) {
     // @TODO Improve logic to use less queries to db
-    const term = request.params.term;
+    const {semester, year} = request.params;
+    let matchesQuery = "";
 
-    const schoolPersonnel = await SchoolPersonnel.find().sort("availability.startTime");
-    const users = await Volunteer.find().sort("availability.startTime");
-
-    let teams = [];
-
-    schoolPersonnel.forEach(user => {
-        
-    })
+    try {
+        const schoolPersonnel = await SchoolPersonnel.find({}, "email availability schoolCode");
+        matchesQuery = buildQuery(schoolPersonnel, {isActive: true}, "volunteer", {pantherID: 1, email: 1, firstName: 1, lastName: 1}, 3);
+        console.log(matchesQuery);
+        const matches = await Volunteer.aggregate(matchesQuery);
+        if (matches.length) {
+            const teams = schoolPersonnel.map(personnel => {
+                return {
+                    schoolCode: personnel.schoolCode,
+                    semester: semester,
+                    year: year,
+                    availability: personnel.availability,
+                    volunteers: matches[0][personnel._id],
+                }
+            })
+            return response.json({
+                success: true,
+                teams
+            })
+        }
+        return response.json(matches)
+    } catch (error) {
+        response.statusCode = 500
+        response.json({
+            success: false,
+            message: `Internal Server Error: [${error.toString()}]`,
+            query: matchesQuery
+        })
+    }
 
 }
 

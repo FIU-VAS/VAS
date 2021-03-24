@@ -5,7 +5,6 @@ import {connect} from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {blueGrey, blue, grey} from '@material-ui/core/colors';
-import {getSchools, getVolunteers, setSemesterTeams} from '../../actions/calendarActions'
 import TeamCalendar from "../Teams/TeamCalendar";
 import AdminRoute from "../Routes/AdminRoute";
 import VolunteerManagement from "../../pages/VolunteerManagement";
@@ -14,10 +13,7 @@ import SchoolManagement from "../../pages/SchoolManagement";
 import TeamManagement from "../../pages/TeamManagement";
 import AdminManagement from "../../pages/AdminManagement";
 import {AdminNav} from "./AdminNav";
-import serverConf from "../../config";
-import axios from "axios";
-import {parseISO} from "date-fns";
-import {setErrors} from "../../actions/server/errorActions";
+import {Box} from "@material-ui/core";
 
 const useStyles = {
     card: {
@@ -69,15 +65,16 @@ const AdminDashboard = (props) => {
 
     return (
         <Fragment>
-            <Grid
-                container
-                style={{marginLeft: '10%'}}>
+            <Box
+                style={{textAlign: "center"}}>
                 <Typography
                     className={props.classes.main}
-                    style={{marginBottom: '15px'}}>
+                    style={{marginBottom: '15px'}}
+                    align="center"
+                >
                     Admin Dashboard
                 </Typography>
-            </Grid>
+            </Box>
 
             <AdminNav/>
 
@@ -102,7 +99,7 @@ const AdminDashboard = (props) => {
                         </Typography>
                     </Grid>
 
-                    <TeamCalendar/>
+                    <TeamCalendar onlyTeams={true}/>
                 </Route>
                 <AdminRoute path={`${path}/volunteer-management`} component={VolunteerManagement}/>
                 <AdminRoute path={`${path}/school-personnel-management`} component={SchoolPersonnelManagement}/>

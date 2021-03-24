@@ -1,139 +1,65 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import {blueGrey, blue, grey, yellow} from '@material-ui/core/colors';
-import EventIcon from '@material-ui/icons/Event';
-import {TeamDay} from "./TeamDay";
-import {TeamCard} from "./TeamCard";
-import {TeamAdmin} from "./TeamAdmin";
-import {TeamPersonnel} from "./TeamPersonnel";
+import {Day} from "./Calendar/Day";
+import {Grid} from "@material-ui/core";
+import {isValid, parseISO} from "date-fns";
 
-const useStyles = {
-    all: {
-        backgroundColor: '#fafafa',
-        height: '100vh'
+const calendarStyles = makeStyles(theme => ({
+    calendar: {
+        padding: "0 calc(0.8rem * 3) 0 calc(0.8rem * 3)",
     },
-    cardHeader: {
-        padding: "1rem 0"
+    dayColumn: {
+        position: "relative",
+        background: 'rgb(245, 248, 250)',
+        margin: "0.25rem 0.5rem",
+        padding: "0.25rem 0.25rem 2rem 0.25rem",
+        boxShadow: "0px 1px 2px 1px rgba(0,0,0,0.2)",
+        borderRadius: "4px"
     },
-    card: {
-        margin: "10px auto 0 auto",
-        minWidth: '60%',
-        maxWidth: 500,
-        height: 400,
-        backgroundColor: 'white',
-        marginBottom: '20px',
-        'overflow-x': 'hidden'
-    },
-    custom: {
-        justify: 'center',
-        minWidth: '300px',
-        maxWidth: '50%',
-    },
-    buttons: {
-        backgroundColor: blueGrey[700],
-        color: "white",
-        fontWeight: "bold",
-        '&:hover': {
-            backgroundColor: blue[500],
-        }
-    },
-    main: {
-        fontSize: 30,
-        fontWeight: 800,
-        color: grey[1000],
-        alignItems: 'left',
-        justify: 'left',
-    },
-    cardTitle: {
-        fontSize: "20px",
-        fontWeight: 800,
-        alignItems: 'right'
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 800,
-        color: grey[800],
-        alignItems: 'right'
-    },
-    this: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'left',
-        minWidth: '80%',
-    },
-    subHeading: {
-        fontSize: 15,
-        alignItems: 'left'
-    },
-    body: {
-        fontSize: 13,
-        alignItems: 'right',
-    },
-}
+}));
 
 const Days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
-const TeamCalendar = (props) => {
+export const AppTeamCalendar = (props) => {
 
-    const {teams, schools, hideEmpty, schoolPersonnels} = props;
+    let {teams} = props;
+    const classes = calendarStyles();
 
-    const getDayColor = (day) => {
-        const today = new Date();
-        return today.getDay() < 6 && Days[today.getDay()] === day ? [yellow[600], "black"] : [blue[500], "white"];
+    if (!teams.length) {
+        return "Loading"
     }
 
-    // @TODO Add school personnel to the calendar card
+    teams = teams.map(team => ({
+        ...team,
+        availability: team.availability.map(av => ({
+            dayOfWeek: av.dayOfWeek,
+            startTime: typeof av.startTime !== "string" && isValid(av.startTime) ? av.startTime : parseISO(av.startTime),
+            endTime: typeof av.endTime !== "string" && isValid(av.endTime) ? av.endTime : parseISO(av.endTime)
+        }))
+    }))
 
     return (
-        <Box>
-            {Days.map(day => {
-                const dayTeams = teams.filter(team => {
-                    return team.availability.some(av => av.dayOfWeek === day)
-                });
+        <Box my={3} style={{overflowX: "scroll"}}>
+            <Grid container className={classes.calendar}>
+                {Days.map((day, index) => {
+                    const dayTeams = teams.filter(team => {
+                        return team.availability.some(av => av.dayOfWeek === day)
+                    });
 
-                if (dayTeams.length === 0 && hideEmpty) {
-                    return "";
-                }
-
-                return (
-                    <TeamCard
-                        cardHeader={day}
-                        cardHeaderIcon={(<EventIcon style={{verticalAlign: "text-bottom"}}/>)}
-                        headerColor={getDayColor(day)[0]}
-                        alignHeaderCenter={true}
-                    >
-                        {dayTeams.length ? (
-                            <TeamDay
-                                teams={dayTeams}
-                                schools={schools}
-                                volunteers={props.volunteers}
-                                classes={props.classes}
-                                day={day}
-                            />
-                        ) : (
-                            <Typography className={props.classes.body} color="textPrimary" variant="body1"
-                                        display="inline"
-                                        gutterBottom>
-                                &nbsp; &#8226; &nbsp; There are no teams scheduled on {day}s<br/>
-                            </Typography>
-                        )}
-                    </TeamCard>
-                )
-            })}
-            <TeamPersonnel
-                school={schools.length ? schools[0] : {}}
-                schoolPersonnel={schoolPersonnels.length ? schoolPersonnels[0] : {}}
-            />
-            <TeamAdmin admins={props.admins} />
+                    return (
+                        <Grid key={day} item xs className={classes.dayColumn}>
+                            <Day day={day} dayTeams={dayTeams} dayIndex={index}/>
+                        </Grid>
+                    )
+                })}
+            </Grid>
         </Box>
     )
 }
 
-TeamCalendar.propTypes = {};
+AppTeamCalendar.propTypes = {};
 
 const mapStateToProps = state => ({
     teams: state.calendar.teams,
@@ -147,4 +73,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {}
-)(withRouter(withStyles(useStyles)(TeamCalendar)));
+)(AppTeamCalendar);
