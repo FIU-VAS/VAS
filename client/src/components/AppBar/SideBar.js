@@ -16,6 +16,8 @@ import { grey } from '@material-ui/core/colors';
 import config from "../../config";
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import { green } from '@material-ui/core/colors';
+import HomeIcon from '@material-ui/icons/Home';
+
 const drawerWidth = 120;
 
 const useStyles = makeStyles((theme) => ({
@@ -79,11 +81,9 @@ function ResponsiveDrawer(props) {
     <div>
       <div className={classes.toolbar} />
       <div className={classes.menu}>
-      <Link to="/" ><img
-            src ={require("../../images/home_blub.png").default}
-            alt="logo"
-            height = "70px"
-         />
+      <Link to="/" >
+        <ListItem><HomeIcon fontSize="large"  style={{ color: green[500] }}/></ListItem>
+        
          </Link>
       <Divider />
       <List>
@@ -148,7 +148,13 @@ function ResponsiveDrawer(props) {
           <ListItem> 
             <ListItemText>Log out</ListItemText>
           </ListItem> 
-         
+         <ListItem>
+         <img
+            src ={require("../../images/VAS_LOGO.png").default}
+            alt="logo"
+            height = "70px"
+         />
+         </ListItem>
         </Link>
         
       </List>
