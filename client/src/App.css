@@ -1,0 +1,12 @@
+.bg {
+    background-image: url("../src/images/background.png");
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.avatar-style {
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 3.5rem !important;
+}
