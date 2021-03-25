@@ -7,11 +7,15 @@ import ClearIcon from "@material-ui/icons/Clear";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
-import { blueGrey, blue } from '@material-ui/core/colors';
+import { blueGrey, blue, lightGreen } from '@material-ui/core/colors';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/core/styles';
+import SideBar from "../components/AppBar/SideBar";
+import Avatar from '@material-ui/core/Avatar';
+import DateRangeSharpIcon from '@material-ui/icons/DateRangeSharp';
+import { BorderAllRounded } from '@material-ui/icons';
 
 const theme = createMuiTheme({
     palette: {
@@ -36,20 +40,27 @@ const useStyles = makeStyles({
     form: {
         width: '100%',
         marginTop: theme.spacing(1),
+        
     },
     selectDay: {
         minWidth: "125px",
         marginBottom: "15px",
-        marginRight: "15px"
+        marginRight: "15px",
+        backgroundColor: lightGreen[200],
+        textAlign: 'center',
+        borderRadius: '6px',
     },
     selectTime: {
-        minWidth: "80px",
+        minWidth: "110px",
         marginBottom: "15px",
-        marginRight: "15px"
+        marginRight: "15px",
+        backgroundColor:lightGreen[200],
+        textAlign: 'center',
+        borderRadius: '6px',
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
-        backgroundColor: blueGrey[700],
+        backgroundColor: blueGrey[900],
         color: "white",
         fontWeight: "bold",
         '&:hover': {
@@ -59,6 +70,15 @@ const useStyles = makeStyles({
     logo: {
         height: '80px',
         marginBottom: '0px'
+    },
+    corner:{
+        position: 'absolute',
+        bottom: '0px',
+        right: '0px',
+        height: '500px',
+        width: '500px',
+
+
     },
 });
 
@@ -160,17 +180,18 @@ const AvailabilityForm = () => {
 
     return (
         <ThemeProvider theme={theme}>
+            <SideBar></SideBar>
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <div className={classes.paper}>
                     <img
-                        className={classes.logo}
-                        src={require("../images/VAS_shadow.png").default}
-                        alt="logo"
+                        className={classes.corner}
+                        src={require("../images/Ignite_1.png").default}
                     />
+                    
 
-                    <Typography component="h1" variant="h5">
-                        Set Availability
+                    <Typography component="h1" variant="h4" >
+                        Set Your Availability Schedule <DateRangeSharpIcon></DateRangeSharpIcon>
                     </Typography>
                     {response.message !== "" && <Alert severity={response.success ? "success" : "error"}>{response.message}</Alert>}
                     {availability.map((entry, index) => {
@@ -230,7 +251,7 @@ const AvailabilityForm = () => {
                                                       
                         )
                     })}
-                    <Button onClick={addSlot} color="primary">Add Slot</Button>
+                    <Button onClick={addSlot} color="primary">Add Day/Time Slot</Button>
                     <Button
                         onClick={validateForm}
                         variant="contained"

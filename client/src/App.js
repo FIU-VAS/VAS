@@ -4,16 +4,11 @@ import {Provider} from "react-redux";
 import store from "./store";
 import './App.css';
 import jwt_decode from "jwt-decode";
-import React, {Component, Fragment} from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom'
-import {Provider} from "react-redux";
-import store from "./store";
-import './App.css';
-import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import {logoutUser, setAuth} from "./actions/authActions"
+import { logoutUser, setAuth } from "./actions/authActions";
 import {getAdmin, getVolunteer, getSchoolPersonnel, getUser} from "./actions/userActions"
-import Login from './pages/Login'
+import Login from './pages/Login';
+import Home from './pages/Home';
 import NavBar from './components/AppBar/NavBar';
 import Footer from './components/AppBar/Footer';
 import Dashboard from './pages/Dashboard';
@@ -29,6 +24,7 @@ import ResetPassword from './pages/ResetPassword';
 import AvailabilityForm from './pages/AvailabilityForm';
 import About from './pages/About'
 import config from "./config";
+import Availability from './pages/Availability';
 
 // check for token to keep user logged in
 if (localStorage.jwt) {
@@ -60,30 +56,41 @@ if (localStorage.jwt) {
 
 class App extends Component {
 
-    render() {
-        return (
 
-            <Provider store={store}>
-                <BrowserRouter>
-                    <div className='.App'>
-                        <Fragment>
-                            <NavBar/>
-                            <Switch>
-                                <Route exact path='/' component={Login}/>
-                                <Route path='/login' component={Login}/>
-                                <Route path='/about' component={About}/>
-                                <Route path="/reset-password" component={ResetPassword}/>                                
-                                <Route path="/availability" component={AvailabilityForm}/>
-                                <PrivateRoute path="/dashboard" component={Dashboard}/>
-                                <PrivateRoute path="/profile" component={Profile}/>
-                            </Switch>
-                            <Footer/>
-                        </Fragment>
-                    </div>
-                </BrowserRouter>
-            </Provider>
-        );
-    }
+	render() {
+		return (
+      
+      <Provider store={store}>
+        <BrowserRouter>
+          <div className='.App'>
+          
+            <Fragment>
+              
+              <Footer/>
+              
+              <Switch>
+              
+                <Route exact path='/' component={Home}/>
+                <Route path='/login' component={Login}/>
+                <Route path='/about' component={About}/>
+                <Route path="/reset-password" component={ResetPassword}/>
+                <PrivateRoute path="/dashboard" component={Dashboard}/>
+                <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
+                <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>
+                <PrivateRoute path="/profile" component={Profile}/>
+                <PrivateRoute path="/availability" component={AvailabilityForm}/>
+                <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
+                <AdminRoute path="/team-management" component={TeamManagement}/>
+                <AdminRoute path="/admin-management" component={AdminManagement}/>
+                
+              </Switch>
+            </Fragment>
+            </div>  
+        </BrowserRouter>
+      </Provider> 
+		);
+	}
+
 }
 
 export default App;

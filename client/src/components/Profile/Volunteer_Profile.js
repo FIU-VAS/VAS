@@ -21,7 +21,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { updateVolunteer_Profile } from "../../actions/userActions";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
-
+import SideBar from "../AppBar/SideBar";
 
 
 const theme = createMuiTheme({
@@ -148,6 +148,7 @@ class Volunteer_Profile extends Component {
                 style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png') + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
+                    <SideBar></SideBar>
         <Grid
         container
         spacing={0}
@@ -182,8 +183,7 @@ class Volunteer_Profile extends Component {
 
                     {/* First Name */}
                     <TextField
-                        variant="standard"
-                        //color= "primary"
+                        variant='standard'
                         margin="normal"
                         disabled
                         fullWidth

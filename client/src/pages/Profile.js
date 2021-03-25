@@ -6,6 +6,7 @@ import Admin_Profile from '../components/Profile/Admin_Profile'
 import Volunteer_Profile from '../components/Profile/Volunteer_Profile'
 import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile'
 import config from "../config";
+import SideBar from "../components/AppBar/SideBar";
 
 
 class Profile extends Component {
