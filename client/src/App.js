@@ -58,7 +58,6 @@ if (localStorage.jwt) {
 
 class App extends Component {
 
-
 	render() {
 		return (
       

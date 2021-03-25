@@ -1,4 +1,5 @@
-import {Days, validateTimeDate} from "../../models/Teams/team";
+import {Days, validateTimeDate, REFERENCE_DATE, sanitizeAvailability} from "../../models/Teams/team";
+import {parse} from "date-fns";
 
 const validateAvailability = (values) => {
     return values.every(value => {
@@ -25,12 +26,17 @@ export const schema = {
             errorMessage: "Invalid phone number",
         },
     },
-    // availability: {
-    //     custom: {
-    //         options: (value) => {
-    //             return validateAvailability(value)
-    //         },
-    //         errorMessage: "Invalid availability configuration"
-    //     }
-    // },
+    availability: {
+        custom: {
+            options: (value) => {
+                return validateAvailability(value);
+            },
+            errorMessage: "Invalid availability configuration"
+        },
+        customSanitizer: {
+            options: (value) => {
+                return sanitizeAvailability(value)
+            }
+        }
+    }
 }
