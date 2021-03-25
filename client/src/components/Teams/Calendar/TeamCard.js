@@ -22,26 +22,33 @@ const cardStyles = makeStyles(theme => ({
         width: '100%',
         padding: '1rem',
         margin: '0.5rem 0',
+        backgroundColor: "white",
         position: 'relative'
     },
     boxHeader: {
-        fontSize: "1rem",
+        fontSize: "1.1rem",
         lineHeight: "1.35rem",
+        
     },
     boxSubheader: {
         textTransform: "capitalize",
         fontWeight: 400,
-        color: theme.palette.text.secondary
+        
     },
     chip: {
         margin: "0.15rem",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        backgroundColor: "black",
+        "&:hover": {
+            backgroundColor: "black"
+          }
     },
     badge: {
         borderRadius: "4px",
         padding: "0.25rem 0.5rem",
         color: "white",
-        display: "inline-block"
+        display: "inline-block",
+        background: "#57C965",
     },
     closeButton: {
         position: 'relative',
@@ -50,6 +57,7 @@ const cardStyles = makeStyles(theme => ({
     },
     expandButton: {
         marginTop: "0.25rem",
+        color: 'black',
     }
 }));
 

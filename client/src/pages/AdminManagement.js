@@ -13,6 +13,13 @@ const useStyles = {
         minWidth: 800,
         maxWidth: 1100,
         height: 900
+    },
+    blob: {
+        position: 'absolute',
+        right: '1%',
+        bottom: '5%',
+        height : "400px",
+        zIndex: '-1'
     }
 }    
 
@@ -27,6 +34,10 @@ class AdminManagement extends Component{
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item className={this.props.classes.table}>
                         <AdminTable/>
+                        <img className={this.props.classes.blob}
+                            src ={require("../images/Ignite_2.png").default}
+                            alt = "Blob" 
+                        />
                     </Grid>    
                 </Grid>
             </div>    

@@ -21,8 +21,10 @@ import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
-import About from './pages/About'
+import About from './pages/About';
+import Settings from './pages/Settings'
 import config from "./config";
+
 
 // check for token to keep user logged in
 if (localStorage.jwt) {
@@ -78,6 +80,7 @@ class App extends Component {
                 <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
                 <AdminRoute path="/team-management" component={TeamManagement}/>
                 <AdminRoute path="/admin-management" component={AdminManagement}/>
+                <AdminRoute path="/settings" component={Settings}/>
                 
               </Switch>
             </Fragment>

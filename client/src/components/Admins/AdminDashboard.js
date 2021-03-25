@@ -66,7 +66,8 @@ const AdminDashboard = (props) => {
         <Fragment>
             <Grid
                 container
-                style={{marginLeft: '10%'}}>
+        
+                >
                 <Typography
                     className={props.classes.main}
                     style={{marginBottom: '15px'}}>

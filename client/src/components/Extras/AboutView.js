@@ -65,7 +65,7 @@ const useStyles = {
         alignItems: 'center',
         marginBottom: 10,
       },
-      main: {
+    main: {
         fontSize: 30,
         fontWeight: 800,
         color: grey[900],

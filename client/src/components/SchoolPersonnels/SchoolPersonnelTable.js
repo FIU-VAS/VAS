@@ -19,7 +19,7 @@ import {ThemeProvider} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
-        primary: {main: green[600]}, // For isActive is true
+        primary: {main: '#57C965'}, // For isActive is true
         secondary: {main: red[600]},// For isActive is false
     }
 });
@@ -36,19 +36,21 @@ const useStyles = ({
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-        height: 105
+        height: 105,
     },
     title: {
         fontSize: 14,
-        alignItems: 'right'
+        alignItems: 'right',
     },
     subHeading: {
         fontSize: 15,
         alignItems: 'right'
+        
     },
     body: {
         fontSize: 13,
-        alignItems: 'right'
+        alignItems: 'right',
+        
     }
 });
 
@@ -157,7 +159,7 @@ class SchoolPersonnelTable extends Component {
         return (
             <Fragment>
                 <MaterialTable
-                    title="School Personnels"
+                    title="School Personnel"
                     columns={
                         [
                             {title: 'First Name', field: 'firstName'},
@@ -172,7 +174,8 @@ class SchoolPersonnelTable extends Component {
                             icon: 'person_add',
                             tooltip: 'Add School Personnel',
                             isFreeAction: true,
-                            onClick: this.toggleUserFormDialog
+                            onClick: this.toggleUserFormDialog,
+                            
                         },
                         {
                             icon: 'edit',
@@ -186,8 +189,8 @@ class SchoolPersonnelTable extends Component {
                     options={{
                         actionsColumnIndex: -1,
                         headerStyle: {
-                            backgroundColor: '#b0bec5',
-                            color: '#212121'
+                            backgroundColor: '#57C965',
+                            color: 'white'
                         },
                         cellStyle: {
                             width: 250,
@@ -257,8 +260,10 @@ class SchoolPersonnelTable extends Component {
                                             </CardContent>
                                         </Card>
                                     </Grid>
+                                    
                                 </div>
                             </ThemeProvider>
+                            
 
                         )
                     }}

@@ -34,8 +34,8 @@ const useStyles = {
   },
   toolbar: {
     display: 'flex',
-    justifyContent: 'space-between',
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    textAlign:'left',
   },
   title: {
     flexGrow: 1,
@@ -44,8 +44,13 @@ const useStyles = {
   logout: {
     color: 'white !important'
   },
-  link: {
-    textDecoration: 'none'
+  rigth: {
+    right: '15px',
+    position: 'absolute',
+    color: 'white'
+  },
+  nodecor: {
+    textDecoration: 'none',
   },
   icon: {
     color: 'white'
@@ -153,7 +158,7 @@ render(){
       <AppBar position='static'>
         <Toolbar className={this.props.classes.toolbar}>
        
-        <Link to='/' className={this.props.classes.link}>
+        <Link to='/' className={this.props.classes.nodecor}>
           
         <Grid
           container
@@ -177,12 +182,13 @@ render(){
         </Grid>
 
         </Link>
-
-        <Link to='/about' className={this.props.classes.link} style={{color:'white'}}>About</Link>
-        {this.state.loggedIn && <Link to='/dashboard' className={this.props.classes.link} style={{color:'white'}}>Dashboard</Link>}  
-        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white'}}>Log In </Link>}
-        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white'}} onClick={this.handleClose && this.submitLogout}>Log Out </Link>}  
         
+        <div className={this.props.classes.rigth}>
+        <Link to='/about' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>About</Link>
+        {this.state.loggedIn && <Link to='/dashboard' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>Dashboard</Link>}  
+        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>Log In </Link>}
+        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}} onClick={this.handleClose && this.submitLogout}>Log Out </Link>}  
+        </div>
             
         </Toolbar>
             

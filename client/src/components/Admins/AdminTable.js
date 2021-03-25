@@ -19,7 +19,7 @@ import {ThemeProvider} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
-        primary: {main: green[600]}, // For isActive is true
+        primary: {main: '#57C965'}, // For isActive is true
         secondary: {main: red[600]},// For isActive is false
     }
 });
@@ -154,8 +154,8 @@ class AdminTable extends Component {
                     options={{
                         actionsColumnIndex: -1,
                         headerStyle: {
-                            backgroundColor: '#b0bec5',
-                            color: '#212121'
+                            backgroundColor: '#57C965',
+                            color: 'white'
                         },
                         searchFieldStyle: {
                             backgroundColor: '#eeeeee',

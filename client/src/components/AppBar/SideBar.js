@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { grey } from '@material-ui/core/colors';
 import config from "../../config";
 
-const drawerWidth = 120;
+const drawerWidth = 110;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,11 +45,10 @@ const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   menu:{
-      textAlign: 'left',
+      textAlign: 'center',
       background: grey[900],
   },
   drawerPaper: {
-    width: drawerWidth,
     background: grey[900],
   },
   content: {
@@ -59,6 +58,12 @@ const useStyles = makeStyles((theme) => ({
   links:{
     color: 'white',
     textDecoration: 'none',
+    "&:hover": {
+      color: "#57C965"
+    },
+    '&:selected': {
+      color: "#57C965"
+    }
   },
 }));
 
@@ -93,42 +98,43 @@ function ResponsiveDrawer(props) {
             <ListItemText>Profile</ListItemText>
           </ListItem> 
         </Link>
+        {!config.userRoles.admin === 'admin' &&
         <Link to='/availability' className={classes.links}> 
           <ListItem> 
             <ListItemText>Availability</ListItemText>
           </ListItem> 
-        </Link>
-        {config.userRoles.admin == 'admin' &&
+        </Link>}
+        {config.userRoles.admin === 'admin' &&
         <Link to='/settings' className={classes.links}> 
           <ListItem> 
             <ListItemText>Settings</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin == 'admin'  &&
+        {config.userRoles.admin === 'admin'  &&
         <Link to='/admin-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Admins</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin == 'admin'  &&
+        {config.userRoles.admin === 'admin'  &&
         <Link to='/school-personnel-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Personnel</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin == 'admin'  &&
+        {config.userRoles.admin === 'admin'  &&
         <Link to='/schoolmanagement' className={classes.links}> 
           <ListItem> 
             <ListItemText>Schools</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin == 'admin'  &&
+        {config.userRoles.admin === 'admin'  &&
         <Link to='/volunteer-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Volunteers</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin == 'admin'  &&
+        {config.userRoles.admin === 'admin'  &&
         <Link to='/team-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Teams</ListItemText>

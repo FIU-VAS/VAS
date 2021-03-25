@@ -42,7 +42,7 @@ const useStyles = {
     margin: theme.spacing(2, 0, 0, 0),
     backgroundColor: theme.secondary.main,
     color: "white",
-    width: '161px',
+    width: '160px',
     '&:hover': {
         backgroundColor: theme.secondary.main,
     }
@@ -52,9 +52,9 @@ const useStyles = {
     margin: theme.spacing(2, 0, 0, 0.5),
     backgroundColor: theme.secondary.main,
     color: "white",
-    width: '161px',
+    width: '160px',
     '&:hover': {
-        backgroundColor: theme.secondary,
+        backgroundColor: theme.secondary.main,
     }
   
   },
