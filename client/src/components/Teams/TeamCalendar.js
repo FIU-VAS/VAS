@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import {Day} from "./Calendar/Day";
-import {Grid} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {isValid, parseISO} from "date-fns";
 
 const calendarStyles = makeStyles(theme => ({
@@ -28,7 +28,11 @@ export const AppTeamCalendar = (props) => {
     const classes = calendarStyles();
 
     if (!teams.length) {
-        return "Loading"
+        return (
+            <Typography align="center" variant="h2">
+                There are no teams to show
+            </Typography>
+        )
     }
 
     teams = teams.map(team => ({

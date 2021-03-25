@@ -67,7 +67,7 @@ class App extends Component {
                                 <Route path='/login' component={Login}/>
                                 <Route path='/about' component={About}/>
                                 <Route path="/reset-password" component={ResetPassword}/>                                
-                                <Route path="/availability" component={AvailabilityForm}/>
+                                <PrivateRoute path="/availability" component={AvailabilityForm}/>
                                 <PrivateRoute path="/dashboard" component={Dashboard}/>
                                 <PrivateRoute path="/profile" component={Profile}/>
                             </Switch>

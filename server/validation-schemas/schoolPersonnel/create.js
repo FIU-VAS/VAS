@@ -1,4 +1,5 @@
-import {Days, validateTimeDate} from "../../models/Teams/team";
+import {Days, validateTimeDate, REFERENCE_DATE} from "../../models/Teams/team";
+import {parse} from "date-fns";
 
 const validateAvailability = (values) => {
     return values.every(value => {
@@ -44,13 +45,5 @@ export const schema = {
         exists: {
             errorMessage: "A school code is required"
         }
-    },
-    // availability: {
-    //     custom: {
-    //         options: (value) => {
-    //             return validateAvailability(value)
-    //         },
-    //         errorMessage: "Invalid availability configuration"
-    //     }
-    // },
+    }
 }

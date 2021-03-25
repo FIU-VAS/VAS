@@ -1,4 +1,4 @@
-import {Days} from "../../models/Teams/team";
+import {Days, sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
 import School from "../../models/Schools/school";
 
 const codes = School.aggregate([{$project: {_id: 0, schoolCode: 1}}]).map(x => x.schoolCode);
@@ -26,13 +26,17 @@ const getSchema = (req) => ({
         }
     },
     availability: {
-        custom: (values) => {
-            return (values.map(value => {
-                return Object.values(Days).indexOf(value.dayOfWeek) !== -1
-                    && value.startTime.length > 0 && value.endTime.length > 0
-            }).filter(Boolean)).length === values.length;
+        custom: {
+            options: (value) => {
+                return validateAvailability(value);
+            },
+            errorMessage: "Invalid availability configuration"
         },
-        errorMessage: "Invalid availability object provided"
+        customSanitizer: {
+            options: (value) => {
+                return sanitizeAvailability(value)
+            }
+        }
     },
     volunteerPIs: {
         type: Array,
