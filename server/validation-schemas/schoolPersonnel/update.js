@@ -1,4 +1,4 @@
-import {Days, validateTimeDate, REFERENCE_DATE} from "../../models/Teams/team";
+import {Days, validateTimeDate, REFERENCE_DATE, sanitizeAvailability} from "../../models/Teams/team";
 import {parse} from "date-fns";
 
 const validateAvailability = (values) => {
@@ -29,10 +29,14 @@ export const schema = {
     availability: {
         custom: {
             options: (value) => {
-                const date = parse(value, "HH:mm", REFERENCE_DATE);
-                return validateAvailability(date);
+                return validateAvailability(value);
             },
             errorMessage: "Invalid availability configuration"
+        },
+        customSanitizer: {
+            options: (value) => {
+                return sanitizeAvailability(value)
+            }
         }
-    },
+    }
 }

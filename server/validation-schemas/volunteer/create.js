@@ -30,13 +30,5 @@ export const schema = {
                 max: 7
             }
         }
-    },
-    availability: {
-        custom: {
-            options: (value) => {
-                return validateAvailability(value);
-            },
-            errorMessage: "Invalid availability configuration"
-        }
     }
 }

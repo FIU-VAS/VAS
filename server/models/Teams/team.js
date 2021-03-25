@@ -13,10 +13,7 @@ export const Days = {
 export const REFERENCE_DATE = new Date(2000, 0, 3);
 
 export const validateTimeDate = (value) => {
-    console.log(value);
-    let arr = value.split(':');
-    const date = new Date(2000, 0, 3, arr[0], arr[1]);
-    return isDate(date) && value.getFullYear() === 2000 && (date.getDate() >= 3 && value.getDate() <= 7)
+    return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
     && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
 }
 
@@ -25,6 +22,16 @@ export const validateAvailability = (values) => {
         return value.dayOfWeek.toUpperCase() in Days
             && validateTimeDate(parse(value.startTime, "HH:mm", REFERENCE_DATE))
             && validateTimeDate(parse(value.endTime, "HH:mm", REFERENCE_DATE));
+    })
+}
+
+export const sanitizeAvailability = (value) => {
+    return value.map(available => {
+        return {
+            ...available,
+            startTime: parse(available.startTime, "HH:mm", REFERENCE_DATE),
+            endTime: parse(available.endTime, "HH:mm", REFERENCE_DATE)
+        }
     })
 }
 

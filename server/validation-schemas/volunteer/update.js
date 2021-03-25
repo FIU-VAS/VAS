@@ -1,4 +1,4 @@
-import {validateAvailability} from "../../models/Teams/team";
+import {sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
 
 export const schema = {
     email: {
@@ -44,6 +44,11 @@ export const schema = {
                 return validateAvailability(value);
             },
             errorMessage: "Invalid availability configuration"
+        },
+        customSanitizer: {
+            options: (value) => {
+                return sanitizeAvailability(value)
+            }
         }
     }
 }

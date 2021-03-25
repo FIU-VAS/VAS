@@ -45,14 +45,5 @@ export const schema = {
         exists: {
             errorMessage: "A school code is required"
         }
-    },
-    availability: {
-        custom: {
-            options: (value) => {
-                const date = parse(value, "HH:mm", REFERENCE_DATE);
-                return validateAvailability(date);
-            },
-            errorMessage: "Invalid availability configuration"
-        }
-    },
+    }
 }
