@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {withRouter} from 'react-router-dom';
-import Admin_Profile from '../components/Profile/Admin_Profile'
-import Volunteer_Profile from '../components/Profile/Volunteer_Profile'
-import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile'
+import Admin_Profile from '../components/Profile/Admin_Profile';
+import Volunteer_Profile from '../components/Profile/Volunteer_Profile';
+import SideBar from "../components/AppBar/SideBar";
+import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile';
+import { Grid } from '@material-ui/core';
 import config from "../config";
 
 
@@ -27,9 +29,27 @@ class Profile extends Component {
             return "Loading"
         }
         return (
-            <div>
-                {this.getProfile()}
-            </div>
+           
+        <Grid container>
+
+            <Grid item xs={1}>
+                <SideBar/>
+            </Grid> 
+
+
+            <Grid
+                item xs={11}
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                    justify="center">
+                <Grid item>
+                    {this.getProfile()}
+                </Grid>
+            </Grid>
+        </Grid>
+            
         )
     }
 }

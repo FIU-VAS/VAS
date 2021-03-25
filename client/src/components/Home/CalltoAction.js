@@ -79,8 +79,8 @@ class LoginForm extends Component {
         
             <h1>Ignite the passion for CS. <br></br>
                 Uplift your community.</h1>
-            <h3>Currently reaching 50+ volunteers, <br></br> 
-            12+ schools, 300+ students </h3>
+            <h3>Currently reaching 60+ volunteers, <br></br> 
+            14+ schools, 320+ students </h3>
             <Button
               type="submit"
               variant="contained"

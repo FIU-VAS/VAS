@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SchoolPersonnelTable from '../components/SchoolPersonnels/SchoolPersonnelTable';
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     all: {
@@ -32,6 +33,9 @@ class SchoolPersonnelManagement extends Component{
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={1}>
+                        <SideBar/>
+                    </Grid> 
                     <Grid item className={this.props.classes.table}>
                         <SchoolPersonnelTable/>
                         <img className={this.props.classes.blob}

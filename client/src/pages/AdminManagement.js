@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AdminTable from '../components/Admins/AdminTable';
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     all: {
@@ -32,6 +33,9 @@ class AdminManagement extends Component{
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={1}>
+                        <SideBar/>
+                    </Grid> 
                     <Grid item className={this.props.classes.table}>
                         <AdminTable/>
                         <img className={this.props.classes.blob}

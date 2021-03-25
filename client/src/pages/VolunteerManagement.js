@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import VolunteerTable from '../components/Volunteers/VolunteerTable';
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     all: {
@@ -31,6 +32,9 @@ class VolunteerManagement extends Component{
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={1}>
+                        <SideBar/>
+                    </Grid>
                     <Grid item className={this.props.classes.table}>
                         <VolunteerTable/>
                         <img className={this.props.classes.blob}
