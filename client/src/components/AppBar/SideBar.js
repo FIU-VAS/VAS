@@ -17,6 +17,7 @@ import config from "../../config";
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import { green } from '@material-ui/core/colors';
 import HomeIcon from '@material-ui/icons/Home';
+import { connect } from 'react-redux';
 
 const drawerWidth = 110;
 
@@ -82,6 +83,7 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -92,17 +94,18 @@ function ResponsiveDrawer(props) {
          </Link>
       <Divider />
       <List>
-      <ListItem>
-       <Link to="/dashboard" >
-         <DashboardOutlinedIcon fontSize="large" style={{ color: green[500] }}></DashboardOutlinedIcon>
+       <Link to='/dashboard' className={classes.links}>
+       <ListItem> 
+          <ListItemText>Dashboard</ListItemText>
+          </ListItem> 
         </Link> 
-        </ListItem>
+        
         <Link to='/profile' className={classes.links}> 
           <ListItem> 
             <ListItemText>Profile</ListItemText>
           </ListItem> 
         </Link>
-        {!config.userRoles.admin === 'admin' &&
+        {config.userRoles.admin === 'admin' &&
         <Link to='/availability' className={classes.links}> 
           <ListItem> 
             <ListItemText>Availability</ListItemText>

@@ -5,22 +5,15 @@ import store from "./store";
 import './App.css';
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-<<<<<<< HEAD
 import { logoutUser, setAuth } from "./actions/authActions";
 import {getAdmin, getVolunteer, getSchoolPersonnel, getUser} from "./actions/userActions"
 import Login from './pages/Login';
 import Home from './pages/Home';
-=======
-import {logoutUser, setAuth} from "./actions/authActions"
-import {getAdmin, getVolunteer, getSchoolPersonnel, getUser} from "./actions/userActions"
-import Login from './pages/Login'
->>>>>>> feature/new-ui
 import NavBar from './components/AppBar/NavBar';
 import Footer from './components/AppBar/Footer';
 import Dashboard from './pages/Dashboard';
 import VolunteerManagement from './pages/VolunteerManagement';
 import Profile from './pages/Profile';
-import Home from './pages/Home';
 import SchoolManagement from './pages/SchoolManagement';
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import AdminRoute from './components/Routes/AdminRoute'
@@ -28,13 +21,9 @@ import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
-<<<<<<< HEAD
 import AvailabilityForm from './pages/AvailabilityForm';
 import About from './pages/About'
-=======
-import About from './pages/About';
 import Settings from './pages/Settings'
->>>>>>> feature/new-ui
 import config from "./config";
 import Availability from './pages/Availability';
 
