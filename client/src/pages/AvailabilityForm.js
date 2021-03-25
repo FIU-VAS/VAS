@@ -119,7 +119,6 @@ const AvailabilityForm = () => {
                 setResponse({success: true, message: res.data.message});
             })
             .catch(err => {
-                console.log(err);
                 setResponse({success: false, message: err.message});
             })
     }
@@ -133,27 +132,27 @@ const AvailabilityForm = () => {
     ]
 
     const startTimes = [
-        { value: "2:00 PM", label: "2:00" },
-        { value: "2:15 PM", label: "2:15" },
-        { value: "2:30 PM", label: "2:30" },
-        { value: "2:45 PM", label: "2:45" },
-        { value: "3:00 PM", label: "3:00" },
-        { value: "3:15 PM", label: "3:15" },
-        { value: "3:30 PM", label: "3:30" },
-        { value: "3:45 PM", label: "3:45" },
-        { value: "4:00 PM", label: "4:00" },
-        { value: "4:15 PM", label: "4:15" },
-        { value: "4:30 PM", label: "4:30" },
-        { value: "4:45 PM", label: "4:45" },
-        { value: "5:00 PM", label: "5:00" }
+        { value: "14:00", label: "2:00" },
+        { value: "14:15", label: "2:15" },
+        { value: "14:30", label: "2:30" },
+        { value: "14:45", label: "2:45" },
+        { value: "15:00", label: "3:00" },
+        { value: "15:15", label: "3:15" },
+        { value: "15:30", label: "3:30" },
+        { value: "15:45", label: "3:45" },
+        { value: "16:00", label: "4:00" },
+        { value: "16:15", label: "4:15" },
+        { value: "16:30", label: "4:30" },
+        { value: "16:45", label: "4:45" },
+        { value: "17:00", label: "5:00" }
     ]
 
     const endTimes = [
         ...startTimes,
-        { value: "5:15 PM", label: "5:15" },
-        { value: "5:30 PM", label: "5:30" },
-        { value: "5:45 PM", label: "5:45" },
-        { value: "6:00 PM", label: "6:00" }
+        { value: "17:15", label: "5:15" },
+        { value: "17:30", label: "5:30" },
+        { value: "17:45", label: "5:45" },
+        { value: "18:00", label: "6:00" }
     ]
 
     const classes = useStyles();

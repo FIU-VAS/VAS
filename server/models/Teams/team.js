@@ -13,7 +13,10 @@ export const Days = {
 export const REFERENCE_DATE = new Date(2000, 0, 3);
 
 export const validateTimeDate = (value) => {
-    return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
+    console.log(value);
+    let arr = value.split(':');
+    const date = new Date(2000, 0, 3, arr[0], arr[1]);
+    return isDate(date) && value.getFullYear() === 2000 && (date.getDate() >= 3 && value.getDate() <= 7)
     && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
 }
 
