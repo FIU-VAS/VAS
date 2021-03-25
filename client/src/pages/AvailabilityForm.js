@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import serverConf from "../config";
 import { FormControl, Select, InputLabel, MenuItem } from "@material-ui/core";
@@ -12,6 +12,8 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/core/styles';
+import {startOfToday, addHours, addMinutes, subHours, format, parseISO} from "date-fns";
+import {setCurrentUser} from "../actions/userActions";
 
 const theme = createMuiTheme({
     palette: {
@@ -64,9 +66,21 @@ const useStyles = makeStyles({
 
 const AvailabilityForm = () => {
     const user = useSelector(state => state.userData.user);
+    const dispatch = useDispatch();
+
     const endpoint = user.role === "volunteer" ? `${serverConf.uri}${serverConf.endpoints.volunteers.update}/${user._id}` : `${serverConf.uri}${serverConf.endpoints.schoolPersonnels.update}/${user._id}`;
 
-    const [availability, setAvailability] = useState([{ dayOfWeek: "", startTime: "", endTime: "" }]);
+
+    const [availability, setAvailability] = useState(
+        (user.availability && user.availability.length)
+            ? user.availability.map(available => ({
+                ...available,
+                startTime: format(parseISO(available.startTime), "HH:mm"),
+                endTime: format(parseISO(available.endTime), "HH:mm")
+            }))
+            : [{ dayOfWeek: "", startTime: "", endTime: "" }]
+    );
+
     const [errors, setErrors] = useState([""]);
     const [response, setResponse] = useState({success: false, message: ""});
 
@@ -111,15 +125,20 @@ const AvailabilityForm = () => {
     }
 
     const submitForm = () => {
-        let data = user;
-        data.availability = availability;
-
-        axios.post(endpoint, data)
+        axios.post(endpoint, {
+            availability,
+            email: user.email
+        })
             .then(res => {
                 setResponse({success: true, message: res.data.message});
+                dispatch(setCurrentUser(res.data.result));
             })
             .catch(err => {
-                setResponse({success: false, message: err.message});
+                if (err.response) {
+                    setResponse({success: false, message: err.response.message});
+                } else {
+                    setResponse({success: false, message: err.message});
+                }
             })
     }
 
@@ -131,29 +150,25 @@ const AvailabilityForm = () => {
         { value: "friday", label: "Friday" }
     ]
 
-    const startTimes = [
-        { value: "14:00", label: "2:00" },
-        { value: "14:15", label: "2:15" },
-        { value: "14:30", label: "2:30" },
-        { value: "14:45", label: "2:45" },
-        { value: "15:00", label: "3:00" },
-        { value: "15:15", label: "3:15" },
-        { value: "15:30", label: "3:30" },
-        { value: "15:45", label: "3:45" },
-        { value: "16:00", label: "4:00" },
-        { value: "16:15", label: "4:15" },
-        { value: "16:30", label: "4:30" },
-        { value: "16:45", label: "4:45" },
-        { value: "17:00", label: "5:00" }
-    ]
+    let startTime = addHours(startOfToday(), 14);
+    const endTime = addHours(startOfToday(), 18);
 
-    const endTimes = [
-        ...startTimes,
-        { value: "17:15", label: "5:15" },
-        { value: "17:30", label: "5:30" },
-        { value: "17:45", label: "5:45" },
-        { value: "18:00", label: "6:00" }
-    ]
+    const startTimes = [];
+    const endTimes = [];
+
+    while (startTime <= endTime) {
+        if (startTime < subHours(endTime, 1)) {
+            startTimes.push({
+                value: format(startTime, "HH:mm"),
+                label: format(startTime, "h:mm aa"),
+            });
+        }
+        endTimes.push({
+            value: format(startTime, "HH:mm"),
+            label: format(startTime, "h:mm aa"),
+        });
+        startTime = addMinutes(startTime, 15)
+    }
 
     const classes = useStyles();
 

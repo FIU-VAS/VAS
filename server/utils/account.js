@@ -119,10 +119,13 @@ export const updateUser = (Schema, validationSchema) => {
 
         try {
             const updateResult = await Schema.updateOne({_id: userId}, updateProps);
+            const newUser = await Schema.findOne({_id: userId});
+            console.log(newUser);
             if (updateResult.nModified === 1) {
                 return response.send({
                     success: true,
-                    message: "User updated successfully"
+                    message: "User updated successfully",
+                    result: newUser
                 });
             }
         } catch (insertError) {
