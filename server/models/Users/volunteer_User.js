@@ -47,17 +47,17 @@ const VolunteerSchema = new mongoose.Schema({
         },
         startTime: {
             type: Date,
-            validate: {
+            /* validate: {
                 validator: validateTimeDate,
                 message: "Invalid value for time"
-            }
+            } */
         },
         endTime: {
             type: Date,
-            validate: {
+            /*validate: {
                 validator: validateTimeDate,
                 message: "Invalid value for time"
-            }
+            }*/
         }
     }],
 }, { discriminatorKey: 'role' });

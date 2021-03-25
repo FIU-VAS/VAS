@@ -1,31 +1,16 @@
 // This component is the equivalent to VolunteerTable etc..
 
-import React, {Component, Fragment, useState} from 'react';
-import MaterialTable from 'material-table';
-import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import React, {useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {green, red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
-import {ThemeProvider} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {blueGrey, blue, grey} from '@material-ui/core/colors';
-import EditTeamDialog from './EditTeamDialog';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Box from '@material-ui/core/Box';
-import SyncIcon from '@material-ui/icons/Sync';
-import AddIcon from '@material-ui/icons/Add';
-import isEmpty from 'is-empty';
-import TeamDialog from "./TeamDialog";
-import {Paper} from "@material-ui/core";
+import {Sync, Add, ArrowUpward} from '@material-ui/icons';
+import {ButtonGroup, Paper} from "@material-ui/core";
 
 import {useForm, Controller} from "react-hook-form";
 import {subYears, eachYearOfInterval, format} from "date-fns";
@@ -115,6 +100,8 @@ const TeamView = (props) => {
     const [currentTeams, setCurrentTeams] = useState([])
     const [triedOnce, setTriedOnce] = useState(false);
     const [loading, setLoading] = useState(false)
+    const [newTeam, setNewTeam] = useState(false)
+    const [importTeams, setImportTeams] = useState(false)
 
     const classes = teamManagementStyles();
 
@@ -168,11 +155,21 @@ const TeamView = (props) => {
                             </Typography>
                         </Grid>
                         <Grid item xs={6} style={{textAlign: "right"}}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                endIcon={<AddIcon/>}
-                            >Create Team </Button>
+                            <ButtonGroup>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    endIcon={<Add/>}
+                                    onClick={() => setNewTeam(true)}
+                                >Create Team </Button>
+                                <Button
+                                    style={{marginLeft: "0.5rem"}}
+                                    variant="contained"
+                                    color="primary"
+                                    endIcon={<ArrowUpward/>}
+                                    onClick={() => setImportTeams(true)}
+                                >Import Teams</Button>
+                            </ButtonGroup>
                         </Grid>
                     </Grid>
                     <form onSubmit={handleSubmit(getTeams)}>
@@ -201,7 +198,7 @@ const TeamView = (props) => {
                             <Grid item xs={12}>
                                 <Button
                                     className={classes.queryButton}
-                                    endIcon={<SyncIcon/>}
+                                    endIcon={<Sync/>}
                                     variant="contained"
                                     fullWidth
                                     size="small"

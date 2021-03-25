@@ -195,7 +195,7 @@ async function resetPassword(req, res) {
 }
 
 async function getCurrentUser(req, res) {
-    res.json(omit(req.account.toObject(), ['_id', '__v', 'token', 'password']))
+    res.json(omit(req.account.toObject(), ['__v', 'token', 'password']))
 }
 
 export default {router};

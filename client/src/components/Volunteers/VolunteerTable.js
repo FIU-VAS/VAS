@@ -316,8 +316,6 @@ class VolunteerTable extends Component {
                                                         open={this.state.userFormDialog} 
                                                         close={this.toggleUserFormDialog} 
                                                         endpoint={endpoint}
-                                                        edit={edit}
-                                                        role={"Volunteer"}
                                                         formProps={formProps}
                                                         title={edit ? "Edit Volunteer" : "Create Volunteer"}
                                                         description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'

@@ -1,7 +1,6 @@
 import {grey} from "@material-ui/core/colors";
 import React, {Fragment} from "react";
 import {TeamCard, TeamCardBody, TeamCardSubheading} from "./TeamCard";
-import Typography from "@material-ui/core/Typography";
 
 
 

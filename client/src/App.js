@@ -23,6 +23,7 @@ import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
 import About from './pages/About';
 import Settings from './pages/Settings'
+import AvailabilityForm from './pages/AvailabilityForm';
 import config from "./config";
 
 

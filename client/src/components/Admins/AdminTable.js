@@ -213,8 +213,6 @@ class AdminTable extends Component {
                     open={this.state.userFormDialog}
                     close={this.toggleUserFormDialog}
                     endpoint={endpoint}
-                    edit={edit}
-                    role={"Admin"}
                     formProps={formProps}
                     title={edit ? "Edit Admin" : "Create Admin"}
                     description={edit ? 'To edit a  Admin, modify the following form and click SUBMIT'
