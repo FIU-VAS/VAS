@@ -14,7 +14,8 @@ import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import { grey } from '@material-ui/core/colors';
 import config from "../../config";
-
+import HomeIcon from '@material-ui/icons/Home';
+import { green } from '@material-ui/core/colors';
 const drawerWidth = 120;
 
 const useStyles = makeStyles((theme) => ({
@@ -78,16 +79,19 @@ function ResponsiveDrawer(props) {
     <div>
       <div className={classes.toolbar} />
       <div className={classes.menu}>
-
-       <Link to="/" >
-         <img
+      <Link to="/" ><img
             src ={require("../../images/VAS_LOGO.png").default}
-            alt = "logo"
+            alt="logo"
             height = "70px"
          />
-        </Link> 
+         </Link>
       <Divider />
       <List>
+      <ListItem>
+       <Link to="/dashboard" >
+         <HomeIcon fontSize="large" style={{ color: green[500] }}></HomeIcon>
+        </Link> 
+        </ListItem>
         <Link to='/profile' className={classes.links}> 
           <ListItem> 
             <ListItemText>Profile</ListItemText>
@@ -144,6 +148,7 @@ function ResponsiveDrawer(props) {
           <ListItem> 
             <ListItemText>Log out</ListItemText>
           </ListItem> 
+         
         </Link>
         
       </List>
