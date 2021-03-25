@@ -18,6 +18,7 @@ import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import { green } from '@material-ui/core/colors';
 import HomeIcon from '@material-ui/icons/Home';
 import { connect } from 'react-redux';
+import {useSelector} from "react-redux";
 
 const drawerWidth = 110;
 
@@ -83,6 +84,7 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const user = useSelector(state => state.userData.user);
 
   const drawer = (
     <div>
@@ -105,43 +107,43 @@ function ResponsiveDrawer(props) {
             <ListItemText>Profile</ListItemText>
           </ListItem> 
         </Link>
-        {config.userRoles.admin === 'admin' &&
+        {user.role !== 'admin' &&
         <Link to='/availability' className={classes.links}> 
           <ListItem> 
             <ListItemText>Availability</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin' &&
+        {user.role === 'admin' &&
         <Link to='/settings' className={classes.links}> 
           <ListItem> 
             <ListItemText>Settings</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin'  &&
+        {user.role === 'admin'  &&
         <Link to='/admin-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Admins</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin'  &&
+        {user.role === 'admin'  &&
         <Link to='/school-personnel-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Personnel</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin'  &&
+        {user.role === 'admin'  &&
         <Link to='/schoolmanagement' className={classes.links}> 
           <ListItem> 
             <ListItemText>Schools</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin'  &&
+        {user.role === 'admin'  &&
         <Link to='/volunteer-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Volunteers</ListItemText>
           </ListItem> 
         </Link>}
-        {config.userRoles.admin === 'admin'  &&
+        {user.role === 'admin'  &&
         <Link to='/team-management' className={classes.links}> 
           <ListItem> 
             <ListItemText>Teams</ListItemText>
