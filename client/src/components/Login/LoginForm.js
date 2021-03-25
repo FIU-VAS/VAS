@@ -57,11 +57,11 @@ const useStyles = {
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: grey[900],
+    backgroundColor: '#57C965',
     color: "white",
     fontWeight: "bold",
     '&:hover': {
-        backgroundColor: grey[900],
+        backgroundColor: '#57C965',
     }
   
   },
@@ -179,7 +179,7 @@ class LoginForm extends Component {
 
                         <img
                             className={this.props.classes.logo}
-                            src={require("../../images/VAS_shadow.png").default}
+                            src={require("../../images/VAS_LOGO.png").default}
                             alt="logo"
                         />
 
@@ -230,7 +230,7 @@ class LoginForm extends Component {
 
                         </form>
 
-                        <Button onClick={this.toggleForgotPasswordDialog} color="secondary">
+                        <Button onClick={this.toggleForgotPasswordDialog} color="black">
                             Forgot Password?
                         </Button>
                     </div>

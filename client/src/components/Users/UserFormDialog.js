@@ -24,11 +24,11 @@ const theme = createMuiTheme({
 
 const useStyles = {
     bottomButtons: {
-        backgroundColor: blueGrey[700],
+        backgroundColor: '#57C965',
         color: "white",
         fontWeight: "bold",
         '&:hover': {
-            backgroundColor: blue[500],
+            backgroundColor: '#57C965',
         }
     },
 }
