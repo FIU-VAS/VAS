@@ -5,7 +5,7 @@ import AboutView from '../components/Extras/AboutView';
 
 const useStyles = {
     all: {
-        
+
         height: '100vh'
     },
     view: {
@@ -13,22 +13,22 @@ const useStyles = {
         width: '90%',
         //height: 900
     }
-}    
+}
 
 class About extends Component{
-    
+
     render(){
         return (
             <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/About.png') + ')',
+                style={{backgroundImage: 'url(' + require('../images/About.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item className={this.props.classes.view}>
                         <AboutView/>
-                    </Grid>    
+                    </Grid>
                 </Grid>
-            </div>    
+            </div>
         )
     }
 }

@@ -109,7 +109,7 @@ class Admin_Profile extends Component {
         this.handleInput = this.handleInput.bind(this);
     }
 
-    componentDidMount() {  
+    componentDidMount() {
         this.setState({
             firstName: this.props.user.firstName,
             lastName: this.props.user.lastName,
@@ -131,7 +131,7 @@ class Admin_Profile extends Component {
         const name = e.target.name
 
         this.setState({
-        [name]: value 
+        [name]: value
         })
 
         console.log(this.state)
@@ -143,14 +143,14 @@ class Admin_Profile extends Component {
         })
     }
 
-  render(){   
+  render(){
 
     var initials = (this.state.firstName.substring(0, 1) + this.state.lastName.substring(0, 1)).toUpperCase()
-  
+
     return (
         <ThemeProvider theme={theme}>
         <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
         <Grid
@@ -159,9 +159,9 @@ class Admin_Profile extends Component {
         direction="column"
         alignItems="center"
         justify="center">
-            <Box 
+            <Box
             borderRadius= "10px"
-            className={this.props.classes.card} 
+            className={this.props.classes.card}
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -250,15 +250,15 @@ class Admin_Profile extends Component {
                 </CardContent>
                 <div className={this.props.classes.Button}>
                 <CardActions>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
-                    onClick={this.editable} 
+                    onClick={this.editable}
                     size="small"
                     disabled={!this.state.editDisabled}
                     endIcon={<EditIcon />}>
                         Edit
                     </Button>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
                     onClick={this.editable && this.updateAdmin}
                     size="small"

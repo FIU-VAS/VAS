@@ -32,7 +32,7 @@ const useStyles = {
   root: {
     flexGrow: 0,
     width: '100vw'
-    
+
   },
   appBar: {
     top: 'auto',
@@ -69,7 +69,7 @@ class Footer extends Component {
   }
 
   redirect_to_AboutPage = () => {
-    this.props.history.push("/about"); 
+    this.props.history.push("/about");
   }
 
 render(){
@@ -89,17 +89,17 @@ render(){
                 justify="center">
         <img
             className={this.props.classes.FIU}
-            src ={require("../../images/FIU_hrz_Color.png")}
+            src ={require("../../images/FIU_hrz_Color.png").default}
             alt = "logo"
             />
 
             </Grid>
 
-           
+
             <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="primary" href="#outlined-buttons">
         About
       </Button>
-          
+
         </Toolbar>
       </AppBar>
       </HideOnScroll>

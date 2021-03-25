@@ -78,7 +78,7 @@ class SchoolPersonnel_Profile extends Component {
 
     //Supress depricated warning use UNSAFE_
     UNSAFE_componentWillReceiveProps(nextProps) {
-        
+
     }
 
     handleInput = (e) =>{
@@ -86,7 +86,7 @@ class SchoolPersonnel_Profile extends Component {
         const name = e.target.name
 
         this.setState({
-        [name]: value 
+        [name]: value
         })
     }
 
@@ -97,14 +97,14 @@ class SchoolPersonnel_Profile extends Component {
     }
 
 
-  render(){   
+  render(){
     const user = this.props.user;
     var initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase()
-    
-    
+
+
     return (
         <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
         <Grid
@@ -114,8 +114,8 @@ class SchoolPersonnel_Profile extends Component {
         alignItems="center"
         justify="center">
             <Box
-            borderRadius= "10px" 
-            className={this.props.classes.card} 
+            borderRadius= "10px"
+            className={this.props.classes.card}
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -219,7 +219,7 @@ class SchoolPersonnel_Profile extends Component {
             </Box>
         </Grid>
         </div>
-      
+
     );
   }
 }
