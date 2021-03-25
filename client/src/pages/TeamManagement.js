@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import TeamView from '../components/Teams/TeamView';
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     all: {
@@ -24,6 +25,9 @@ class TeamManagement extends Component{
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={1}>
+                        <SideBar/>
+                    </Grid>
                     <Grid item className={this.props.classes.table}>
                          <TeamView/> 
                     </Grid>    

@@ -22,11 +22,6 @@ import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
 
 
 const useStyles = {
-    all: {
-        //backgroundColor: '#fafafa',
-        //background: 'linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%)',
-
-    },
     cell: {
         marginTop: 20,
         minWidth: 200,
@@ -101,16 +96,15 @@ const Dashboard = (props) => {
 
     return (
         
-        <div className={props.classes.all}
-             style={{
-                 backgroundImage: 'url(' + require('../images/FIU_1_10.png') + ')',
-                 backgroundPosition: 'center',
-                 backgroundSize: 'cover'
-             }}>
+        <Grid container className={props.classes.all}>
 
-            <SideBar></SideBar>
+            <Grid item xs={1}>
+                <SideBar/>
+            </Grid> 
+            
 
             <Grid
+                item xs={11}
                 container
                 spacing={0}
                 direction="column"
@@ -120,7 +114,7 @@ const Dashboard = (props) => {
                     {getPage()}
                 </Grid>
             </Grid>
-        </div>
+        </Grid>
 
     )
 }

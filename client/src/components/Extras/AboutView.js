@@ -65,24 +65,28 @@ const useStyles = {
         alignItems: 'center',
         marginBottom: 10,
       },
-      main: {
+    main: {
         fontSize: 30,
         fontWeight: 800,
         color: grey[900],
         alignItems: 'left',
         justify: 'left',
     },
-    // text:{
-    //     left: '3%',
-    //     right: '35%',
-    //     position: 'absolute',
-    // },
-    // blob: {
-    //     position: 'absolute',
-    //     right: '3%',
-    //     left: '65%',
-    //     height : "350px",
-    // }
+    cardContainer:{
+        heigth:'100px'
+    },
+    textContainer:{
+        paddingTop: '2%',
+        display: 'flex',
+        width: '100%',
+    },
+    text:{
+        position: 'flex',
+    },
+    blob: {
+        paddingTop: '0px',
+        height : "350px",
+    }
 }
 
 function ListItemLink(props) {
@@ -118,37 +122,48 @@ class AboutView extends Component {
 
             </Grid>
             <Grid  >
-            <div className={this.props.classes.text}>
+                <div className={this.props.classes.textContainer}>
+                    <div className={this.props.classes.text}>
                             <Typography
                             className={this.props.classes.regular}>
-                                The <strong>CS First</strong> outreach program started at Florida International University's (FIU) School of Computing and Information Sciences (SCIS) 
-                                    in the Spring of 2015, as an attempt to spread the knowledge of coding and Computer Science to elementary and middle schools near FIU. 
-                                    Initially, only 2 elementary schools were involved, Sweetwater Elementary and Coral Park Elementary, with the Women in Computer Science (WICS ) 
-                                    student organization and an SCIS instructor, Ms. Charters, as the only volunteers and organizers of the outreach.  
-                                    Year after year, the outreach program has grown, expanding the number of elementary and middle schools that are served, and recruiting a greater number of FIU student volunteers.
-                                    <br/><br/>
-                                In the Spring of 2018, FIU's Computer Science student organization called  Upsilon Pi Epsilon (UPE), adopted <strong>CS First</strong> as its main outreach program.  
-                                    Through UPE's frequent member meetings each semester, the organization has helped to recruit, train, and manage the volunteers in the outreach, to meet the increasing need for CS education 
-                                    in elementary and middle schools, using the multitude of children's resources now available to teach CS, including Code.org' K-5 curriculum, Google's <strong>CS First</strong> curriculum,  and MIT's Scratch curriculum. 
-                                    <br/><br/>
-                                If you are interested in joining the <strong>CS First</strong> outreach program, go to <a href="https://upe.cs.fiu.edu/google-cs-first/" target="_blank">https://upe.cs.fiu.edu/google-cs-first/</a> to apply.  
-                                    Each December, as a celebration of Computer Science Education week, <strong>CS First</strong> works with SCIS to help organize and run a "mini-hackathon" for the children involved with the outreach.  
-                                    For more details, please go to  <a href="https://www.cis.fiu.edu/codefest-miami-2017-fiu/" target="_blank">https://www.cis.fiu.edu/codefest-miami-2017-fiu/</a>
+                                The <strong>Ignite</strong> program at Florida International University’s Knight Foundation School of Computing 
+                                and Information Sciences (KFSCIS) is an outreach program with the mission of promoting computer science 
+                                education to K-12 students in Miami Dade County. Through the program, volunteers visit schools every week 
+                                to teach students the fundamentals of computer science, using resources such as Code.org' K-5 curriculum, 
+                                Google's CS First curriculum, and MIT's Scratch curriculum. Since its inception, the Ignite program has 
+                                counted with the support of hundreds of volunteers, served over 20 schools, and impacted over 2000 grade 
+                                school students. Additionally, to celebrate Computer Science Education week, Ignite collaborates with 
+                                KFSCIS every December to host its signature event: CodeFest Miami - a mini-hackathon for students in 
+                                the outreach. For more details, please go to  
+                                <a href="https://www.cis.fiu.edu/codefest-miami-2017-fiu/" target="_blank" style={{'color':'#57C965',textDecoration: 'none'}}> CodeFest Miami - 2017</a>.
+                                <br/><br/>
+                                The program is organized by Upsilon Pi Epsilon (UPE), FIU’s largest student organization for technology, 
+                                and under the guidance of KFSCIS Instructor Cristy Charters. The organization plans the program’s activities, 
+                                and recruits, trains, and manages the volunteers every semester. The Ignite program is also currently sponsored 
+                                by State Farm and has been supported by Google in previous years. To learn more, please visit the Ignite 
+                                program website at 
+                                <a href="https://upe.cs.fiu.edu/google-cs-first/" target="_blank" style={{'color':'#57C965',textDecoration: 'none'}}> UPE Ignite </a> to apply. 
+                        
                             </Typography>
 
-
-                            </div>
+                    </div>
+                            <img className={this.props.classes.blob}
+                                src ={require("../../images/Ignite_4.png").default}
+                                alt = "Blob" 
+                            />
+                </div>
+                            
             </Grid>
-            {/* <img className={this.props.classes.blob}
-                src ={require("../../images/Ignite_4.png").default}
-                alt = "Blob" 
-                /> */}
+            
+            <div className={this.props.classes.cardContainer}>
            <Grid
             container
             direction="column"
             justify="center"
             alignItems="center"
+            paddingTop="50px"
             >
+                <div>
                 
                     <Typography
                         className={this.props.classes.main}
@@ -156,7 +171,7 @@ class AboutView extends Component {
                         style={{marginBottom: '5px'}}>
                             Project Credits 
                     </Typography>
-
+                </div>
             </Grid>
 
                 <Grid
@@ -181,20 +196,17 @@ class AboutView extends Component {
                         boxShadow={2}
                         className={this.props.classes.cardHeader}
                         variant="outlined"
-                        justify="center">
+                        justify="center"
+>
 
-                            <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="center">
+                            
 
                                 <Typography
                                 className={this.props.classes.cardTitle}
                                 style={{marginTop: '14px'}}>
                                     Version 1 
                                 </Typography>
-                            </Grid>
+                            
 
                       <Grid style={{paddingLeft: '15px', paddingTop: '10px', paddingRight: '15px', paddingBottom: '15px',}}>
                             
@@ -334,7 +346,7 @@ class AboutView extends Component {
                    </Grid>
 
             
-            
+                   </div>
             
             </Fragment>
             </div>
