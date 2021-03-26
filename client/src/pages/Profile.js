@@ -8,7 +8,7 @@ import SideBar from "../components/AppBar/SideBar";
 import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile';
 import { Grid } from '@material-ui/core';
 import config from "../config";
-
+import '../../src/App.css';
 
 class Profile extends Component {
 
@@ -30,7 +30,7 @@ class Profile extends Component {
         }
         return (
            
-        <Grid container>
+        <Grid className="bg" container>
 
             <Grid item xs={1}>
                 <SideBar></SideBar>
