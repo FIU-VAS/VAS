@@ -17,7 +17,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 
   const theme = createMuiTheme({
     palette: {
-      primary: {main: green[600]}, // For isActive is true
+      primary: {main: '#57C965'}, // For isActive is true
       secondary: {main: red[600]},// For isActive is false
     }
   });
@@ -100,10 +100,22 @@ class SchoolTable extends Component {
                     title="Schools"
                     columns={
                         [
-                            { title: 'School Name', field: 'schoolName' },
-                            { title: 'Level', field: 'level' },
-                            { title: 'Phone #', field: 'phoneNumber'},
-                            { title: 'City', field: 'city'},
+                            { title: 'School Name', field: 'schoolName' ,
+                            headerStyle: {
+                              backgroundColor: '#57C965',
+                            }},
+                            { title: 'Level', field: 'level',
+                            headerStyle: {
+                              backgroundColor: '#57C965',
+                            } },
+                            { title: 'Phone #', field: 'phoneNumber',
+                            headerStyle: {
+                              backgroundColor: '#57C965',
+                            }},
+                            { title: 'City', field: 'city',
+                            headerStyle: {
+                              backgroundColor: '#57C965',
+                            }},
                         ]
                     }
                     data={this.props.schools}
@@ -123,8 +135,8 @@ class SchoolTable extends Component {
                     options={{
                         actionsColumnIndex: -1,
                         headerStyle: {
-                            backgroundColor: '#b0bec5',
-                            color: '#212121'
+                            backgroundColor: '#57C965',
+                            color: 'white'
                         },
                         searchFieldStyle: {
                             backgroundColor: '#eeeeee',

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import { blue, blueGrey } from '@material-ui/core/colors';
+import { blue, blueGrey, green} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -18,7 +18,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { updateAdmin } from "../../actions/userActions";
 import { ThemeProvider } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-
+import '../../../src/App.css';
 
 const theme = createMuiTheme({
     palette: {
@@ -29,15 +29,14 @@ const theme = createMuiTheme({
 // Profile Styling
 const useStyles = {
     all: {
-        backgroundColor: '#fafafa',
-        height: '100vh'
+        height: '100vh',
     },
     card: {
         marginTop: 10,
         minWidth: 300,
-        maxWidth: 450,
+        maxWidth: 700,
         height: 500,
-        backgroundColor: 'white'
+        backgroundColor: 'transparent'
     },
     paper: {
         marginTop: theme.spacing(1),
@@ -52,17 +51,18 @@ const useStyles = {
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 14,
-        alignItems: 'right'
+        fontSize: 15,
+        alignItems: 'center',
     },
     pos: {
         marginBottom: 12,
     },
-    blue: {
-        backgroundColor: blue[500],
+    green: {
+        backgroundColor: '#72D565',
     },
     Avatar: {
-        marginBottom: 5,
+        marginTop: 20,
+        marginBottom: 20,
     },
     form: {
         width: '100%',
@@ -75,13 +75,16 @@ const useStyles = {
         marginBottom: 10,
     },
     editButton: {
-        backgroundColor: blueGrey[700],
+        backgroundColor: '#000',
         color: "white",
         fontWeight: "bold",
+        fontSize: "1rem",
         '&:hover': {
-            backgroundColor: blue[500],
+            backgroundColor: '#606060',
         },
-        width: "70px",
+        width: "150px",
+        height: "40px",
+        marginRight: "15px",
         "&:disabled": {
             backgroundColor: blueGrey[100],
             color: "white",
@@ -109,7 +112,7 @@ class Admin_Profile extends Component {
         this.handleInput = this.handleInput.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() {  
         this.setState({
             firstName: this.props.user.firstName,
             lastName: this.props.user.lastName,
@@ -131,7 +134,7 @@ class Admin_Profile extends Component {
         const name = e.target.name
 
         this.setState({
-        [name]: value
+        [name]: value 
         })
 
         console.log(this.state)
@@ -143,25 +146,22 @@ class Admin_Profile extends Component {
         })
     }
 
-  render(){
+  render(){   
 
     var initials = (this.state.firstName.substring(0, 1) + this.state.lastName.substring(0, 1)).toUpperCase()
-
+  
     return (
-        <ThemeProvider theme={theme}>
-        <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover' }}>
+        <ThemeProvider theme={theme} >
+        <div className={this.props.classes.all}>
         <Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justify="center">
-            <Box
+            <Box 
             borderRadius= "10px"
-            className={this.props.classes.card}
+            className={this.props.classes.card} 
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -173,20 +173,21 @@ class Admin_Profile extends Component {
                     alignItems="center"
                     justify="center"
                     >
-                        <Avatar className={this.props.classes.blue} >{initials}</Avatar>
+                        <Avatar classes={{ root: 'avatar-style' }} className={this.props.classes.green} >{initials}</Avatar>
                     </Grid>
                     <div className={this.props.classes.paper}>
                         <Typography className={this.props.classes.title} color="textPrimary" variant="h4" gutterBottom>
                             {this.props.user.role}
                         </Typography>
                     </div>
-                    <Typography className={this.props.classes.title} color="textSecondary" variant="h4" gutterBottom>
+                    <Typography className={this.props.classes.title} color="black" variant="h4" gutterBottom>
                         Profile Information
                     </Typography>
                     <form className={this.props.classes.form} noValidate>
 
                     {/* First Name */}
-                    <TextField
+                    <TextField 
+                        classes={{ root: 'text' }}
                         variant="standard"
                         //color= "primary"
                         margin="normal"
@@ -250,15 +251,15 @@ class Admin_Profile extends Component {
                 </CardContent>
                 <div className={this.props.classes.Button}>
                 <CardActions>
-                    <Button
+                    <Button 
                     className={this.props.classes.editButton}
-                    onClick={this.editable}
+                    onClick={this.editable} 
                     size="small"
                     disabled={!this.state.editDisabled}
                     endIcon={<EditIcon />}>
                         Edit
                     </Button>
-                    <Button
+                    <Button 
                     className={this.props.classes.editButton}
                     onClick={this.editable && this.updateAdmin}
                     size="small"

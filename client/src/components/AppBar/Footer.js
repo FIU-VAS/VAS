@@ -11,35 +11,34 @@ import Slide from '@material-ui/core/Slide';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
-
-import { Link } from "react-router-dom";
-
 import Grid from '@material-ui/core/Grid';
-
+import { blueGrey, grey } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#455a64"
+            main: grey[900],
         },
         secondary: {
-          main: "#fafafa"
+          main: grey[900],
         }
     }
 });
 
 const useStyles = {
-  root: {
+  root1: {
     flexGrow: 0,
-    width: '100vw'
-
+    width: '100vw',
+    backgroundColor: grey[50],
+    
   },
-  appBar: {
+  appBar1: {
     top: 'auto',
     bottom: 0,
-    opacity: "80%"
+    opacity: "80%",
+    backgroundColor: grey[50],
   },
-  FIU: {
+  FIU1: {
     height: "30px"
   }
 };
@@ -69,16 +68,16 @@ class Footer extends Component {
   }
 
   redirect_to_AboutPage = () => {
-    this.props.history.push("/about");
+    this.props.history.push("/about"); 
   }
 
 render(){
   const props = this.props;
   return (
     <ThemeProvider theme={theme}>
-    <div className={this.props.classes.root} >
+    <div className={this.props.classes.root1} >
     <HideOnScroll {...props}>
-    <AppBar position="fixed" color="secondary" className={this.props.classes.appBar}>
+    <AppBar position="fixed" color="secondary" className={this.props.classes.appBar1}>
         <Toolbar>
 
         <Grid
@@ -88,18 +87,18 @@ render(){
                 alignItems="center"
                 justify="center">
         <img
-            className={this.props.classes.FIU}
+            className={this.props.classes.FIU1}
             src ={require("../../images/FIU_hrz_Color.png").default}
             alt = "logo"
             />
 
             </Grid>
 
-
-            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="primary" href="#outlined-buttons">
+           
+            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="black" href="#outlined-buttons">
         About
       </Button>
-
+          
         </Toolbar>
       </AppBar>
       </HideOnScroll>

@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
+import { Grid } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import SideBar from "../components/AppBar/SideBar";
 import {withRouter} from 'react-router-dom';
-import {Grid} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
 import config from "../config";
 import VolunteerDashboard from "../components/Dashboards/VolunteerDashboard";
 import AdminDashboard from "../components/Admins/AdminDashboard";
@@ -19,12 +20,8 @@ import {getVolunteers} from "../actions/volunteerActions";
 import {getSchools} from "../actions/schoolActions";
 import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
 
-const useStyles = {
-    all: {
-        //backgroundColor: '#fafafa',
-        //background: 'linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%)',
 
-    },
+const useStyles = {
     cell: {
         marginTop: 20,
         minWidth: 200,
@@ -98,14 +95,16 @@ const Dashboard = (props) => {
     }
 
     return (
-        <div className={props.classes.all}
-             style={{
-                 backgroundImage: 'url(' + require('../images/FIU_1_10.png').default + ')',
-                 backgroundPosition: 'center',
-                 backgroundSize: 'cover'
-             }}>
+        
+        <Grid container className={props.classes.all}>
+
+            <Grid item xs={1}>
+                <SideBar/>
+            </Grid> 
+            
 
             <Grid
+                item xs={11}
                 container
                 spacing={0}
                 direction="column"
@@ -115,7 +114,7 @@ const Dashboard = (props) => {
                     {getPage()}
                 </Grid>
             </Grid>
-        </div>
+        </Grid>
 
     )
 }

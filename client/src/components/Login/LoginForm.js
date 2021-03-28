@@ -3,12 +3,11 @@ import isEmpty from 'is-empty';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import {blueGrey, blue} from '@material-ui/core/colors';
-import {createMuiTheme} from '@material-ui/core/styles';
-import {ThemeProvider} from '@material-ui/core/styles';
-import {withStyles} from '@material-ui/core/styles';
+import { blueGrey, grey } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ForgotPasswordDialog from './ForgotPasswordDialog';
 import './LoginForm.css';
@@ -17,45 +16,59 @@ import {connect} from "react-redux";
 import {loginUser} from "../../actions/authActions";
 import {clearSuccess} from "../../actions/server/successActions";
 import Alert from '@material-ui/lab/Alert';
+import { Link } from "react-router-dom";
+import Typography from '@material-ui/core/Typography';
+
 
 // Login Styling
 const theme = createMuiTheme({
     palette: {
-        primary: blue,
+      primary: grey,
     }
-});
+    
+  });
 
 const useStyles = {
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: blueGrey[500],
-        '&:hover': {
-            backgroundColor: blue[500],
-        }
-    },
-    form: {
-        width: '100%',
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-        backgroundColor: blueGrey[700],
-        color: "white",
-        fontWeight: "bold",
-        '&:hover': {
-            backgroundColor: blue[500],
-        }
-    },
-    logo: {
-        height: '80px',
-        marginBottom: '0px'
-    },
+  loginform: {
+
+    
+  },
+  paper: {
+    marginTop: theme.spacing(15),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: blueGrey[500],
+    alignItems: 'left',
+    '&:hover': {
+        backgroundColor: grey[900],
+    }
+    
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+    
+    
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: '#57C965',
+    color: "white",
+    fontWeight: "bold",
+    '&:hover': {
+        backgroundColor: '#57C965',
+    }
+  
+  },
+  logo: {
+    height: '80px',
+    marginBottom: '0px'
+  },
 };
 
 // Login Styling END
@@ -166,7 +179,7 @@ class LoginForm extends Component {
 
                         <img
                             className={this.props.classes.logo}
-                            src={require("../../images/VAS_shadow.png").default}
+                            src={require("../../images/VAS_LOGO.png").default}
                             alt="logo"
                         />
 
@@ -217,7 +230,7 @@ class LoginForm extends Component {
 
                         </form>
 
-                        <Button onClick={this.toggleForgotPasswordDialog} color="secondary">
+                        <Button onClick={this.toggleForgotPasswordDialog} color="black">
                             Forgot Password?
                         </Button>
                     </div>

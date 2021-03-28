@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { blue, blueGrey } from '@material-ui/core/colors';
+import { blue, blueGrey, green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -21,8 +21,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { updateVolunteer_Profile } from "../../actions/userActions";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
-
-
+import '../../../src/App.css';
 
 const theme = createMuiTheme({
     palette: {
@@ -33,15 +32,14 @@ const theme = createMuiTheme({
 // Profile Styling
 const useStyles = {
     all: {
-        backgroundColor: '#fafafa',
         height: '100vh'
     },
     card: {
         marginTop: 10,
         minWidth: 300,
-        maxWidth: 450,
+        maxWidth: 700,
         height: 880,
-        backgroundColor: 'white'
+        backgroundColor: 'transparent'
     },
     paper: {
         marginTop: theme.spacing(1),
@@ -56,17 +54,18 @@ const useStyles = {
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 14,
-        alignItems: 'right'
+        fontSize: 15,
+        alignItems: 'center'
     },
     pos: {
         marginBottom: 12,
     },
-    blue: {
-        backgroundColor: blue[500],
+    green: {
+        backgroundColor: '#72D565',
     },
     Avatar: {
-        marginBottom: 5,
+        marginTop: 20,
+        marginBottom: 20,
     },
     form: {
         width: '100%',
@@ -79,13 +78,16 @@ const useStyles = {
         marginBottom: 10,
     },
     editButton: {
-        backgroundColor: blueGrey[700],
+        backgroundColor: '#000',
         color: "white",
         fontWeight: "bold",
+        fontSize: "1rem",
         '&:hover': {
-            backgroundColor: blue[500],
+            backgroundColor: '#606060',
         },
-        width: "70px",
+        width: "150px",
+        height: "40px",
+        marginRight: "15px",
         "&:disabled": {
             backgroundColor: blueGrey[100],
             color: "white",
@@ -168,7 +170,7 @@ class Volunteer_Profile extends Component {
                     alignItems="center"
                     justify="center"
                     >
-                        <Avatar className={this.props.classes.blue} >{initials}</Avatar>
+                        <Avatar classes={{ root: 'avatar-style' }} className={this.props.classes.green} >{initials}</Avatar>
                     </Grid>
                     <div className={this.props.classes.paper}>
                         <Typography className={this.props.classes.title} color="textPrimary" variant="h4" gutterBottom>

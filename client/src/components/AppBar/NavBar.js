@@ -10,21 +10,14 @@ import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { resetState } from '../../actions/logoutAction';
 import Grid from '@material-ui/core/Grid';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import MenuIcon from '@material-ui/icons/Menu';
-import InfoIcon from '@material-ui/icons/Info';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#455a64"
+            main: "#000000"
         },
         secondary: {
           main: "#FFFFFF"
@@ -35,12 +28,14 @@ const theme = createMuiTheme({
 const useStyles = {
   root: {
     flexGrow: 0,
-    width: '100vw'
-
+    width: '100vw',
+    backgroundColor: 'black'
+    
   },
   toolbar: {
     display: 'flex',
-    justifyContent: 'space-between',
+    backgroundColor: 'black',
+    textAlign:'left',
   },
   title: {
     flexGrow: 1,
@@ -49,8 +44,13 @@ const useStyles = {
   logout: {
     color: 'white !important'
   },
-  link: {
-    textDecoration: 'none'
+  rigth: {
+    right: '15px',
+    position: 'absolute',
+    color: 'white'
+  },
+  nodecor: {
+    textDecoration: 'none',
   },
   icon: {
     color: 'white'
@@ -141,22 +141,12 @@ redirect_to_AboutPage = () => {
     this.setAnchorEl(null);
 }
 
-renderMenu(){
-  return(
-  <Menu id="fade-menu" anchorEl={this.state.anchorEl} open={this.state.open} onClose={this.handleClose} TransitionComponent={Fade}>
-        <MenuItem onClick={this.handleClose && this.redirect_to_Profile}>Profile &nbsp; <AccountCircle/></MenuItem>
-        <MenuItem onClick={this.handleClose && this.redirect_to_AboutPage}>About &nbsp; <InfoIcon/></MenuItem>
-        <MenuItem onClick={this.handleClose && this.submitLogout}>Logout &nbsp; <ExitToAppIcon/></MenuItem>
-    </Menu>
-   )
-}
-
 getTitle(){
   let size = document.body.clientWidth
   if (size < 750) {
-    return ("FIU CS VAS")
+    return ("FIU VAS")
   } else {
-    return ("FIU CS Volunteer Attendance System")
+    return ("FIU Outreach Volunteer Attendance System")
   }
 }
 
@@ -167,8 +157,10 @@ render(){
     <div className={this.props.classes.root} >
       <AppBar position='static'>
         <Toolbar className={this.props.classes.toolbar}>
-          <Link to='/' className={this.props.classes.link}>
-          <Grid
+       
+        <Link to='/' className={this.props.classes.nodecor}>
+          
+        <Grid
           container
           direction="row"
           justify="center"
@@ -178,25 +170,28 @@ render(){
           { (document.body.clientWidth > 750) &&
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/logo_shadow.png").default}
+            src ={require("../../images/VAS_LOGO.png").default}
             alt = "logo"
             />}
 
             <Typography className={this.props.classes.title} variant='h5' >
              &nbsp;
              {this.getTitle()}
-            </Typography></Fragment>
-            </Grid>
-          </Link>
+            </Typography>
+            </Fragment>
+        </Grid>
 
-
-          {this.state.loggedIn &&
-          <IconButton aria-owns={this.state.open ? 'fade-menu' : undefined} aria-haspopup="true" onClick={this.handleClick}>
-            <MenuIcon className={this.props.classes.icon} />
-          </IconButton>}
-          {this.renderMenu()}
-
+        </Link>
+        
+        <div className={this.props.classes.rigth}>
+        <Link to='/about' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>About</Link>
+        {this.state.loggedIn && <Link to='/dashboard' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>Dashboard</Link>}  
+        {!this.state.loggedIn && <Link to='/login' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}}>Log In </Link>}
+        {this.state.loggedIn && <Link to='/' className={this.props.classes.link} style={{color:'white', textDecoration: 'none', paddingRight: '15px'}} onClick={this.handleClose && this.submitLogout}>Log Out </Link>}  
+        </div>
+            
         </Toolbar>
+            
       </AppBar>
     </div>
     </ThemeProvider>
