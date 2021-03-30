@@ -38,7 +38,7 @@ const config = {
 			getPersonnelInfo: '/school-personnels/getPersonnelInfo'
 		},
 		team: {
-			create: '/team/create',
+			create: '/team',
 			fetch: '/team',
 			update: '/team/update',
 			getTeamInfo: '/team/getTeamInfo',

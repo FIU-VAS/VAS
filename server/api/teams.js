@@ -9,6 +9,7 @@ import Volunteer from '../models/Users/volunteer_User';
 //input validation
 import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
 import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
+import {schema as teamCreateSchema} from "../validation-schemas/team/create"
 import validateCreateTeamInput from '../validation/teams/createTeam';
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
@@ -17,7 +18,7 @@ import {buildQuery} from "../utils/team-query";
 
 const router = new express.Router();
 
-router.post('/', checkAdminRole, createTeam);
+router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
@@ -42,57 +43,21 @@ router.get('/suggest', checkAdminRole, extendedCheckSchema({
 router.get('/:id', fetchTeamById);
 
 
-function createTeam(req, res) {
+async function createTeam(req, res) {
     const {body} = req;
-    let {
-        schoolCode,
-        semester,
-        year,
-        startTime,
-        endTime,
-        volunteerPIs,
-        isActive
-    } = body;
 
-    //deconstruct PIDs into an array
-    volunteerPIs = volunteerPIs.split(',')
-
-    // form validation
-    const {errors, isValid} = validateCreateTeamInput(req.body);
-    // check validation
-    if (!isValid) {
-        return res.status(400).json({success: false, errors});
+    let properties = {};
+    for (let prop in Team.schema.obj) {
+        if (prop in body) {
+            properties[prop] = body[prop];
+        }
     }
 
-    const newTeam = new Team;
-
-    newTeam.schoolCode = schoolCode;
-    newTeam.semester = semester;
-    newTeam.year = year;
-    newTeam.dayOfWeek.monday = body['dayOfWeek[monday]'];
-    newTeam.dayOfWeek.tuesday = body['dayOfWeek[tuesday]'];
-    newTeam.dayOfWeek.wednesday = body['dayOfWeek[wednesday]'];
-    newTeam.dayOfWeek.thursday = body['dayOfWeek[thursday]'];
-    newTeam.dayOfWeek.friday = body['dayOfWeek[friday]'];
-    newTeam.startTime = startTime;
-    newTeam.endTime = endTime;
-    newTeam.volunteerPIs = volunteerPIs;
-    newTeam.isActive = 'true';
-    newTeam.timeStamp = Date.now()
-
-    newTeam.save((err, team) => {
-        if (err) {
-            return res.send({
-                success: false,
-                errors: 'Error: Server error'
-            });
-        }
-        return res.send({
-            success: true,
-            message: 'Successfully created team!'
-        });
-    });
-
+    const result = await Team.create(properties)
+    return res.json({
+        success: true,
+        team: result,
+    })
 }
 
 function updateTeam(request, response) {
@@ -154,7 +119,6 @@ function fetchTeams(request, response) {
             break;
     }
 
-    console.log(conditions);
 
 
     Team.find(conditions, (err, result) => {
@@ -258,8 +222,6 @@ async function getTeamData(request, response) {
             aggregation[0].$match.volunteerPIs = request.account.pantherID;
             break
     }
-
-    console.log(aggregation);
 
     const results = await Team.aggregate(aggregation);
 
