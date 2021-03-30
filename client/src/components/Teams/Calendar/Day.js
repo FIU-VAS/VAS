@@ -37,7 +37,7 @@ export const Day = (props) => {
             </Grid>
             {dayTeams.map(team => {
                 return (
-                    <TeamCard key={team._id} team={team} day={day}/>
+                    <TeamCard key={team._id} team={team} day={day} />
                 )
             })}
         </Grid>

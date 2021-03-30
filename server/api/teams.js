@@ -10,7 +10,7 @@ import Volunteer from '../models/Users/volunteer_User';
 import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
 import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
 import {schema as teamCreateSchema} from "../validation-schemas/team/create"
-import validateCreateTeamInput from '../validation/teams/createTeam';
+import {schema as teamDeleteSchema} from "../validation-schemas/team/delete"
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
@@ -18,7 +18,8 @@ import {buildQuery} from "../utils/team-query";
 
 const router = new express.Router();
 
-router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createTeam);
+router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createUpdateTeam);
+router.post('/delete/:id', extendedCheckSchema(teamDeleteSchema), checkAdminRole, deleteTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
@@ -43,17 +44,48 @@ router.get('/suggest', checkAdminRole, extendedCheckSchema({
 router.get('/:id', fetchTeamById);
 
 
-async function createTeam(req, res) {
+async function deleteTeam(req, res) {
+    const {id, closureNotes} = req.body;
+
+    let update = {
+        isActive: false,
+        closureNotes: closureNotes || ''
+    }
+
+    try {
+        await Team.updateOne({_id: id}, {$set: update})
+        return res.json({
+            success: true,
+            message: "Successfully deleted Team: " + id
+        });
+    } catch (dbError) {
+        return res.json({
+            success: false,
+            message: "Error when deleting Team: " + dbError.toString()
+        });
+    }
+}
+
+
+async function createUpdateTeam(req, res) {
     const {body} = req;
 
     let properties = {};
+    let result;
+
     for (let prop in Team.schema.obj) {
         if (prop in body) {
             properties[prop] = body[prop];
         }
     }
+    console.log(body._id);
 
-    const result = await Team.create(properties)
+    if (body._id) {
+        result = await Team.updateOne({_id: body._id}, properties)
+    } else {
+        result = await Team.create(properties)
+    }
+
     return res.json({
         success: true,
         team: result,
