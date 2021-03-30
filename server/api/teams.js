@@ -9,79 +9,86 @@ import Volunteer from '../models/Users/volunteer_User';
 //input validation
 import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
 import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
-import validateCreateTeamInput from '../validation/teams/createTeam';
+import {schema as teamCreateSchema} from "../validation-schemas/team/create"
+import {schema as teamDeleteSchema} from "../validation-schemas/team/delete"
 import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
+import {buildQuery} from "../utils/team-query";
 
 const router = new express.Router();
 
-router.post('/', checkAdminRole, createTeam);
+router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createUpdateTeam);
+router.post('/delete/:id', extendedCheckSchema(teamDeleteSchema), checkAdminRole, deleteTeam);
 router.put('/update/:id', checkAdminRole, updateTeam);
-router.get('/:id', fetchTeamById);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
 router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
-router.get('/suggest/:term', checkAdminRole, extendedCheckSchema({
-    term: {
+router.get('/suggest', checkAdminRole, extendedCheckSchema({
+    semester: {
         exists: true,
         errorMessage: "Term must be defined"
+    },
+    year: {
+        isNumeric: true,
+        isLength: {
+            options: {
+                min: 4,
+                max: 4
+            },
+        },
+        errorMessage: "Year must be a number of 4 digits"
     }
 }), teamSuggestions);
+router.get('/:id', fetchTeamById);
 
 
-function createTeam(req, res) {
-    const {body} = req;
-    let {
-        schoolCode,
-        semester,
-        year,
-        startTime,
-        endTime,
-        volunteerPIs,
-        isActive
-    } = body;
+async function deleteTeam(req, res) {
+    const {id, closureNotes} = req.body;
 
-    //deconstruct PIDs into an array
-    volunteerPIs = volunteerPIs.split(',')
-
-    // form validation
-    const {errors, isValid} = validateCreateTeamInput(req.body);
-    // check validation
-    if (!isValid) {
-        return res.status(400).json({success: false, errors});
+    let update = {
+        isActive: false,
+        closureNotes: closureNotes || ''
     }
 
-    const newTeam = new Team;
-
-    newTeam.schoolCode = schoolCode;
-    newTeam.semester = semester;
-    newTeam.year = year;
-    newTeam.dayOfWeek.monday = body['dayOfWeek[monday]'];
-    newTeam.dayOfWeek.tuesday = body['dayOfWeek[tuesday]'];
-    newTeam.dayOfWeek.wednesday = body['dayOfWeek[wednesday]'];
-    newTeam.dayOfWeek.thursday = body['dayOfWeek[thursday]'];
-    newTeam.dayOfWeek.friday = body['dayOfWeek[friday]'];
-    newTeam.startTime = startTime;
-    newTeam.endTime = endTime;
-    newTeam.volunteerPIs = volunteerPIs;
-    newTeam.isActive = 'true';
-    newTeam.timeStamp = Date.now()
-
-    newTeam.save((err, team) => {
-        if (err) {
-            return res.send({
-                success: false,
-                errors: 'Error: Server error'
-            });
-        }
-        return res.send({
+    try {
+        await Team.updateOne({_id: id}, {$set: update})
+        return res.json({
             success: true,
-            message: 'Successfully created team!'
+            message: "Successfully deleted Team: " + id
         });
-    });
+    } catch (dbError) {
+        return res.json({
+            success: false,
+            message: "Error when deleting Team: " + dbError.toString()
+        });
+    }
+}
 
+async function createUpdateTeam(req, res) {
+    const {body} = req;
+
+    let properties = {};
+    let result;
+
+    for (let prop in Team.schema.obj) {
+        if (prop in body) {
+            properties[prop] = body[prop];
+        }
+    }
+    console.log(body._id);
+
+    if (body._id) {
+        result = await Team.updateOne({_id: body._id}, properties)
+    } else {
+        result = await Team.create(properties)
+    }
+
+    return res.json({
+        success: true,
+        team: result,
+    })
 }
 
 function updateTeam(request, response) {
@@ -245,8 +252,6 @@ async function getTeamData(request, response) {
             break
     }
 
-    console.log(aggregation);
-
     const results = await Team.aggregate(aggregation);
 
     return response.json({
@@ -257,16 +262,38 @@ async function getTeamData(request, response) {
 
 async function teamSuggestions(request, response) {
     // @TODO Improve logic to use less queries to db
-    const term = request.params.term;
+    const {semester, year} = request.params;
+    let matchesQuery = "";
 
-    const schoolPersonnel = await SchoolPersonnel.find().sort("availability.startTime");
-    const users = await Volunteer.find().sort("availability.startTime");
-
-    let teams = [];
-
-    schoolPersonnel.forEach(user => {
-
-    })
+    try {
+        const schoolPersonnel = await SchoolPersonnel.find({}, "email availability schoolCode");
+        matchesQuery = buildQuery(schoolPersonnel, {isActive: true}, "volunteer", {pantherID: 1, email: 1, firstName: 1, lastName: 1}, 3);
+        console.log(matchesQuery);
+        const matches = await Volunteer.aggregate(matchesQuery);
+        if (matches.length) {
+            const teams = schoolPersonnel.map(personnel => {
+                return {
+                    schoolCode: personnel.schoolCode,
+                    semester: semester,
+                    year: year,
+                    availability: personnel.availability,
+                    volunteers: matches[0][personnel._id],
+                }
+            })
+            return response.json({
+                success: true,
+                teams
+            })
+        }
+        return response.json(matches)
+    } catch (error) {
+        response.statusCode = 500
+        response.json({
+            success: false,
+            message: `Internal Server Error: [${error.toString()}]`,
+            query: matchesQuery
+        })
+    }
 
 }
 

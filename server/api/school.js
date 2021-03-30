@@ -9,13 +9,14 @@ import validateUpdateSchoolInput from '../validation/schools/updateSchool';
 
 import {checkAdminRole, checkSchoolPersonnelRole, checkVolunteerRole} from "../utils/passport";
 import passport from "../config/passport";
+import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
 router.post('/create',checkAdminRole, createSchool);
 router.put('/update/:id',checkSchoolPersonnelRole, updateSchool);
+router.get('/getSchoolInfo/:codes', extendedCheckSchema({codes: {exists: true}}),fetchSchoolByCode);
 router.get('/:id', fetchSchoolById);
-router.get('/getSchoolInfo/:codes', fetchSchoolByCode);
 router.get('/', fetchSchools);
 
 

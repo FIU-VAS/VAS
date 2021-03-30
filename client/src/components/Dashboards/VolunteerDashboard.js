@@ -1,5 +1,7 @@
 import React, {Component, Fragment} from 'react';
-import {withRouter} from 'react-router-dom';
+import { Button, Link } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {withStyles} from '@material-ui/core/styles';
@@ -88,7 +90,6 @@ class VolunteerDashboard extends Component {
 
     displayAdmins() {
 
-        console.log(this.props.admins);
         let admins = this.props.admins.filter(admin => admin.isActive)
 
         if (!isEmpty(admins)) {
@@ -133,9 +134,7 @@ class VolunteerDashboard extends Component {
 
     render() {
         return (
-
             <Fragment>
-
                 <Grid
                     container
                     direction="column"
@@ -149,7 +148,7 @@ class VolunteerDashboard extends Component {
                         style={{marginBottom: '5px'}}>
                         Welcome {this.props.user.firstName} !
                     </Typography>
-
+                    {isEmpty(this.props.user.availability) && <Alert severity="info">Your availability has not been set! <Link component={Button} href="/availability" color="primary">Set Availability</Link></Alert>}
                     <Grid
                         container
                         direction="column"

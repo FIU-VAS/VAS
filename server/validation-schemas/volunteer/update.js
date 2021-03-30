@@ -1,12 +1,4 @@
-import {Days, validateTimeDate} from "../../models/Teams/team";
-
-const validateAvailability = (values) => {
-    return values.every(value => {
-        value.dayOfWeek.toUpperCase() in Days
-        && validateTimeDate(value.startTime)
-        && validateTimeDate(value.endTime);
-    })
-}
+import {sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
 
 export const schema = {
     email: {
@@ -46,12 +38,17 @@ export const schema = {
             ]
         },
     },
-    // availability: {
-    //     custom: {
-    //         options: (value) => {
-    //             return validateAvailability(value)
-    //         },
-    //         errorMessage: "Invalid availability configuration"
-    //     }
-    // },
+    availability: {
+        custom: {
+            options: (value) => {
+                return validateAvailability(value);
+            },
+            errorMessage: "Invalid availability configuration"
+        },
+        customSanitizer: {
+            options: (value) => {
+                return sanitizeAvailability(value)
+            }
+        }
+    }
 }
