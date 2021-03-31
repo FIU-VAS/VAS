@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-import {startOfDay, isDate, addHours, parse} from "date-fns";
+import {addDays, isDate, addHours, parse} from "date-fns";
 
 export const Days = {
     MONDAY: 'monday',
@@ -29,8 +29,8 @@ export const sanitizeAvailability = (value) => {
     return value.map(available => {
         return {
             ...available,
-            startTime: addHours(parse(available.startTime, "HH:mm", REFERENCE_DATE), 5),
-            endTime: addHours(parse(available.endTime, "HH:mm", REFERENCE_DATE), 5)
+            startTime: addDays(addHours(parse(available.startTime, "HH:mm", REFERENCE_DATE), 5), Object.values(Days).indexOf(available.dayOfWeek)),
+            endTime: addDays(addHours(parse(available.endTime, "HH:mm", REFERENCE_DATE), 5), Object.values(Days).indexOf(available.dayOfWeek))
         }
     })
 }

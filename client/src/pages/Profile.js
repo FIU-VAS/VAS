@@ -33,7 +33,7 @@ class Profile extends Component {
         <Grid className="bg" container>
 
             <Grid item xs={1}>
-                <SideBar/>
+                <SideBar></SideBar>
             </Grid> 
 
 

@@ -6,7 +6,7 @@ import NavBar from '../components/AppBar/NavBar'
 
 const useStyles = {
     all: {
-        
+
         height: '100vh'
     },
     view: {
@@ -14,19 +14,18 @@ const useStyles = {
         width: '90%',
         //height: 900
     }
-}    
+}
 
 class About extends Component{
-    
+
     render(){
         return (
-            
-            <div className={this.props.classes.all}>
+        <div className={this.props.classes.all}>
                 <NavBar/>
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item className={this.props.classes.view}>
                         <AboutView/>
-                    </Grid>    
+                    </Grid>
                 </Grid>
             </div> 
                

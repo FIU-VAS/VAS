@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { blue, blueGrey, green } from '@material-ui/core/colors';
+import { blue, blueGrey, yellow } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -21,6 +21,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { updateVolunteer_Profile } from "../../actions/userActions";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
+import SideBar from "../AppBar/SideBar";
 import '../../../src/App.css';
 
 const theme = createMuiTheme({
@@ -150,6 +151,7 @@ class Volunteer_Profile extends Component {
                 style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
+                    <SideBar></SideBar>
         <Grid
         container
         spacing={0}
@@ -184,8 +186,7 @@ class Volunteer_Profile extends Component {
 
                     {/* First Name */}
                     <TextField
-                        variant="standard"
-                        //color= "primary"
+                        variant='standard'
                         margin="normal"
                         disabled
                         fullWidth

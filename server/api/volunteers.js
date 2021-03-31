@@ -8,19 +8,29 @@ import User from '../models/Users/user_Auth';
 import {createNewUser, updateUser} from "../utils/account";
 import {schema as volunteerSchema} from "../validation-schemas/volunteer/create"
 import {schema as volunteerUpdateSchema} from "../validation-schemas/volunteer/update"
+import {schema as volunteerFetchSchema} from "../validation-schemas/volunteer/fetch"
 import {UserRoles} from "../models/Users/user_Auth";
 import Team from "../models/Teams/team";
-import SchoolPersonnel from "../models/Users/school_User";
+import {extendedCheckSchema} from "../utils/validation";
+import {buildVolunteerByAvailability} from "../utils/team-query";
 
 const router = new express.Router();
 
 router.post('/', createNewUser(Volunteer, volunteerSchema));
 router.post('/:id', updateUser(Volunteer, volunteerUpdateSchema));
-router.get('/', fetchVolunteers);
+router.get('/', extendedCheckSchema(volunteerFetchSchema), fetchVolunteers);
 router.get('/:id', fetchVolunteerById);
 router.get('/getVolunteerInfo/:pids', fetchVolunteerByPID);
 
 async function fetchVolunteers(request, response) {
+
+    const {availability, semester, year} = request.query;
+
+    if (availability && semester && year && request.account.role === UserRoles.Admin) {
+        let aggregation = buildVolunteerByAvailability(semester, year, availability);
+        const results = await Volunteer.aggregate(aggregation);
+        return response.json(results);
+    }
 
     if (request.account.role !== UserRoles.Admin) {
         switch (request.account.role) {

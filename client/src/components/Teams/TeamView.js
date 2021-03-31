@@ -18,71 +18,13 @@ import {MuiSelect} from "../Users/UserFormDialog";
 import config from "../../config";
 import axios from "axios";
 import {AppTeamCalendar} from "./TeamCalendar";
+import TeamDialog from "./TeamDialog";
 
 const theme = createMuiTheme({
     palette: {
         primary: {main: green[600]}, // For isActive is true
         secondary: {main: red[600]},// For isActive is false
         blue: {main: '#2196f3'},
-    }
-});
-
-const useStyles = ({
-    table: {
-        minWidth: 200,
-    },
-    all: {
-        backgroundColor: '#fafafa',
-        height: 280
-    },
-    card_details: {
-        marginTop: 10,
-        minWidth: 300,
-        maxWidth: 750,
-        height: 255,
-        overflow: 'auto'
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 800,
-        color: grey[800],
-        alignItems: 'right'
-    },
-    subHeading: {
-        fontSize: 15,
-        alignItems: 'right'
-    },
-    body: {
-        fontSize: 13,
-        alignItems: 'right'
-    },
-    buttons: {
-        backgroundColor: blueGrey[700],
-        color: "white",
-        fontWeight: "bold",
-        '&:hover': {
-            backgroundColor: blue[500],
-        }
-    },
-    paper: {
-        marginTop: theme.spacing(1),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    card: {
-        marginTop: 10,
-        minWidth: 800,
-        maxWidth: 1000,
-        height: 210,
-        backgroundColor: 'white'
-    },
-    here: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justify: 'right',
     }
 });
 
@@ -227,6 +169,7 @@ const TeamView = (props) => {
                     <AppTeamCalendar teams={currentTeams}/>
                 )}
             </Box>
+            <TeamDialog open={newTeam} close={() => setNewTeam(false)} />
         </React.Fragment>
     )
 }

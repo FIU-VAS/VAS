@@ -94,15 +94,11 @@ const Dashboard = (props) => {
         }
     }
 
-    return (
-        
+    return ( 
         <Grid container className={props.classes.all}>
-
             <Grid item xs={1}>
                 <SideBar/>
-            </Grid> 
-            
-
+            </Grid>
             <Grid
                 item xs={11}
                 container
