@@ -15,6 +15,7 @@ import {useForm, FormProvider, useFormContext, Controller, get} from "react-hook
 import axios from "axios";
 import Alert from '@material-ui/lab/Alert';
 import DialogActions from "@material-ui/core/DialogActions";
+import AvailabilityForm from "../Extras/AvailabilityForm";
 
 const theme = createMuiTheme({
     palette: {
@@ -82,8 +83,24 @@ export const MaterialUIField = (props) => {
                     defaultValue={fieldProps.defaultValue}
                     type={fieldProps.type}
                     placeholder={fieldProps.placeholder}
+                    rules={fieldProps.rules}
                 />
             );
+        case "availability":
+            return (
+                <Controller
+                    name={fieldProps.name}
+                    inputRef={register}
+                    key={fieldProps.name}
+                    label={fieldProps.label}
+                    defaultValue={fieldProps.defaultValue}
+                    type={fieldProps.type}
+                    placeholder={fieldProps.placeholder}
+                    control={control}
+                    as={<AvailabilityForm />}
+                    rules={fieldProps.rules}
+                />
+            )
         case "select":
             return (
                 <React.Fragment>
@@ -98,6 +115,7 @@ export const MaterialUIField = (props) => {
                         defaultValue={fieldProps.defaultValue}
                         options={fieldProps.options}
                         placeholder={fieldProps.placeholder}
+                        rules={fieldProps.rules}
                     />
                 </React.Fragment>
             );

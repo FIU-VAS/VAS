@@ -69,7 +69,7 @@ class Footer extends Component {
   }
 
   redirect_to_AboutPage = () => {
-    this.props.history.push("/about"); 
+    this.props.history.push("/about");
   }
 
 render(){
@@ -99,7 +99,7 @@ render(){
             <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="black" href="#outlined-buttons">
         About
       </Button>
-          
+
         </Toolbar>
       </AppBar>
       </HideOnScroll>

@@ -125,9 +125,9 @@ class Volunteer_Profile extends Component {
     handleInput = (e) =>{
         const value = e.target.value
         const name = e.target.name
-        
+
         this.setState({
-        [name]: value 
+        [name]: value
         })
     }
 
@@ -139,16 +139,16 @@ class Volunteer_Profile extends Component {
 
 
 
-  render(){   
+  render(){
     const user = this.props.user;
 
     let initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
-    
-    
+
+
     return (
         <ThemeProvider theme={theme}>
         <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                     <SideBar></SideBar>
@@ -160,7 +160,7 @@ class Volunteer_Profile extends Component {
         justify="center">
             <Box
             borderRadius= "10px"
-            className={this.props.classes.card} 
+            className={this.props.classes.card}
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -289,7 +289,7 @@ class Volunteer_Profile extends Component {
                         <MenuItem value={true}>Yes</MenuItem>
                         <MenuItem value={false}>No</MenuItem>
                     </Select>
-                    
+
                     {/* Volunteer Status */}
                     <TextField
                         variant="standard"
@@ -323,15 +323,15 @@ class Volunteer_Profile extends Component {
                 </CardContent>
                 <div className={this.props.classes.Button}>
                 <CardActions>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
-                    onClick={this.editable} 
+                    onClick={this.editable}
                     size="small"
                     disabled={!this.state.editDisabled}
                     endIcon={<EditIcon />}>
                         Edit
                     </Button>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
                     onClick={this.editable && this.updateVolunteer_Profile}
                     size="small"

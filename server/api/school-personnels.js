@@ -5,19 +5,38 @@ import SchoolPersonnel from '../models/Users/school_User';
 // input validation
 import {createNewUser, updateUser} from "../utils/account";
 import {schema as schoolPersonnelSchema} from "../validation-schemas/schoolPersonnel/create"
-import {schema as schoolPersonnelUpdateSchema} from "../validation-schemas/schoolPersonnel/create"
+import {schema as schoolPersonnelUpdateSchema} from "../validation-schemas/schoolPersonnel/update"
 import {UserRoles} from "../models/Users/user_Auth";
-import Team from "../models/Teams/team";
+import Team, {sanitizeAvailability, validateAvailability} from "../models/Teams/team";
+import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
 router.post('/', createNewUser(SchoolPersonnel, schoolPersonnelSchema));
 router.post('/:id', updateUser(SchoolPersonnel, schoolPersonnelUpdateSchema));
-router.get('/', fetchSchoolPersonnels);
+router.get('/', extendedCheckSchema({
+    schoolCode: {
+        isNumeric: true,
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
+    }
+}), fetchSchoolPersonnels);
 router.get('/:id', fetchSchoolPersonnelById);
 router.get('/getPersonnelInfo/:codes', fetchSchoolPersonnelByCode);
 
 async function fetchSchoolPersonnels(request, response) {
+    let conditions = {};
+
+    if (request.query.schoolCode) {
+        conditions.schoolCode = request.query.schoolCode
+    }
+
+    if (request.query.availability) {
+        // Return aggregation instead of find
+
+    }
 
     if (request.account.role !== UserRoles.Admin) {
         switch (request.account.role) {
@@ -31,7 +50,7 @@ async function fetchSchoolPersonnels(request, response) {
                 return response.json(results);
         }
     }
-    const all = await SchoolPersonnel.find({});
+    const all = await SchoolPersonnel.find(conditions);
     response.json(all);
 }
 

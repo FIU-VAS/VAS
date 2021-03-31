@@ -22,14 +22,14 @@ const useStyles = {
         height : "400px",
         zIndex: '-1'
     }
-}    
+}
 
 class AdminManagement extends Component{
-    
+
     render(){
         return (
             <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_4_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../images/FIU_4_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
@@ -38,13 +38,9 @@ class AdminManagement extends Component{
                     </Grid> 
                     <Grid item className={this.props.classes.table}>
                         <AdminTable/>
-                        <img className={this.props.classes.blob}
-                            src ={require("../images/Ignite_2.png").default}
-                            alt = "Blob" 
-                        />
-                    </Grid>    
+                    </Grid>
                 </Grid>
-            </div>    
+            </div>
         )
     }
 }
