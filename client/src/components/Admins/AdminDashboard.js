@@ -65,10 +65,9 @@ const AdminDashboard = (props) => {
 
     return (
         <Fragment>
-            <Grid
-                container
-        
-                >
+            <Grid  container    >
+            <Box
+                style={{textAlign: "center"}}>
                 <Typography
                     className={props.classes.main}
                     style={{marginBottom: '15px'}}
@@ -102,6 +101,7 @@ const AdminDashboard = (props) => {
 
                 <AdminRoute path={`${path}/admin-management`} component={AdminManagement}/>
             </Switch>
+            </Box>
           </Grid>
         </Fragment>
     )
