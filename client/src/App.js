@@ -21,7 +21,7 @@ import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
-import AvailabilityForm from './pages/AvailabilityForm';
+import Availability from './pages/Availability';
 import About from './pages/About'
 import Settings from './pages/Settings'
 import config from "./config";
@@ -58,6 +58,7 @@ if (localStorage.jwt) {
 
 class App extends Component {
 
+<<<<<<< HEAD
 	render() {
 		return (
       
@@ -92,6 +93,32 @@ class App extends Component {
       </Provider> 
 		);
 	}
+=======
+    render() {
+        return (
+
+            <Provider store={store}>
+                <BrowserRouter>
+                    <div className='.App'>
+                        <Fragment>
+                            <NavBar/>
+                            <Switch>
+                                <Route exact path='/' component={Login}/>
+                                <Route path='/login' component={Login}/>
+                                <Route path='/about' component={About}/>
+                                <Route path="/reset-password" component={ResetPassword}/>                                
+                                <PrivateRoute path="/availability" component={Availability}/>
+                                <PrivateRoute path="/dashboard" component={Dashboard}/>
+                                <PrivateRoute path="/profile" component={Profile}/>
+                            </Switch>
+                            <Footer/>
+                        </Fragment>
+                    </div>
+                </BrowserRouter>
+            </Provider>
+        );
+    }
+>>>>>>> component-refactor
 }
 
 export default App;

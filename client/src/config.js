@@ -40,6 +40,7 @@ const config = {
 		team: {
 			create: '/team',
 			fetch: '/team',
+			delete: '/team/delete',
 			update: '/team/update',
 			getTeamInfo: '/team/getTeamInfo',
 			getTeamInfoSch: '/team/getTeamInfoSch',

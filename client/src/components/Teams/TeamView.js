@@ -18,7 +18,7 @@ import {MuiSelect} from "../Users/UserFormDialog";
 import config from "../../config";
 import axios from "axios";
 import {AppTeamCalendar} from "./TeamCalendar";
-import TeamDialog from "./TeamDialog";
+import TeamDialog from "./TeamDialog/TeamDialog";
 
 const theme = createMuiTheme({
     palette: {
@@ -169,7 +169,9 @@ const TeamView = (props) => {
                     <AppTeamCalendar teams={currentTeams}/>
                 )}
             </Box>
-            <TeamDialog open={newTeam} close={() => setNewTeam(false)} />
+            {newTeam ? (
+                <TeamDialog open={newTeam} close={() => setNewTeam(false)} />
+            ) : ""}
         </React.Fragment>
     )
 }
