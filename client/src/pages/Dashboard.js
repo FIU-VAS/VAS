@@ -16,7 +16,7 @@ import {setErrors} from "../actions/server/errorActions";
 import {getAdmins} from "../actions/adminActions";
 import {logoutUser} from "../actions/authActions";
 import {getVolunteers} from "../actions/volunteerActions";
-import {getSchools} from "../actions/schoolActions";
+import {getSchools, setCurrentSchools} from "../actions/schoolActions";
 import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
 
 const useStyles = {
@@ -72,7 +72,10 @@ const Dashboard = (props) => {
                 // set current teams
                 props.setSemesterTeams(teams);
                 props.getVolunteers(allVolunteers);
-                props.getSchools(allSchools);
+
+                const schools = await axios.get(`${config.uri}${config.endpoints.schools.fetch}`);
+                // props.getSchools(allSchools);
+                props.setCurrentSchools(schools.data)
                 props.getSchoolPersonnels(allSchools);
             } catch (httpError) {
                 props.setErrors(httpError)
@@ -140,6 +143,7 @@ export default connect(
         setErrors,
         getAdmins,
         logoutUser,
-        getSchoolPersonnels
+        getSchoolPersonnels,
+        setCurrentSchools
     }
 )(withRouter(withStyles(useStyles)(Dashboard)));

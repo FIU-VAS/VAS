@@ -53,9 +53,14 @@ const volunteerForTransferList = (volunteer) => {
                         {volunteer.availability && volunteer.availability.map(available => {
                             const [startTime, endTime] = parseAvailabilityISO(available)
                             return (
-                                <Typography style={{fontWeight: 600}}>
-                                    {format(startTime, "HH:mm")} – {format(endTime, "HH:mm")}
-                                </Typography>
+                                <React.Fragment>
+                                    <Typography style={{fontWeight: 600, textTransform: "capitalize"}}>
+                                        {available.dayOfWeek}
+                                    </Typography>
+                                    <Typography style={{fontWeight: 600}}>
+                                        {format(startTime, "hh:mm")} – {format(endTime, "hh:mm")}
+                                    </Typography>
+                                </React.Fragment>
                             )
                         })}
                     </Grid>
