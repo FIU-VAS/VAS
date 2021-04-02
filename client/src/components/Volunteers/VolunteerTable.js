@@ -5,6 +5,7 @@ import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { AvailabilityDialog } from "../Extras/AvailabilityDialog";
 import { getVolunteers } from '../../actions/volunteerActions';
 import { UserFormDialog } from '../Users/UserFormDialog';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,11 +13,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CreateIcon from '@material-ui/icons/Create';
+import { IconButton } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
-
-
+import { format, parseISO } from 'date-fns';
 
 const theme = createMuiTheme({
     palette: {
@@ -31,13 +33,13 @@ const useStyles = ({
     },
     all: {
         backgroundColor: '#fafafa',
-        height: 192
+        height: 322
     },
     card: {
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-        height: 170
+        height: 300
     },
     title: {
         fontSize: 14,
@@ -59,10 +61,12 @@ class VolunteerTable extends Component {
         this.state = {
             selectedVolunteer: {},
             userFormDialog: false,
+            availabilityDialog: false,
             edit: false
         }
 
         this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
+        this.toggleAvailabilityDialog = this.toggleAvailabilityDialog.bind(this);
     }
 
     componentDidMount() {
@@ -72,6 +76,7 @@ class VolunteerTable extends Component {
     toggleUserFormDialog() {
         if (this.state.userFormDialog) {
             this.setState(prevState => ({
+                ...prevState,
                 userFormDialog: false,
                 selectedVolunteer: {}
             }));
@@ -79,7 +84,24 @@ class VolunteerTable extends Component {
         }
         else {
             this.setState(prevState => ({
+                ...prevState,
                 userFormDialog: true,
+            }));
+        }
+    }
+
+    toggleAvailabilityDialog() {
+        if (this.state.availabilityDialog) {
+            this.setState(prevState => ({
+                ...prevState,
+                availabilityDialog: false,
+            }));
+            this.props.getVolunteers();
+        }
+        else {
+            this.setState(prevState => ({
+                ...prevState,
+                availabilityDialog: true,
             }));
         }
     }
@@ -225,7 +247,6 @@ class VolunteerTable extends Component {
                     }}
                     detailPanel={rowData => { 
                         return (
-
                             <ThemeProvider theme={theme}>
                             <div className={this.props.classes.all} >
                             <Grid
@@ -286,9 +307,29 @@ class VolunteerTable extends Component {
                                     <Typography className={this.props.classes.body} variant="h6" display="inline" color={this.setColor(rowData.isActive)} gutterBottom>
                                         {rowData.isActive ? 'Active' : 'Not Active'}<br/>
                                     </Typography>
-
-
-
+                                    {/* Availability*/}
+                                     <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
+                                        Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={this.toggleAvailabilityDialog} size="small"><CreateIcon /></IconButton>}<br/>
+                                    </Typography>
+                                    {rowData.availability.length === 0 ?                                     
+                                        <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
+                                        Availability has not been set.<br/>
+                                        </Typography> :
+                                        rowData.availability.map(timeSlot => {
+                                            return(
+                                            <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
+                                            {timeSlot.dayOfWeek}: {format(parseISO(timeSlot.startTime), "h:mm aa")} - {format(parseISO(timeSlot.endTime), "h:mm aa")}<br/>
+                                            </Typography>
+                                            )
+                                        })}
+                                        {this.state.availabilityDialog && <AvailabilityDialog
+                                                                            open={this.state.availabilityDialog}
+                                                                            close={this.toggleAvailabilityDialog}
+                                                                            userEmail={rowData.email}
+                                                                            value={rowData.availability}
+                                                                            endpoint={`${serverConf.uri}${serverConf.endpoints.volunteers.update}/${rowData._id}`}
+                                                                          />
+                                        }   
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -308,7 +349,8 @@ class VolunteerTable extends Component {
                                                         title={edit ? "Edit Volunteer" : "Create Volunteer"}
                                                         description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'
                                                         : 'To create a  Volunteer, modify the following form and click SUBMIT'}
-                                                    />}
+                                                />
+                } 
             </Fragment>
         );
     }

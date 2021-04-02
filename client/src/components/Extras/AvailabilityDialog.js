@@ -19,7 +19,7 @@ import AvailabilityForm, {validateAvailability} from "./AvailabilityForm";
 
 export const AvailabilityDialog = (props) => {
 
-    const {endpoint, open, close, onSubmit, userEmail} = props;
+    const {endpoint, open, close, onSubmit, userEmail, value} = props;
 
     const {handleSubmit, control, errors} = useForm();
     const [response, setResponse] = useState(null)
@@ -73,6 +73,7 @@ export const AvailabilityDialog = (props) => {
                         as={<AvailabilityForm/>}
                         name="availability"
                         label=""
+                        defaultValue={value}
                         rules={{
                             required: true,
                             validate: validateAvailability,
