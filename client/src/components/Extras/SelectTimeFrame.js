@@ -1,20 +1,31 @@
 import React, {useState} from "react";
 import {Button, Grid} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import {format, parseISO, isValid, isDate} from "date-fns";
+import {format, parseISO, isValid, isDate, isEqual} from "date-fns";
 
 export const SelectTimeFrame = React.forwardRef((props, ref) => {
-    const {times, onChange, label} = props;
+    // @TODO warn on different timeframes selected
 
-    const [selected, setSelected] = useState([]);
+    const {onChange, label} = props;
 
+    const [selected, setSelected] = useState(props.value || []);
 
-    const addTime = (id) => {
+    const times = props.times.map(time => {
+        const startTime = typeof time.startTime === "string" ? parseISO(time.startTime) : time.startTime;
+        const endTime = typeof time.endTime === "string" ? parseISO(time.endTime) : time.endTime;
+        return {
+            ...time,
+            startTime,
+            endTime
+        }
+    })
+
+    const addTime = (candidate) => {
         let newSelected;
-        if (isSelected(id)) {
-            newSelected = selected.filter(time => time._id !== id);
+        if (isSelected(candidate)) {
+            newSelected = selected.filter(time => time._id !== candidate._id);
         } else {
-            newSelected = [...selected, times.filter(time => time._id === id)[0]];
+            newSelected = [...selected, times.filter(time => time._id === candidate._id)[0]];
         }
         setSelected(
             newSelected
@@ -25,8 +36,14 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
         onChange(newSelected);
     }
 
-    const isSelected = (id) => {
-        return selected.find(time => time._id === id);
+    const isSelected = (candidate) => {
+        return selected.find(
+            time => {
+                return time.dayOfWeek === candidate.dayOfWeek
+                && isEqual(time.startTime, candidate.startTime)
+                && isEqual(time.endTime, candidate.endTime)
+            }
+        );
     }
 
     return (
@@ -43,9 +60,9 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
                     <Grid key={index} item xs={4}>
                         <Button
                             style={{marginTop: "0.5rem"}}
-                            onClick={() => addTime(time._id)}
-                            variant={isSelected(time._id) ? "contained" : "outlined"}
-                            color={isSelected(time._id) ? "primary" : "default"}
+                            onClick={() => addTime(time)}
+                            variant={isSelected(time) ? "contained" : "outlined"}
+                            color={isSelected(time) ? "primary" : "default"}
                         >
                             <Grid container spacing={0}>
                                 <Grid item xs={12}>

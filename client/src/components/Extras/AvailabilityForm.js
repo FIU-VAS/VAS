@@ -4,7 +4,7 @@ import {
 } from "@material-ui/core";
 import {Clear, Add} from "@material-ui/icons";
 import {blueGrey, blue} from '@material-ui/core/colors';
-import {startOfToday, addHours, addMinutes, subHours, format, parse} from "date-fns";
+import {startOfToday, addHours, addMinutes, subHours, format, parse, parseISO} from "date-fns";
 import {REFERENCE_DATE} from "../Teams/Calendar/utils";
 
 const useStyles = makeStyles(theme => ({
@@ -56,7 +56,6 @@ export const validateAvailability = (availability) => {
     availability.forEach((timeSlot, index) => {
         if (timeSlot.dayOfWeek === "" || timeSlot.startTime === "" || timeSlot.endTime === "") {
             valid = false;
-            return true
         }
         const startTime = parse(timeSlot.startTime, "H:mm aa", REFERENCE_DATE);
         const endTime = parse(timeSlot.endTime, "H:mm aa", REFERENCE_DATE);
@@ -65,11 +64,11 @@ export const validateAvailability = (availability) => {
         }
     });
 
-    return valid
+    return valid;
 }
 
 export const AvailabilityForm = React.forwardRef((props, ref) => {
-    const {onChange, onBlur, value, name, label} = props
+    const {onChange, onBlur, value, name, label} = props;
 
     const [availability, setAvailability] = useState(
         value && value.length
@@ -85,7 +84,10 @@ export const AvailabilityForm = React.forwardRef((props, ref) => {
         if (availability.length === 1) {
             setAvailability([{dayOfWeek: "", startTime: "", endTime: ""}]);
         } else {
-            setAvailability(availability.splice(index, 1));
+            const list = [...availability];
+            list.splice(index, 1);
+            setAvailability(list);
+            onChange(list);
         }
     }
 
@@ -183,14 +185,15 @@ export const AvailabilityForm = React.forwardRef((props, ref) => {
                                             <MenuItem key={time.value} value={time.value}>
                                                 {time.label}
                                             </MenuItem>
-                                        ))}
+                                        ))
+                                    }
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid container item xs={3} alignItems="center" justify="flex-end">
                             <Grid item xs={6}>
                                 {index + 1 === availability.length && (
-                                    <IconButton onClick={addSlot} color="primary">
+                                    <IconButton onClick={addSlot} disabled={availability.length >= 5} color="primary">
                                         <Add/>
                                     </IconButton>
                                 )}
