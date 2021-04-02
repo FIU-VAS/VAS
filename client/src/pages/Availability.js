@@ -66,7 +66,7 @@ const useStyles = makeStyles({
     },
 });
 
-const AvailabilityPage = () => {
+const Availability = () => {
     const user = useSelector(state => state.userData.user);
     const dispatch = useDispatch();
 
@@ -106,8 +106,6 @@ const AvailabilityPage = () => {
         }
     });
 
-    console.log(errors);
-
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="md">
@@ -144,7 +142,6 @@ const AvailabilityPage = () => {
                             type="submit"
                             variant="contained"
                             className={classes.submit}
-                            disabled={response.success}
                         >
                             Submit
                         </Button>
@@ -155,4 +152,4 @@ const AvailabilityPage = () => {
     )
 }
 
-export default AvailabilityPage;
+export default Availability;
