@@ -56,8 +56,7 @@ if (localStorage.jwt) {
 }
 
 class App extends Component {
-
-	render() {
+    render() {
 		return (
       
       <Provider store={store}>
@@ -91,7 +90,6 @@ class App extends Component {
       </Provider> 
 		);
 	}
-
 }
 
 export default App;
