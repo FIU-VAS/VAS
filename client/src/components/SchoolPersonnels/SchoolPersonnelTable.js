@@ -40,11 +40,7 @@ const useStyles = ({
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-<<<<<<< HEAD
-        height: 105,
-=======
-        height: 300
->>>>>>> component-refactor
+        height: 300,
     },
     title: {
         fontSize: 14,
