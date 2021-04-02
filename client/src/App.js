@@ -25,7 +25,6 @@ import Availability from './pages/Availability';
 import About from './pages/About'
 import Settings from './pages/Settings'
 import config from "./config";
-import Availability from './pages/Availability';
 
 
 // check for token to keep user logged in
@@ -57,9 +56,7 @@ if (localStorage.jwt) {
 }
 
 class App extends Component {
-
-<<<<<<< HEAD
-	render() {
+    render() {
 		return (
       
       <Provider store={store}>
@@ -80,7 +77,6 @@ class App extends Component {
                 <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
                 <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>
                 <PrivateRoute path="/profile" component={Profile}/>
-                <PrivateRoute path="/availability" component={AvailabilityForm}/>
                 <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
                 <AdminRoute path="/team-management" component={TeamManagement}/>
                 <AdminRoute path="/admin-management" component={AdminManagement}/>
@@ -93,32 +89,6 @@ class App extends Component {
       </Provider> 
 		);
 	}
-=======
-    render() {
-        return (
-
-            <Provider store={store}>
-                <BrowserRouter>
-                    <div className='.App'>
-                        <Fragment>
-                            <NavBar/>
-                            <Switch>
-                                <Route exact path='/' component={Login}/>
-                                <Route path='/login' component={Login}/>
-                                <Route path='/about' component={About}/>
-                                <Route path="/reset-password" component={ResetPassword}/>                                
-                                <PrivateRoute path="/availability" component={Availability}/>
-                                <PrivateRoute path="/dashboard" component={Dashboard}/>
-                                <PrivateRoute path="/profile" component={Profile}/>
-                            </Switch>
-                            <Footer/>
-                        </Fragment>
-                    </div>
-                </BrowserRouter>
-            </Provider>
-        );
-    }
->>>>>>> component-refactor
 }
 
 export default App;

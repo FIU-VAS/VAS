@@ -58,12 +58,9 @@ const cardStyles = makeStyles(theme => ({
     },
     expandButton: {
         marginTop: "0.25rem",
-<<<<<<< HEAD
         color: 'black',
-=======
     },
     editButton: {
->>>>>>> component-refactor
     }
 }));
 
