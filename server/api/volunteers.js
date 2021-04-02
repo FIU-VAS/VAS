@@ -21,6 +21,7 @@ router.post('/:id', updateUser(Volunteer, volunteerUpdateSchema));
 router.get('/', extendedCheckSchema(volunteerFetchSchema), fetchVolunteers);
 router.get('/:id', fetchVolunteerById);
 router.get('/getVolunteerInfo/:pids', fetchVolunteerByPID);
+router.post('/', )
 
 async function fetchVolunteers(request, response) {
 
@@ -77,7 +78,6 @@ function fetchVolunteerById(request, response) {
 }
 
 function fetchVolunteerByPID(request, response) {
-
 
     const pantherIDs = request.params.pids
 

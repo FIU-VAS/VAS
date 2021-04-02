@@ -18,6 +18,14 @@ const AdminSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    schoolForm:{
+        type: String,
+        default: ''
+    },
+    volunteerForm:{
+        type: String,
+        default: ''
+    }
 }, { discriminatorKey: 'role' });
 
 const Admin = User.discriminator('admin', AdminSchema);

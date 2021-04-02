@@ -9,13 +9,27 @@ export const updateAdmin = (id, form) => dispatch => {
 
     axios.put(endpoint, form)
     .then((res) => {
-        dispatch(getAdmin(res.data.id))   
+        dispatch(getAdmin(res.data.id))
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
         payload: err
     }));
  };
+
+export const updateLinks = (id, form) => dispatch => {
+
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.siteSettings.update}/${id}`;
+
+    axios.put(endpoint, form)
+        .then((res) => {
+            dispatch(getLinks(res.data.id))
+        })
+        .catch((err) => dispatch({
+            type: GET_ERRORS,
+            payload: err
+        }));
+};
 
 export const getUser = () => dispatch => {
     const endpoint = `${serverConf.uri}${serverConf.endpoints.user.me}/`;
@@ -46,6 +60,20 @@ export const getAdmin = (id) => dispatch => {
     }));
 };
 
+export const getLinks = () => dispatch => {
+
+    const endpoint = `${serverConf.uri}${serverConf.endpoints.siteSettings.fetch}/`;
+
+    axios.get(endpoint)
+        .then((res) => {
+            dispatch(setCurrentLink(res.data))
+        })
+        .catch((err) => dispatch({
+            type: GET_ERRORS,
+            payload: err
+        }));
+};
+
 export const getVolunteer = (id) => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.volunteers.fetchByid}/${id}`;
@@ -53,7 +81,7 @@ export const getVolunteer = (id) => dispatch => {
     axios.get(endpoint)
     .then((res) => {
         // set current volunteers
-        dispatch(setCurrentUser(res.data))    
+        dispatch(setCurrentUser(res.data))
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
@@ -68,7 +96,7 @@ export const getSchoolPersonnel = (id) => dispatch => {
     axios.get(endpoint)
     .then((res) => {
         // set current volunteers
-        dispatch(setCurrentUser(res.data))    
+        dispatch(setCurrentUser(res.data))
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
@@ -96,7 +124,7 @@ export const updateVolunteer = (id, form) => dispatch => {
 
     axios.put(endpoint, form)
     .then((res) => {
-        dispatch(getVolunteer(res.data.id))   
+        dispatch(getVolunteer(res.data.id))
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
@@ -109,5 +137,12 @@ export const setCurrentUser = user => {
     return {
         type: SET_USER,
         payload: user
+    };
+};
+
+export const setCurrentLink = link => {
+    return {
+        type: SET_USER,
+        payload: link
     };
 };

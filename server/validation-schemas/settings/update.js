@@ -1,18 +1,17 @@
 export const schema = {
-    email: {
+    schoolForm: {
         optional: {
             nullable: true,
             checkFalsy: true
         },
         isEmail: true
     },
-    phoneNumber: {
+    volunteerForm: {
         optional: {
             nullable: true,
             checkFalsy: true
         },
-        isMobilePhone: {
-            errorMessage: "Invalid phone number",
-        },
-    }
+        isEmail: true
+    },
+
 }

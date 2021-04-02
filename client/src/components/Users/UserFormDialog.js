@@ -84,6 +84,7 @@ export const MaterialUIField = (props) => {
                     type={fieldProps.type}
                     placeholder={fieldProps.placeholder}
                     rules={fieldProps.rules}
+                    disabled={fieldProps.disabled}
                 />
             );
         case "availability":
@@ -99,6 +100,8 @@ export const MaterialUIField = (props) => {
                     control={control}
                     as={<AvailabilityForm />}
                     rules={fieldProps.rules}
+                    disabled={fieldProps.disabled}
+
                 />
             )
         case "select":
@@ -116,6 +119,8 @@ export const MaterialUIField = (props) => {
                         options={fieldProps.options}
                         placeholder={fieldProps.placeholder}
                         rules={fieldProps.rules}
+                        disabled={fieldProps.disabled}
+
                     />
                 </React.Fragment>
             );

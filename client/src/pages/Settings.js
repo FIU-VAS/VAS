@@ -1,43 +1,71 @@
-import React, { Component } from 'react';
-import LoginForm from '../components/Login/LoginForm';
-import { withStyles } from '@material-ui/core/styles';
-import { blueGrey, grey } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {createMuiTheme} from '@material-ui/core/styles';
+import {grey} from '@material-ui/core/colors';
 import SideBar from '../components/AppBar/SideBar';
-import CalltoAction from '../components/Home/CalltoAction';
-import SettingsForm from '../components/Settings/SettingsForm' ;
+import SettingsForm from '../components/Settings/SettingsForm';
+import Grid from "@material-ui/core/Grid";
+import {withStyles} from "@material-ui/core";
+import axios from "axios";
+import config from "../config";
+import {setCurrentSettings} from "../actions/siteSettingsActions";
+import {connect} from "react-redux";
 
 const theme = createMuiTheme({
     palette: {
-      primary: grey,
+        primary: grey,
     }
-    
-  });
+
+});
 
 const useStyles = {
     blob: {
         position: 'absolute',
         right: '2%',
         bottom: '5%',
-        height : "400px",
+        height: "400px",
     }
 };
 
-class Settings extends Component{
-    
-    render(){
+class Settings extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            isLoading: true
+        }
+    }
+
+    componentDidMount() {
+        axios.get(`${config.uri}${config.endpoints.siteSettings.fetch}`)
+            .then( (response) => {
+                if (response.data.length) {
+                    this.props.setCurrentSettings(response.data[0])
+                }
+                this.setState({isLoading: false})
+            })
+    }
+
+    render() {
         return (
             <div>
-                <SideBar/>
-                <SettingsForm/>
-                
-                <img className={this.props.classes.blob}
-                src ={require("../images/Ignite_2.png").default}
-                alt = "Blob" 
-                />
+                <Grid container spacing={2} >
+                    <Grid item xs={2}>
+                        <SideBar/>
+                    </Grid>
+                    <Grid item xs={10}>
+                        {!this.state.isLoading ? <SettingsForm/> : ""}
+                    </Grid>
+                    <img className={this.props.classes.blob}
+                         src={require("../images/Ignite_2.png").default}
+                         alt="Blob"
+                    />
+                </Grid>
             </div>
         )
     }
 }
 
-export default withStyles(useStyles)(Settings);
+export default connect(
+    null,
+    {setCurrentSettings}
+)(withStyles(useStyles)(Settings));
