@@ -20,7 +20,7 @@ import SchoolPersonnelManagement from './pages/SchoolPersonnelManagement';
 import TeamManagement from './pages/TeamManagement';
 import AdminManagement from './pages/AdminManagement';
 import ResetPassword from './pages/ResetPassword';
-import AvailabilityForm from './pages/AvailabilityForm';
+import Availability from './pages/Availability';
 import About from './pages/About'
 import config from "./config";
 
@@ -67,7 +67,7 @@ class App extends Component {
                                 <Route path='/login' component={Login}/>
                                 <Route path='/about' component={About}/>
                                 <Route path="/reset-password" component={ResetPassword}/>                                
-                                <PrivateRoute path="/availability" component={AvailabilityForm}/>
+                                <PrivateRoute path="/availability" component={Availability}/>
                                 <PrivateRoute path="/dashboard" component={Dashboard}/>
                                 <PrivateRoute path="/profile" component={Profile}/>
                             </Switch>
