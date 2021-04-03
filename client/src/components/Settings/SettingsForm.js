@@ -32,16 +32,16 @@ const useStyles = {
         height: '100vh'
     },
     card: {
-        marginTop: theme.spacing(8),
-        minWidth: 300,
-        maxWidth: 450,
-        height: 275,
+        marginTop: theme.spacing(12),
+        minWidth: 650,
+        maxWidth: 800,
+        height: 400,
         backgroundColor: 'white'
     },
     title: {
         fontSize: 16,
         alignItems: 'right',
-        fontWeight: 'bold'
+        color: 'black'
     },
     form: {
         width: '100%',
@@ -58,11 +58,11 @@ const useStyles = {
         
     },
     editButton: {
-        backgroundColor: "#57C965",
+        backgroundColor: "black",
         color: "white",
         fontWeight: "bold",
         '&:hover': {
-            backgroundColor: "#57C965",
+            backgroundColor: "black",
         },
         width: "70px",
         "&:disabled": {

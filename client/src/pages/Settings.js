@@ -15,12 +15,7 @@ const theme = createMuiTheme({
   });
 
 const useStyles = {
-    blob: {
-        position: 'absolute',
-        right: '2%',
-        bottom: '5%',
-        height : "400px",
-    }
+   
 };
 
 class Settings extends Component{
@@ -30,11 +25,7 @@ class Settings extends Component{
             <div>
                 <SideBar/>
                 <SettingsForm/>
-                
-                <img className={this.props.classes.blob}
-                src ={require("../images/Ignite_2.png").default}
-                alt = "Blob" 
-                />
+            
             </div>
         )
     }

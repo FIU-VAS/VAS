@@ -23,6 +23,9 @@ import Alert from '@material-ui/lab/Alert';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
+import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 const theme = createMuiTheme({
@@ -34,8 +37,7 @@ const theme = createMuiTheme({
 const useStyles = {
     bottomButtons: {
         backgroundColor: '#57C965',
-        color: "white",
-        fontWeight: "bold",
+        color: "black",
         '&:hover': {
             backgroundColor: '#57C965',
         }
@@ -116,7 +118,16 @@ class EditSchoolDialog extends Component {
             <Dialog
             open={open}
             >
-                <DialogTitle >Edit School</DialogTitle>
+                <DialogTitle>
+                        <Box display="flex" alignItems="center">
+                            <Box flexGrow={1}>Edit School</Box>
+                            <Box>
+                                <IconButton onClick={this.exitDialog}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    </DialogTitle>
                 { this.successMessage() }
                 <DialogContent>
                     <DialogContentText>

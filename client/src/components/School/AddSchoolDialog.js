@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { createMuiTheme } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { blueGrey, blue } from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -23,6 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import isEmpty from 'is-empty';
 import FormControl from '@material-ui/core/FormControl';
+import { FormProvider} from "react-hook-form";
 
 
 const theme = createMuiTheme({
@@ -34,8 +38,7 @@ const theme = createMuiTheme({
 const useStyles = {
     bottomButtons: {
         backgroundColor: '#57C965',
-        color: "white",
-        fontWeight: "bold",
+        color: "black",
         '&:hover': {
             backgroundColor: '#57C965',
         }
@@ -98,11 +101,21 @@ class AddSchoolDialog extends Component {
 
         return (
             <ThemeProvider theme={theme}>
+                <FormProvider>
             <Dialog
             open={open}
             maxWidth="sm"
             >
-                <DialogTitle >Add School</DialogTitle>
+                <DialogTitle>
+                        <Box display="flex" alignItems="center">
+                            <Box flexGrow={1}>Add School</Box>
+                            <Box>
+                                <IconButton onClick={this.exitDialog}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    </DialogTitle>
                 { this.successMessage() }
                 <DialogContent>
                     <DialogContentText>
@@ -225,6 +238,7 @@ class AddSchoolDialog extends Component {
                     <Button className={this.props.classes.bottomButtons} onClick={this.addSchool}  variant="contained" color="primary">Add</Button>
                 </DialogActions>
             </Dialog>
+            </FormProvider>
             </ThemeProvider>
         );
     }
