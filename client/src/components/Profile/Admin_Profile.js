@@ -51,7 +51,7 @@ const useStyles = {
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 15,
+        fontSize: 25,
         alignItems: 'center',
     },
     pos: {
@@ -77,7 +77,6 @@ const useStyles = {
     editButton: {
         backgroundColor: '#000',
         color: "white",
-        fontWeight: "bold",
         fontSize: "1rem",
         '&:hover': {
             backgroundColor: '#606060',
@@ -119,8 +118,6 @@ class Admin_Profile extends Component {
             email: this.props.user.email,
             phoneNumber: this.props.user.phoneNumber,
         });
-        console.log(this.props.user)
-
     }
 
     updateAdmin() {
@@ -180,7 +177,7 @@ class Admin_Profile extends Component {
                             {this.props.user.role}
                         </Typography>
                     </div>
-                    <Typography className={this.props.classes.title} color="black" variant="h4" gutterBottom>
+                    <Typography className={this.props.classes.title} variant="h4" gutterBottom>
                         Profile Information
                     </Typography>
                     <form className={this.props.classes.form} noValidate>
@@ -281,7 +278,6 @@ class Admin_Profile extends Component {
 // define types
 Admin_Profile.propTypes = {
     updateAdmin: PropTypes.func.isRequired,
-    getAdmin: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };

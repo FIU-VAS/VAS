@@ -18,8 +18,9 @@ import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
 import { green } from '@material-ui/core/colors';
 import HomeIcon from '@material-ui/icons/Home';
 import { connect } from 'react-redux';
-import {useRouteMatch} from "react-router-dom";
+import {useRouteMatch, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
+import Logout from "./Logout";
 
 const drawerWidth = 110;
 
@@ -51,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   menu:{
-      textAlign: 'center',
       background: grey[900],
   },
   drawerPaper: {
@@ -126,13 +126,9 @@ const routes = [
     link: "/about",
     allowed: ["admin", "volunteer", "schoolPersonnel"]
   },
-  {
-    title: "Log Out",
-    link:"/",
-    allowed: ["admin", "volunteer", "schoolPersonnel"]
-  }
   
 ]
+
 
 function ResponsiveDrawer(props) {
   const { window } = props;
@@ -146,22 +142,23 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const location = useLocation().pathname;
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <div className={classes.menu}>
-      <Link to="/" >
-        <ListItem><HomeIcon fontSize="large"  style={{ color: green[500] }}/></ListItem>
-        
-         </Link>
-      <Divider />
       <List>
+      <Link to="/">
+        <ListItem><HomeIcon fontSize="large" style={{ color: green[500], fontSize: 50}}/></ListItem>
+         </Link>
         {routes.filter((route) => route.allowed.indexOf(user.role) !== -1).map(route=> (
         <Link className={classes.links} to={route.link} key={`${route.link}`}> 
           <ListItem> 
-            <ListItemText>{route.title}</ListItemText>
+            <ListItemText style={{'color':(location===route.link?'#57C965':'white')}}>{route.title}</ListItemText>
           </ListItem> 
         </Link>))} 
+          <Logout class={classes.links}/>
       </List>
       </div>
            

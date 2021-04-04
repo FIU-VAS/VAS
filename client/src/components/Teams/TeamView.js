@@ -1,6 +1,6 @@
 // This component is the equivalent to VolunteerTable etc..
 
-import React, {useState} from 'react';
+import React, {useState, Component} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +11,6 @@ import {blueGrey, blue, grey} from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import {Sync, Add, ArrowUpward} from '@material-ui/icons';
 import {ButtonGroup, Paper} from "@material-ui/core";
-
 import {useForm, Controller} from "react-hook-form";
 import {subYears, eachYearOfInterval, format} from "date-fns";
 import {MuiSelect} from "../Users/UserFormDialog";
@@ -25,6 +24,65 @@ const theme = createMuiTheme({
         primary: {main: green[600]}, // For isActive is true
         secondary: {main: red[600]},// For isActive is false
         blue: {main: '#2196f3'},
+    }
+});
+
+const useStyles = ({
+    table: {
+        minWidth: 200,
+    },
+    all: {
+        backgroundColor: '#fafafa',
+        height: 280
+    },
+    card_details: {
+        marginTop: 10,
+        minWidth: 300,
+        maxWidth: 750,
+        height: 255,
+        overflow: 'auto'
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 800,
+        color: grey[900],
+        alignItems: 'right'
+    },
+    subHeading: {
+        fontSize: 15,
+        alignItems: 'right'
+    },
+    body: {
+        fontSize: 13,
+        alignItems: 'right'
+    },
+    buttons: {
+        backgroundColor: blueGrey[700],
+        color: "white",
+        fontWeight: "bold",
+        '&:hover': {
+            backgroundColor: blue[500],
+        }
+    },
+    paper: {
+        marginTop: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    card: {
+        marginTop: 10,
+        minWidth: 800,
+        maxWidth: 1000,
+        height: 210,
+        backgroundColor: 'white'
+    },
+    here: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justify: 'right',
     }
 });
 
@@ -93,21 +151,20 @@ const TeamView = (props) => {
                     <Grid container alignItems="center" justify="center" spacing={2}>
                         <Grid item xs={6}>
                             <Typography variant="h6" align="left">
-                                Query Teams:
+                                Query Teams
                             </Typography>
                         </Grid>
                         <Grid item xs={6} style={{textAlign: "right"}}>
                             <ButtonGroup>
                                 <Button
                                     variant="contained"
-                                    color="primary"
+                                    style={{'backgroundColor':'#57C965', 'color':'black'}}
                                     endIcon={<Add/>}
                                     onClick={() => setNewTeam(true)}
                                 >Create Team </Button>
                                 <Button
-                                    style={{marginLeft: "0.5rem"}}
+                                    style={{marginLeft: "0.5rem",'backgroundColor':'#57C965', 'color':'black'}}
                                     variant="contained"
-                                    color="primary"
                                     endIcon={<ArrowUpward/>}
                                     onClick={() => setImportTeams(true)}
                                 >Import Teams</Button>
@@ -144,7 +201,7 @@ const TeamView = (props) => {
                                     variant="contained"
                                     fullWidth
                                     size="small"
-                                    color="primary"
+                                    style={{'backgroundColor':'#57C965', 'color':'black'}}
                                     type="submit"
                                 >
                                     Display Teams

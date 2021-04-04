@@ -38,6 +38,10 @@ class AdminManagement extends Component{
                     </Grid> 
                     <Grid item className={this.props.classes.table}>
                         <AdminTable/>
+                        <img className={this.props.classes.blob}
+                            src ={require("../images/Ignite_2.png").default}
+                            alt = "Blob" 
+                        />
                     </Grid>
                 </Grid>
             </div>

@@ -15,7 +15,9 @@ import {MaterialUIField} from "../../Users/UserFormDialog";
 import {useForm, FormProvider, Controller} from "react-hook-form";
 import axios from "axios";
 import {format, parseISO, isValid} from "date-fns";
-
+import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import config from "../../../config";
 import {TransferList} from "../../Extras/TransferList";
 import {makeStyles} from "@material-ui/core/styles";
@@ -264,8 +266,15 @@ const TeamDialog = (props) => {
             close();
         }} maxWidth="md" fullWidth={true}>
             <DialogTitle>
-                Create Team
-            </DialogTitle>
+                        <Box display="flex" alignItems="center">
+                            <Box flexGrow={1}>Create Team</Box>
+                            <Box>
+                                <IconButton onClick={props.close}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    </DialogTitle>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(submit)}>
                     <DialogContent>
@@ -382,7 +391,7 @@ const TeamDialog = (props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions style={{justifyContent: "center"}}>
-                        <Button type="submit" variant="contained" color="primary">Submit</Button>
+                        <Button type="submit" variant="contained" style={{'backgroundColor':'#57C965', 'color':'black'}}>Submit</Button>
                     </DialogActions>
                 </form>
             </FormProvider>

@@ -12,7 +12,6 @@ import SchoolPersonnelManagement from "../../pages/SchoolPersonnelManagement";
 import SchoolManagement from "../../pages/SchoolManagement";
 import TeamManagement from "../../pages/TeamManagement";
 import AdminManagement from "../../pages/AdminManagement";
-import {AdminNav} from "./AdminNav";
 import {Box} from "@material-ui/core";
 
 const useStyles = {

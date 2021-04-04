@@ -96,7 +96,7 @@ render(){
             </Grid>
 
            
-            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} color="black" href="#outlined-buttons">
+            <Button onClick={this.redirect_to_AboutPage} startIcon={<InfoIcon />} href="#outlined-buttons">
         About
       </Button>
 

@@ -26,6 +26,13 @@ const useStyles = {
         marginTop: 20,
         minWidth: 200,
         width: '95%',
+    },
+    blob: {
+        position: 'absolute',
+        right: '1%',
+        bottom: '6%',
+        height : "300px",
+        zIndex: '-1'
     }
 }
 
@@ -111,6 +118,10 @@ const Dashboard = (props) => {
                 justify="center">
                 <Grid item className={props.classes.cell}>
                     {getPage()}
+                    <img className={props.classes.blob}
+                            src ={require("../images/Ignite_2.png").default}
+                            alt = "Blob" 
+                    />
                 </Grid>
             </Grid>
         </Grid>
