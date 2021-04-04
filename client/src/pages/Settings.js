@@ -6,6 +6,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import SideBar from '../components/AppBar/SideBar';
 import CalltoAction from '../components/Home/CalltoAction';
 import SettingsForm from '../components/Settings/SettingsForm' ;
+import '../../src/App.css';
 
 const theme = createMuiTheme({
     palette: {
@@ -22,7 +23,7 @@ class Settings extends Component{
     
     render(){
         return (
-            <div>
+            <div className="bg">
                 <SideBar/>
                 <SettingsForm/>
             
