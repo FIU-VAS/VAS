@@ -9,7 +9,7 @@ export const TeamPersonnel = (props) => {
     const {school, schoolPersonnel} = props;
 
     return (
-        <TeamCard cardHeader="Your School" headerColor={grey[800]}>
+        <TeamCard cardHeader="Your School" headerColor={grey[900]}>
             {/* Name */}
             <TeamCardSubheading>
                 Name: &nbsp;

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {createMuiTheme} from '@material-ui/core/styles';
-import {blueGrey, blue} from '@material-ui/core/colors';
+import {blueGrey, blue, green} from '@material-ui/core/colors';
 import {ThemeProvider} from '@material-ui/core/styles';
 import {withStyles} from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -35,7 +35,7 @@ import {Grid} from '@material-ui/core';
 
 const theme = createMuiTheme({
     palette: {
-        primary: blue,
+        primary: green,
     }
 });
 

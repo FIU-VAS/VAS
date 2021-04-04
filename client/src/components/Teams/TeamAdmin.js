@@ -1,4 +1,4 @@
-import {blueGrey} from "@material-ui/core/colors";
+import {blueGrey, grey} from "@material-ui/core/colors";
 import Grid from "@material-ui/core/Grid";
 import React, {Fragment} from "react";
 import {TeamCard, TeamCardBody, TeamCardSubheading} from "./TeamCard";
@@ -15,7 +15,7 @@ export const TeamAdmin = (props) => {
     return (
         <TeamCard
             cardHeader="Administrators"
-            headerColor={blueGrey[700]}
+            headerColor={grey[900]}
         >
             <TeamCardBody>
                 Have any concerns or questions? You may contact any of the administrators listed

@@ -45,7 +45,8 @@ const useStyles = {
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 15,
+        fontSize: 25,
+        fontWeight: "bold",
         alignItems: 'center'
     },
     pos: {

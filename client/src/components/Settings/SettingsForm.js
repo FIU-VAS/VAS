@@ -39,7 +39,8 @@ const useStyles = {
         backgroundColor: 'transparent'
     },
     title: {
-        fontSize: 30,
+        fontSize: 25,
+        fontWeight: "bold",
         alignItems: 'right',
         color: 'black'
     },

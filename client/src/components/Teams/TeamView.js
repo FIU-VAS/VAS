@@ -45,7 +45,7 @@ const useStyles = ({
     title: {
         fontSize: 18,
         fontWeight: 800,
-        color: grey[800],
+        color: grey[900],
         alignItems: 'right'
     },
     subHeading: {
