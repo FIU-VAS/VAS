@@ -10,7 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {createMuiTheme} from '@material-ui/core/styles';
-import {blueGrey, blue} from '@material-ui/core/colors';
+import {green} from '@material-ui/core/colors';
 import {useForm, FormProvider, useFormContext, Controller, get} from "react-hook-form";
 import axios from "axios";
 import Alert from '@material-ui/lab/Alert';
@@ -19,15 +19,17 @@ import AvailabilityForm from "../Extras/AvailabilityForm";
 
 const theme = createMuiTheme({
     palette: {
-        primary: blue,
-    }
+        primary: green,
+      }
 })
 
 const useStyles = {
     bottomButtons: {
         backgroundColor: '#57C965',
         color: "white",
+        textColor: 'white',
         fontWeight: "bold",
+        primaryTextColor: 'white',
         '&:hover': {
             backgroundColor: '#57C965',
         }

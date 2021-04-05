@@ -28,20 +28,21 @@ const theme = createMuiTheme({
 // Profile Styling
 const useStyles = {
     all: {
-        backgroundColor: '#fafafa',
         height: '100vh'
     },
     card: {
-        marginTop: theme.spacing(8),
-        minWidth: 300,
-        maxWidth: 450,
-        height: 275,
-        backgroundColor: 'white'
+        paddingTop: 100,
+        marginTop: theme.spacing(12),
+        minWidth: 650,
+        maxWidth: 800,
+        height: 400,
+        backgroundColor: 'transparent'
     },
     title: {
-        fontSize: 16,
+        fontSize: 25,
+        fontWeight: "bold",
         alignItems: 'right',
-        fontWeight: 'bold'
+        color: 'black'
     },
     form: {
         width: '100%',
@@ -55,16 +56,20 @@ const useStyles = {
         flexDirection: 'column',
         alignItems: 'center',
         marginBottom: 10,
+        marginTop: 30,
         
     },
     editButton: {
-        backgroundColor: "#57C965",
+        backgroundColor: '#000',
         color: "white",
         fontWeight: "bold",
+        fontSize: "1rem",
         '&:hover': {
-            backgroundColor: "#57C965",
+            backgroundColor: '#606060',
         },
-        width: "70px",
+        width: "150px",
+        height: "40px",
+        marginRight: "15px",
         "&:disabled": {
             backgroundColor: blueGrey[100],
             color: "white",

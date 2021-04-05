@@ -12,7 +12,7 @@ import SchoolPersonnelManagement from "../../pages/SchoolPersonnelManagement";
 import SchoolManagement from "../../pages/SchoolManagement";
 import TeamManagement from "../../pages/TeamManagement";
 import AdminManagement from "../../pages/AdminManagement";
-import {AdminNav} from "./AdminNav";
+import {Box} from "@material-ui/core";
 
 const useStyles = {
     card: {
@@ -64,13 +64,16 @@ const AdminDashboard = (props) => {
 
     return (
         <Fragment>
-            <Grid container>
+            <Box
+                style={{textAlign: "center"}}>
                 <Typography
                     className={props.classes.main}
-                    style={{marginBottom: '15px'}}>
+                    style={{marginBottom: '15px'}}
+                    align="center"
+                >
                     Admin Dashboard
                 </Typography>
-            </Grid>
+            </Box>
 
             <Switch>
                 <Route exact path={path}>

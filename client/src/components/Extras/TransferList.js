@@ -28,11 +28,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function not(a, b) {
-    return a.filter((value) => b.indexOf(value) === -1);
+    b = b.map(element => element.value);
+    return a.filter((element) => b.indexOf(element.value) === -1);
 }
 
 function intersection(a, b) {
-    return a.filter((value) => b.indexOf(value) !== -1);
+    b = b.map(element => element.value);
+    return a.filter((element) => b.index(element.value) !== -1);
 }
 
 export const  TransferList = React.forwardRef((props, ref) => {

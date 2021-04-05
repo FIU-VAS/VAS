@@ -14,6 +14,8 @@ import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import { grey } from '@material-ui/core/colors';
 import config from "../../config";
+import {useRouteMatch} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const drawerWidth = 110;
 
@@ -67,6 +69,66 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const routes = [
+  {
+    title: "Profile",
+    link: "/profile",
+    allowed: ["admin", "volunteer", "schoolPersonnel"]
+},
+{
+  title: "Dashboard",
+  link: "/dashboard",
+  allowed: ["admin", "volunteer", "schoolPersonnel"]
+},
+{
+  title: "Availability",
+  link:"/availability",
+  allowed: [ "volunteer", "schoolPersonnel"]
+},
+{
+  title: "Settings",
+  link: "/settings",
+  allowed: ["admin"]
+},
+
+  {
+      title: "Admins",
+      link: "/admin-management",
+      allowed: ["admin"]
+  },
+  {
+    title: "Personnels",
+    link: "/school-personnel-management",
+    allowed: ["admin"]
+},
+{
+  title: "Schools",
+  link: "/schoolmanagement",
+  allowed: ["admin"]
+},
+  {
+      title: "Volunteers",
+      link: "/volunteer-management",
+      allowed: ["admin"]
+  },
+  
+  {
+      title: "Teams",
+      link: "/team-management",
+      allowed: ["admin"]
+  },
+  {
+    title: "About",
+    link: "/about",
+    allowed: ["admin", "volunteer", "schoolPersonnel"]
+  },
+  {
+    title: "Log Out",
+    link:"/",
+    allowed: ["admin", "volunteer", "schoolPersonnel"]
+  }
+  
+]
 
 
 function ResponsiveDrawer(props) {
@@ -74,10 +136,13 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  let {url} = useRouteMatch();
+  const user = useSelector(state => state.userData.user);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
 
   const drawer = (
     <div>
@@ -93,65 +158,12 @@ function ResponsiveDrawer(props) {
         </Link> 
       <Divider />
       <List>
-        <Link to='/profile' className={classes.links}> 
+        {routes.filter((route) => route.allowed.indexOf(user.role) !== -1).map(route=> (
+        <Link className={classes.links} to={route.link} key={`${route.link}`}> 
           <ListItem> 
-            <ListItemText>Profile</ListItemText>
+            <ListItemText>{route.title}</ListItemText>
           </ListItem> 
-        </Link>
-        {!config.userRoles.admin === 'admin' &&
-        <Link to='/availability' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Availability</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin' &&
-        <Link to='/settings' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Settings</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin'  &&
-        <Link to='/admin-management' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Admins</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin'  &&
-        <Link to='/school-personnel-management' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Personnel</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin'  &&
-        <Link to='/schoolmanagement' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Schools</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin'  &&
-        <Link to='/volunteer-management' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Volunteers</ListItemText>
-          </ListItem> 
-        </Link>}
-        {config.userRoles.admin === 'admin'  &&
-        <Link to='/team-management' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>Teams</ListItemText>
-          </ListItem> 
-        </Link>}
-        <Link to='/about' className={classes.links}> 
-          <ListItem> 
-            <ListItemText>About</ListItemText>
-          </ListItem> 
-        </Link>
-        <Link to='/' className={classes.links}>
-           {/* onClick={this.submitLogout}>  */}
-          <ListItem> 
-            <ListItemText>Log out</ListItemText>
-          </ListItem> 
-        </Link>
-        
+        </Link>))} 
       </List>
       </div>
            

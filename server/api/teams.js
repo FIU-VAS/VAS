@@ -150,6 +150,9 @@ function fetchTeams(request, response) {
             break;
     }
 
+    console.log(conditions);
+
+
     Team.find(conditions, (err, result) => {
         if (err) {
             console.log(err);

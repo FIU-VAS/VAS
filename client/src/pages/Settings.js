@@ -6,6 +6,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import SideBar from '../components/AppBar/SideBar';
 import CalltoAction from '../components/Home/CalltoAction';
 import SettingsForm from '../components/Settings/SettingsForm' ;
+import '../../src/App.css';
 
 const theme = createMuiTheme({
     palette: {
@@ -15,26 +16,17 @@ const theme = createMuiTheme({
   });
 
 const useStyles = {
-    blob: {
-        position: 'absolute',
-        right: '2%',
-        bottom: '5%',
-        height : "400px",
-    }
+   
 };
 
 class Settings extends Component{
     
     render(){
         return (
-            <div>
+            <div className="bg">
                 <SideBar/>
                 <SettingsForm/>
-                
-                <img className={this.props.classes.blob}
-                src ={require("../images/Ignite_2.png").default}
-                alt = "Blob" 
-                />
+            
             </div>
         )
     }
