@@ -23,6 +23,7 @@ import About from './pages/About';
 import Settings from './pages/Settings'
 import AvailabilityForm from './pages/AvailabilityForm';
 import {getUser} from "./actions/userActions";
+import Logout from "./pages/Logout";
 
 
 // check for token to keep user logged in
@@ -55,40 +56,41 @@ if (localStorage.jwt) {
 
 class App extends Component {
 
-	render() {
-		return (
+    render() {
+        return (
 
-      <Provider store={store}>
-        <BrowserRouter>
-          <div className='.App'>
+            <Provider store={store}>
+                <BrowserRouter>
+                    <div className='.App'>
 
-            <Fragment>
+                        <Fragment>
 
-              <Footer/>
+                            <Footer/>
 
-              <Switch>
+                            <Switch>
 
-                <Route exact path='/' component={Home}/>
-                <Route path='/login' component={Login}/>
-                <Route path='/about' component={About}/>
-                <Route path="/reset-password" component={ResetPassword}/>
-                <PrivateRoute path="/dashboard" component={Dashboard}/>
-                <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
-                <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>
-                  <PrivateRoute path="/availability" component={AvailabilityForm}/>
-                  <PrivateRoute path="/profile" component={Profile}/>
-                <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
-                <AdminRoute path="/team-management" component={TeamManagement}/>
-                <AdminRoute path="/admin-management" component={AdminManagement}/>
-                <AdminRoute path="/settings" component={Settings}/>
+                                <Route exact path='/' component={Home}/>
+                                <Route path='/login' component={Login}/>
+                                <Route path='/logout' component={Logout}/>
+                                <Route path='/about' component={About}/>
+                                <Route path="/reset-password" component={ResetPassword}/>
+                                <PrivateRoute path="/dashboard" component={Dashboard}/>
+                                <AdminRoute path="/volunteer-management" component={VolunteerManagement}/>
+                                <AdminRoute path="/school-personnel-management" component={SchoolPersonnelManagement}/>
+                                <PrivateRoute path="/availability" component={AvailabilityForm}/>
+                                <PrivateRoute path="/profile" component={Profile}/>
+                                <AdminRoute path="/schoolmanagement" component={SchoolManagement}/>
+                                <AdminRoute path="/team-management" component={TeamManagement}/>
+                                <AdminRoute path="/admin-management" component={AdminManagement}/>
+                                <AdminRoute path="/settings" component={Settings}/>
 
-              </Switch>
-            </Fragment>
-            </div>
-        </BrowserRouter>
-      </Provider>
-		);
-	}
+                            </Switch>
+                        </Fragment>
+                    </div>
+                </BrowserRouter>
+            </Provider>
+        );
+    }
 }
 
 export default App;

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { blue, green } from '@material-ui/core/colors';
+import { blue } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -65,22 +64,13 @@ const useStyles = {
   };
 // Login Styling END
 
-class SchoolPersonnel_Profile extends Component {
+class SchoolPersonnelProfile extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             editDisabled: true,
         }
-    }
-
-    componentDidMount() {
-
-    }
-
-    //Supress depricated warning use UNSAFE_
-    UNSAFE_componentWillReceiveProps(nextProps) {
-
     }
 
     handleInput = (e) =>{
@@ -227,7 +217,7 @@ class SchoolPersonnel_Profile extends Component {
 }
 
 // define types
-SchoolPersonnel_Profile.propTypes = {
+SchoolPersonnelProfile.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -242,4 +232,4 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-)(withRouter(withStyles(useStyles)(SchoolPersonnel_Profile)));
+)(withRouter(withStyles(useStyles)(SchoolPersonnelProfile)));

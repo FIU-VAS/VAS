@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import serverConf from "../config";
-import {FormControl, Select, InputLabel, MenuItem, Box, Grid} from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
+import {Box, Grid} from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
@@ -12,7 +11,7 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/core/styles';
-import {startOfToday, addHours, addMinutes, subHours, format, parseISO} from "date-fns";
+import {format, parseISO} from "date-fns";
 import {setCurrentUser} from "../actions/userActions";
 import {useForm, Controller} from "react-hook-form";
 import AvailabilityForm, {validateAvailability} from "../components/Extras/AvailabilityForm";
@@ -94,7 +93,7 @@ const AvailabilityPage = () => {
 
     const classes = useStyles();
 
-    const {handleSubmit, errors, watch, control} = useForm({
+    const {handleSubmit, errors, control} = useForm({
         defaultValues: {
             availability: (user.availability && user.availability.length)
                 ? user.availability.map(available => ({

@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import {green, red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import {blueGrey, blue, grey} from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import {Sync, Add, ArrowUpward} from '@material-ui/icons';
 import {ButtonGroup, Paper} from "@material-ui/core";
@@ -20,14 +19,6 @@ import axios from "axios";
 import {AppTeamCalendar} from "./TeamCalendar";
 import TeamDialog from "./TeamDialog/TeamDialog";
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {main: green[600]}, // For isActive is true
-        secondary: {main: red[600]},// For isActive is false
-        blue: {main: '#2196f3'},
-    }
-});
-
 const teamManagementStyles = makeStyles(theme => ({
     queryWrapper: {
         padding: theme.spacing(2),
@@ -38,12 +29,11 @@ const teamManagementStyles = makeStyles(theme => ({
     queryButton: {}
 }))
 
-const TeamView = (props) => {
+const TeamView = () => {
     const [currentTeams, setCurrentTeams] = useState([])
     const [triedOnce, setTriedOnce] = useState(false);
     const [loading, setLoading] = useState(false)
     const [newTeam, setNewTeam] = useState(false)
-    const [importTeams, setImportTeams] = useState(false)
 
     const classes = teamManagementStyles();
 
@@ -104,13 +94,6 @@ const TeamView = (props) => {
                                     endIcon={<Add/>}
                                     onClick={() => setNewTeam(true)}
                                 >Create Team </Button>
-                                <Button
-                                    style={{marginLeft: "0.5rem"}}
-                                    variant="contained"
-                                    color="primary"
-                                    endIcon={<ArrowUpward/>}
-                                    onClick={() => setImportTeams(true)}
-                                >Import Teams</Button>
                             </ButtonGroup>
                         </Grid>
                     </Grid>

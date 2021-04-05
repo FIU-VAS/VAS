@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import { blue, blueGrey, green} from '@material-ui/core/colors';
+import { blue, blueGrey} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -95,7 +94,7 @@ const useStyles = {
   };
 // Login Styling END
 
-class Admin_Profile extends Component {
+class AdminProfile extends Component {
 
     constructor(props) {
         super(props);
@@ -280,7 +279,7 @@ class Admin_Profile extends Component {
 }
 
 // define types
-Admin_Profile.propTypes = {
+AdminProfile.propTypes = {
     updateAdmin: PropTypes.func.isRequired,
     getAdmin: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
@@ -297,4 +296,4 @@ const mapStateToProps = state => ({
 export default connect (
   mapStateToProps,
   { updateAdmin }
-)(withRouter(withStyles(useStyles)(Admin_Profile)));
+)(withRouter(withStyles(useStyles)(AdminProfile)));

@@ -90,6 +90,8 @@ const Dashboard = (props) => {
                 return (<VolunteerDashboard/>);
             case config.userRoles.schoolPersonnel:
                 return (<SchoolPersonnelDashboard/>);
+            default:
+                return "";
         }
     }
 

@@ -14,7 +14,7 @@ import {connect} from "react-redux";
 import {MaterialUIField} from "../../Users/UserFormDialog";
 import {useForm, FormProvider, Controller} from "react-hook-form";
 import axios from "axios";
-import {format, parseISO, isValid} from "date-fns";
+import {format, parseISO} from "date-fns";
 
 import config from "../../../config";
 import {TransferList} from "../../Extras/TransferList";
@@ -31,13 +31,11 @@ const teamDialogStyles = makeStyles(theme => ({
     }
 }))
 
-let renderedAmounts = 0;
-
 const volunteerForTransferList = (volunteer) => {
     return {
         value: volunteer.pantherID,
         label: (
-            <Grid container>
+            <Grid key={volunteer.pantherID} container>
                 <Grid item xs={12}>
                     <Typography>
                         {volunteer.firstName + " " + volunteer.lastName}
@@ -50,10 +48,10 @@ const volunteerForTransferList = (volunteer) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {volunteer.availability && volunteer.availability.map(available => {
+                        {volunteer.availability && volunteer.availability.map((available, index) => {
                             const [startTime, endTime] = parseAvailabilityISO(available)
                             return (
-                                <Typography style={{fontWeight: 600}}>
+                                <Typography key={`available-${index}`} style={{fontWeight: 600}}>
                                     {format(startTime, "HH:mm")} – {format(endTime, "HH:mm")}
                                 </Typography>
                             )
@@ -104,7 +102,9 @@ const TeamDialog = (props) => {
     const classes = teamDialogStyles();
 
     const [schoolPersonnel, setSchoolPersonnel] = useState([]);
-    const [volunteers, setVolunteers] = useState([]);
+    const [volunteers, setVolunteers] = useState(
+        props.team && props.team.volunteers && props.team.volunteers.length ? props.team.volunteers : []
+    );
     const [editingAvailability, setEditingAvailability] = useState({});
     const [response, setResponse] = useState(null);
 
@@ -129,6 +129,11 @@ const TeamDialog = (props) => {
     const updateVolunteers = (availability) => {
         setLoading(true);
         let params;
+
+        if (!isDirty && volunteers.length && availability) {
+            return;
+        }
+        setVolunteers([]);
 
         if (availability && !availability.length) {
             setLoading(false);
@@ -173,8 +178,6 @@ const TeamDialog = (props) => {
 
     const updateData = async () => {
         if (!!allFields.schoolCode && allFields.schoolCode !== team.schoolCode) {
-            setSchoolPersonnel([]);
-            setVolunteers([]);
             updatePersonnel(allFields.schoolCode);
         }
         if (!!allFields.availability && allFields.availability !== team.availability) {
@@ -255,7 +258,6 @@ const TeamDialog = (props) => {
     return (
         <Dialog open={open} onClose={() => {
             setResponse(null);
-            renderedAmounts = 0;
             close();
         }} maxWidth="md" fullWidth={true}>
             <DialogTitle>
@@ -340,11 +342,22 @@ const TeamDialog = (props) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Collapse in={!!team.availability && !!team.availability.length && !!volunteers.length}
-                                          mountOnEnter={true}>
+                                          mountOnEnter={true} unmountOnExit={true}>
                                     <Controller
                                         control={control}
                                         as={<TransferList
-                                            titleLeft="Available Volunteers"
+                                            titleLeft={(
+                                                <Grid container alignItems="center" justify="space-between">
+                                                    <Grid item xs="auto">
+                                                        <Typography>Available Volunteers</Typography>
+                                                    </Grid>
+                                                    <Grid item xs="auto">
+                                                        <Button onClick={() => updateVolunteers(null)}>
+                                                            Load All
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            )}
                                             titleRight="Selected Volunteers"
                                             available={volunteers.map(volunteerForTransferList)}
                                         />}

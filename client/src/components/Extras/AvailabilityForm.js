@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {
-    FormControl, Select, InputLabel, MenuItem, Button, Typography, makeStyles, Grid, Box, IconButton
+    FormControl, Select, InputLabel, MenuItem, Typography, makeStyles, Grid, Box, IconButton
 } from "@material-ui/core";
 import {Clear, Add} from "@material-ui/icons";
 import {blueGrey, blue} from '@material-ui/core/colors';
@@ -69,7 +69,7 @@ export const validateAvailability = (availability) => {
 }
 
 export const AvailabilityForm = React.forwardRef((props, ref) => {
-    const {onChange, onBlur, value, name, label} = props
+    const {onChange, value, label} = props
 
     const [availability, setAvailability] = useState(
         value && value.length

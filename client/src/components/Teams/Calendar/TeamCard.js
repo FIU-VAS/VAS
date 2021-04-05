@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogTitle,
     IconButton,
-    CircularProgress, Collapse, Button, DialogContent, DialogContentText, DialogActions
+    CircularProgress, Collapse, Button
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {format} from "date-fns";
@@ -65,7 +65,7 @@ const teamDataInitialState = {
 const getCurrentTeamData = async (team) => {
     const response = await axios({
         method: "GET",
-        url: `${config.uri}${config.endpoints.team.getTeamData}` + "/" + team._id,
+        url: `${config.uri}${config.endpoints.team.getTeamData}/${team._id}`,
         params: {
             related: ['volunteers', 'school', 'schoolPersonnel']
         }

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Grid, Typography, Portal} from "@material-ui/core";
+import {Button, Grid, Typography} from "@material-ui/core";
 import {Controller, useFormContext} from "react-hook-form";
 import {SelectTimeFrame} from "../../Extras/SelectTimeFrame";
 import PropTypes from "prop-types";
@@ -11,9 +11,9 @@ export const PersonnelPicker = (props) => {
 
     const {control} = useFormContext();
 
-    return selectedPersonnel.map(personnel => {
+    return selectedPersonnel.map((personnel, index) => {
         return (
-            <Grid container spacing={2}>
+            <Grid key={`personnel-availability-${index}`} container spacing={2}>
                 {!personnel.availability || !personnel.availability.length ?
                     (
                         <React.Fragment>

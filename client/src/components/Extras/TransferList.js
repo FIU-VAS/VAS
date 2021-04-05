@@ -34,7 +34,7 @@ function not(a, b) {
 
 function intersection(a, b) {
     b = b.map(element => element.value);
-    return a.filter((element) => b.index(element.value) !== -1);
+    return a.filter((element) => b.indexOf(element.value) !== -1);
 }
 
 export const  TransferList = React.forwardRef((props, ref) => {
