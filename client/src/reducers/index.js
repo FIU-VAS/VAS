@@ -11,6 +11,7 @@ import adminReducer from './adminReducers';
 import volunteerRequestReducer from './volunteerRequestReducer';
 import schoolPersonnelRequestReducer from './schoolPersonnelRequestReducers'
 import calendarReducer from './calendarReducer'
+import siteSettingsReducer from "./siteSettingsReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
   success: successReducer,
   volunteerRequests: volunteerRequestReducer,
   schoolPersonnelRequests: schoolPersonnelRequestReducer,
-  calendar: calendarReducer
+  calendar: calendarReducer,
+  siteSettings: siteSettingsReducer
 });

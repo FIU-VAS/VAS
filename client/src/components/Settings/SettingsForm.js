@@ -1,24 +1,26 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
-import { blue, blueGrey } from '@material-ui/core/colors';
-import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import {blue, blueGrey} from '@material-ui/core/colors';
+import {createMuiTheme, withStyles, ThemeProvider} from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 import Typography from '@material-ui/core/Typography';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import { createMuiTheme } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import { ThemeProvider } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-
+import {setCurrentSettings} from "../../actions/siteSettingsActions";
+import {MaterialUIField} from "../Users/UserFormDialog";
+import {FormProvider, useForm} from "react-hook-form";
+import config from "../../config";
+import axios from "axios";
 
 const theme = createMuiTheme({
     palette: {
-      primary: blue,
+        primary: blue,
     }
-  });
+});
 
 // Profile Styling
 const useStyles = {
@@ -41,7 +43,7 @@ const useStyles = {
     form: {
         width: '100%',
     },
-    textfield:{
+    textfield: {
         // boxShadow:'0 0 15px 4px rgba(0,0,0,0.06)'
     },
     Button: {
@@ -65,123 +67,101 @@ const useStyles = {
         "&:disabled": {
             backgroundColor: blueGrey[100],
             color: "white",
-          }
+        }
     },
 
-  };
+};
+
 // Login Styling END
 
-class Settings_Form extends Component {
+const SettingsForm = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            editDisabled: true,
-            schoolForm: "",
-            volunteerForm: "",
+    const [disabled, setDisabled] = useState(true);
+    const methods = useForm({
+        defaultValues: props.siteSettings
+    });
 
-        }
-
-        this.handleInput = this.handleInput.bind(this);
-    }
-
-    componentDidMount() {  
-        this.setState({
-            
-            schoolForm: this.props.schoolForm,
-            volunteerForm: this.props.volunteerForm,
-        });
-
-    }
-
-    handleInput = (e) =>{
-        const value = e.target.value
-    }
-
-    editable = () => {
-        this.setState({
-            editDisabled: !this.state.editDisabled
-        })
-    }
-
-  render(){   
+    const submit = async (data) => {
+        const response = await axios.post(`${config.uri}${config.endpoints.siteSettings.createOrUpdate}`,data);
+        props.setCurrentSettings(response.data);
+    };
 
     return (
         <ThemeProvider theme={theme}>
-        <div className={this.props.classes.all}>
-        <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center">
-            <Box 
-            borderRadius= "10px"
-            className={this.props.classes.card} 
-            variant="outlined"
-            justify="center">
-                <CardContent>
-                    <Typography className={this.props.classes.title} color="textSecondary" variant="h2" gutterBottom>
-                        Site Settings
-                    </Typography>
-                    <form className={this.props.classes.form} noValidate>
+            <div className={props.classes.all}>
+                <FormProvider {...methods}>
+                    <form onSubmit={methods.handleSubmit(submit)} className={props.classes.form}
+                          noValidate>
+                        <Box
+                            borderRadius="10px"
+                            className={props.classes.card}
+                            variant="outlined"
+                            justify="center">
+                            <CardContent>
+                                <Typography className={props.classes.title} color="textSecondary" variant="h2"
+                                            gutterBottom>
+                                    Site Settings
+                                </Typography>
+                                <MaterialUIField
+                                    fieldProps={
+                                        {
+                                            type: 'text',
+                                            name: 'schoolForm',
+                                            label: 'School Form',
+                                            disabled: disabled
+                                        }}
+                                />
+                                <MaterialUIField
+                                    fieldProps={
+                                        {
+                                            type: 'text',
+                                            name: 'volunteerForm',
+                                            label: 'Volunteer Form',
+                                            disabled: disabled
+                                        }
+                                    }
+                                />
 
-                    {/* Register School Form */}
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        disabled={this.state.editDisabled}
-                        className={this.props.classes.textfield}
-                        fullWidth
-                        label="Register_School Form Link"
-                        name="registerschoollink"
-                        autoFocus
-                        onChange={this.handleInput}
-                        value={this.state.schoolForm}
-                    />
-                    {/* Volunteer Form */}
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        disabled={this.state.editDisabled}
-                        className={this.props.classes.textfield}
-                        fullWidth
-                        label="Volunteer Form Link"
-                        name="volunteerlink"
-                        autoFocus
-                        onChange={this.handleInput}
-                        value={this.state.volunteerForm}
-                    />
+                            </CardContent>
+                            <div className={props.classes.Button}>
+                                <CardActions>
+                                    <Button
+                                        className={props.classes.editButton}
+                                        onClick={() => setDisabled(false)}
+                                        size="small"
+                                        disabled={!disabled}
+                                        endIcon={<EditIcon/>}>
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        className={props.classes.editButton}
+                                        type="submit"
+                                        size="small"
+                                        disabled={disabled}
+                                        endIcon={<SaveIcon/>}>
+                                        Save
+                                    </Button>
+                                </CardActions>
+                            </div>
+                        </Box>
                     </form>
-                </CardContent>
-                <div className={this.props.classes.Button}>
-                <CardActions>
-                    <Button 
-                    className={this.props.classes.editButton}
-                    onClick={this.editable} 
-                    size="small"
-                    disabled={!this.state.editDisabled}
-                    endIcon={<EditIcon />}>
-                        Edit
-                    </Button>
-                    <Button 
-                    className={this.props.classes.editButton}
-                    onClick={this.editable}
-                    size="small"
-                    disabled={this.state.editDisabled}
-                    endIcon={<SaveIcon />}>
-                        Save
-                    </Button>
-                </CardActions>
-                </div>
-            </Box>
-
-        </Grid>
-        </div>
+                </FormProvider>
+            </div>
         </ThemeProvider>
     );
-  }
 }
 
+// define types
+SettingsForm.propTypes = {
+    siteSettings: PropTypes.object.isRequired
+};
 
-export default withStyles(useStyles)(Settings_Form);
+// allows us to get our state from Redux and map it to props
+const mapStateToProps = state => ({
+    siteSettings: state.siteSettings
+});
+
+export default connect(
+    mapStateToProps,
+    {setCurrentSettings}
+)(withStyles(useStyles)(SettingsForm));

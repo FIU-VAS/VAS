@@ -156,7 +156,6 @@ class VolunteerDashboard extends Component {
                             Below is your team information with all of the appropriate details. &nbsp;
                         </Typography>
                     </Grid>
-
                 </Grid>
 
                 <TeamCalendar hideEmpty={true}/>

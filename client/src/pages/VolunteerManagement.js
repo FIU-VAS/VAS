@@ -21,14 +21,14 @@ const useStyles = {
         height : "400px",
         zIndex: '-1'
     }
-}
+}    
 
 class VolunteerManagement extends Component{
-
+    
     render(){
         return (
             <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_2_10.png').default + ')',
+                style={{backgroundImage: 'url(' + require('../images/FIU_2_10.png') + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
@@ -43,7 +43,7 @@ class VolunteerManagement extends Component{
                         />
                     </Grid>    
                 </Grid>
-            </div>
+            </div>    
         )
     }
 }

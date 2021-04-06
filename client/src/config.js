@@ -22,14 +22,14 @@ const config = {
 			fetchByid: '/volunteers',
 			update: '/volunteers',
 			updateProfile: '/volunteers/updateProfile',
-			
+
 		},
 		schools: {
 			create: '/school/create',
 			fetch: '/school',
 			update: '/school/update',
 			getSchoolInfo: '/school/getSchoolInfo'
-		},	
+		},
 		schoolPersonnels: {
 			signup: '/school-personnels',
 			fetch: '/school-personnels',
@@ -48,6 +48,10 @@ const config = {
 		},
 		user: {
 			me: '/account/me'
+		},
+		siteSettings: {
+			createOrUpdate: '/site-settings',
+			fetch: '/site-settings',
 		}
 	},
 	userRoles: {
