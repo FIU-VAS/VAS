@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import serverConf from "../config";
-import {FormControl, Select, InputLabel, MenuItem, Box, Grid} from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
+import {Box, Grid} from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
@@ -12,14 +11,12 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/core/styles';
-import {startOfToday, addHours, addMinutes, subHours, format, parseISO} from "date-fns";
+import {format, parseISO} from "date-fns";
 import {setCurrentUser} from "../actions/userActions";
 import {useForm, Controller} from "react-hook-form";
 import AvailabilityForm, {validateAvailability} from "../components/Extras/AvailabilityForm";
 import SideBar from "../components/AppBar/SideBar";
-import Avatar from '@material-ui/core/Avatar';
 import DateRangeSharpIcon from '@material-ui/icons/DateRangeSharp';
-import { BorderAllRounded } from '@material-ui/icons';
 
 const theme = createMuiTheme({
     palette: {
@@ -52,6 +49,8 @@ const useStyles = makeStyles({
         backgroundColor: lightGreen[200],
         textAlign: 'center',
         borderRadius: '6px',
+        padding: theme.spacing(2),
+        marginTop: theme.spacing(2)
     },
     selectTime: {
         minWidth: "110px",
@@ -123,6 +122,8 @@ const Availability = () => {
         }
     });
 
+    console.log(errors);
+
     return (
         <ThemeProvider theme={theme}>
             <SideBar/>
@@ -135,7 +136,7 @@ const Availability = () => {
                     
                 <Box className={classes.paper} width="100%">
                      <Typography component="h1" variant="h4" >
-                        Volunteer Schedule <DateRangeSharpIcon></DateRangeSharpIcon>
+                        Volunteer Schedule <DateRangeSharpIcon />
                     </Typography>
                     {response.message !== "" && <Alert severity={response.success ? "success" : "error"}>{response.message}</Alert>}
                     <form onSubmit={handleSubmit((data) => submitForm(data.availability))}
@@ -163,7 +164,6 @@ const Availability = () => {
                             type="submit"
                             variant="contained"
                             className={classes.submit}
-                            disabled={response.success}
                             color="primary">
                             Submit
                         </Button>

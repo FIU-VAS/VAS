@@ -1,5 +1,4 @@
-  
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import { withRouter } from 'react-router-dom';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,7 +12,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
-import { blueGrey, grey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
     palette: {

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import serverConf from '../config'
 import { GET_ERRORS, SET_TEAMS_REQ, SET_VOLUNTEERS_REQ, SET_SCHOOLS_REQ, SET_SCHOOL_PERSONNEL_REQ, SET_ADMINS_REQ } from './types';
-import { compose } from 'redux';
-const _ = require("underscore"); 
 
 // get teams from database
 export const getTeamRequest = pid => dispatch => {

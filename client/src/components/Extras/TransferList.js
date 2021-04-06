@@ -28,11 +28,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function not(a, b) {
-    return a.filter((value) => b.indexOf(value) === -1);
+    b = b.map(element => element.value);
+    return a.filter((element) => b.indexOf(element.value) === -1);
 }
 
 function intersection(a, b) {
-    return a.filter((value) => b.indexOf(value) !== -1);
+    b = b.map(element => element.value);
+    return a.filter((element) => b.indexOf(element.value) !== -1);
 }
 
 export const  TransferList = React.forwardRef((props, ref) => {
@@ -40,7 +42,7 @@ export const  TransferList = React.forwardRef((props, ref) => {
 
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
-    const [left, setLeft] = React.useState(not(available, value));
+    const left = not(available, value);
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, value);
@@ -61,26 +63,22 @@ export const  TransferList = React.forwardRef((props, ref) => {
     const handleAllRight = () => {
         // setRight(right.concat(left));
         onChange(value.concat(left));
-        setLeft([]);
     };
 
     const handleCheckedRight = () => {
         // setRight(right.concat(leftChecked));
         onChange(value.concat(leftChecked));
 
-        setLeft(not(left, leftChecked));
         setChecked(not(checked, leftChecked));
     };
 
     const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
         // setRight(not(right, rightChecked));
         onChange(not(value, rightChecked));
         setChecked(not(checked, rightChecked));
     };
 
     const handleAllLeft = () => {
-        setLeft(left.concat(value));
         // setRight([]);
         onChange([]);
     };

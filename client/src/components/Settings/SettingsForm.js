@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { blue, blueGrey } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -50,13 +45,12 @@ const useStyles = {
         // boxShadow:'0 0 15px 4px rgba(0,0,0,0.06)'
     },
     Button: {
-        marginTop: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         marginBottom: 10,
         marginTop: 30,
-        
+
     },
     editButton: {
         backgroundColor: '#000',

@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogTitle,
     IconButton,
-    CircularProgress, Collapse, Button, DialogContent, DialogContentText, DialogActions
+    CircularProgress, Collapse, Button
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {format} from "date-fns";
@@ -23,33 +23,30 @@ const cardStyles = makeStyles(theme => ({
         width: '100%',
         padding: '1rem',
         margin: '0.5rem 0',
-        backgroundColor: "white",
         position: 'relative'
     },
     boxHeader: {
-        fontSize: "1.1rem",
+        fontSize: "1rem",
         lineHeight: "1.35rem",
-        
     },
     boxSubheader: {
         textTransform: "capitalize",
         fontWeight: 400,
-        
+        color: theme.palette.text.secondary,
     },
     chip: {
         margin: "0.15rem",
         fontWeight: "bold",
-        backgroundColor: "black",
-        "&:hover": {
-            backgroundColor: "black"
-          }
+        background: theme.palette.grey[900],
+        "&:focus": {
+            background: theme.palette.grey[900],
+        }
     },
     badge: {
         borderRadius: "4px",
         padding: "0.25rem 0.5rem",
         color: "white",
-        display: "inline-block",
-        background: "#57C965",
+        display: "inline-block"
     },
     closeButton: {
         position: 'relative',
@@ -73,7 +70,7 @@ const teamDataInitialState = {
 const getCurrentTeamData = async (team) => {
     const response = await axios({
         method: "GET",
-        url: `${config.uri}${config.endpoints.team.getTeamData}` + "/" + team._id,
+        url: `${config.uri}${config.endpoints.team.getTeamData}/${team._id}`,
         params: {
             related: ['volunteers', 'school', 'schoolPersonnel']
         }
@@ -198,7 +195,11 @@ const TeamDetails = (props) => {
                         volunteers: teamVolunteers,
                         schoolPersonnel: teamPersonnel[0]
                     })}
-                    onSubmit={console.log}
+                    onSubmit={() => {
+                        if (props.onChange) {
+                            props.onChange();
+                        }
+                    }}
                 />
             ) : ""}
             {deleteTeam && (
@@ -221,6 +222,19 @@ let TeamCardComponent = (props) => {
 
     const {teamSchool} = teamData;
 
+    const updateData = async () => {
+        try {
+            let data = await getCurrentTeamData(team);
+            setTeamData(data);
+        } catch (httpError) {
+            if (httpError.response.data) {
+                // Error is recognized by server
+            }
+            // Server doesn't know what happened
+        }
+        setLoading(false);
+    }
+
     useEffect(() => {
         (async () => {
             try {
@@ -242,7 +256,7 @@ let TeamCardComponent = (props) => {
     const classes = cardStyles();
 
     return (
-        <Paper elevation={2} className={classes.box}>
+        <Paper elevation={2} className={classes.box} style={{textAlign: "left"}}>
             <Grid container spacing={1}>
                 {!loading ? (
                     <React.Fragment>
@@ -277,6 +291,7 @@ let TeamCardComponent = (props) => {
                             teamVolunteers={teamData.teamVolunteers}
                             teamPersonnel={teamData.teamPersonnel}
                             classes={classes}
+                            onChange={updateData}
                         />
                     </React.Fragment>
                 ) : (

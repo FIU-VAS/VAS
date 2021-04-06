@@ -1,6 +1,6 @@
 import axios from 'axios';
 import serverConf from '../config'
-import { GET_ERRORS, SET_SCHOOL_PERSONNELS, SCHOOL_PERSONNELS_LOADING, GET_SUCCESS} from './types';
+import { GET_ERRORS, SET_SCHOOL_PERSONNELS} from './types';
 
 // get school personnels from database
 export const getSchoolPersonnels = (code) => dispatch => {
@@ -19,13 +19,6 @@ export const getSchoolPersonnels = (code) => dispatch => {
         type: GET_ERRORS,
         payload: err
     }));
-};
-
-// school personnels loading
-export const setSchoolPersonnelsLoading = () => {
-    return {
-        type: SCHOOL_PERSONNELS_LOADING
-    };
 };
 
 // set school personnels

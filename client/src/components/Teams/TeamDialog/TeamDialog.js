@@ -14,10 +14,8 @@ import {connect} from "react-redux";
 import {MaterialUIField} from "../../Users/UserFormDialog";
 import {useForm, FormProvider, Controller} from "react-hook-form";
 import axios from "axios";
-import {format, parseISO, isValid} from "date-fns";
-import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import {format, parseISO} from "date-fns";
+
 import config from "../../../config";
 import {TransferList} from "../../Extras/TransferList";
 import {makeStyles} from "@material-ui/core/styles";
@@ -25,6 +23,7 @@ import {Alert} from "@material-ui/lab";
 import {PersonnelPicker} from "./PersonnelPicker";
 import {AvailabilityDialog} from "../../Extras/AvailabilityDialog";
 import {parseAvailabilityISO} from "../Calendar/utils";
+import {setTeams} from "../../../actions/volunteerRequestActions";
 
 const teamDialogStyles = makeStyles(theme => ({
     backdrop: {
@@ -33,13 +32,11 @@ const teamDialogStyles = makeStyles(theme => ({
     }
 }))
 
-let renderedAmounts = 0;
-
 const volunteerForTransferList = (volunteer) => {
     return {
         value: volunteer.pantherID,
         label: (
-            <Grid container>
+            <Grid key={volunteer.pantherID} container>
                 <Grid item xs={12}>
                     <Typography>
                         {volunteer.firstName + " " + volunteer.lastName}
@@ -52,17 +49,12 @@ const volunteerForTransferList = (volunteer) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {volunteer.availability && volunteer.availability.map(available => {
+                        {volunteer.availability && volunteer.availability.map((available, index) => {
                             const [startTime, endTime] = parseAvailabilityISO(available)
                             return (
-                                <React.Fragment>
-                                    <Typography style={{fontWeight: 600, textTransform: "capitalize"}}>
-                                        {available.dayOfWeek}
-                                    </Typography>
-                                    <Typography style={{fontWeight: 600}}>
-                                        {format(startTime, "hh:mm")} – {format(endTime, "hh:mm")}
-                                    </Typography>
-                                </React.Fragment>
+                                <Typography key={`available-${index}`} style={{fontWeight: 600}}>
+                                    {format(startTime, "HH:mm")} – {format(endTime, "HH:mm")}
+                                </Typography>
                             )
                         })}
                     </Grid>
@@ -111,7 +103,9 @@ const TeamDialog = (props) => {
     const classes = teamDialogStyles();
 
     const [schoolPersonnel, setSchoolPersonnel] = useState([]);
-    const [volunteers, setVolunteers] = useState([]);
+    const [volunteers, setVolunteers] = useState(
+        props.team && props.team.volunteers && props.team.volunteers.length ? props.team.volunteers : []
+    );
     const [editingAvailability, setEditingAvailability] = useState({});
     const [response, setResponse] = useState(null);
 
@@ -136,6 +130,11 @@ const TeamDialog = (props) => {
     const updateVolunteers = (availability) => {
         setLoading(true);
         let params;
+
+        if (!isDirty && volunteers.length && availability) {
+            return;
+        }
+        setVolunteers([]);
 
         if (availability && !availability.length) {
             setLoading(false);
@@ -180,8 +179,6 @@ const TeamDialog = (props) => {
 
     const updateData = async () => {
         if (!!allFields.schoolCode && allFields.schoolCode !== team.schoolCode) {
-            setSchoolPersonnel([]);
-            setVolunteers([]);
             updatePersonnel(allFields.schoolCode);
         }
         if (!!allFields.availability && allFields.availability !== team.availability) {
@@ -236,6 +233,7 @@ const TeamDialog = (props) => {
                     })
                     if (onSubmit) {
                         onSubmit(response.data);
+                        setTeams([...props.teams.filter(team => team._id !== response.data.team._id), response.data.team]);
                     }
                 }
             })
@@ -262,19 +260,11 @@ const TeamDialog = (props) => {
     return (
         <Dialog open={open} onClose={() => {
             setResponse(null);
-            renderedAmounts = 0;
             close();
         }} maxWidth="md" fullWidth={true}>
             <DialogTitle>
-                        <Box display="flex" alignItems="center">
-                            <Box flexGrow={1}>Create Team</Box>
-                            <Box>
-                                <IconButton onClick={props.close}>
-                                    <CloseIcon/>
-                                </IconButton>
-                            </Box>
-                        </Box>
-                    </DialogTitle>
+                Create Team
+            </DialogTitle>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(submit)}>
                     <DialogContent>
@@ -354,11 +344,22 @@ const TeamDialog = (props) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Collapse in={!!team.availability && !!team.availability.length && !!volunteers.length}
-                                          mountOnEnter={true}>
+                                          mountOnEnter={true} unmountOnExit={true}>
                                     <Controller
                                         control={control}
                                         as={<TransferList
-                                            titleLeft="Available Volunteers"
+                                            titleLeft={(
+                                                <Grid container alignItems="center" justify="space-between">
+                                                    <Grid item xs="auto">
+                                                        <Typography>Available Volunteers</Typography>
+                                                    </Grid>
+                                                    <Grid item xs="auto">
+                                                        <Button onClick={() => updateVolunteers(null)}>
+                                                            Load All
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            )}
                                             titleRight="Selected Volunteers"
                                             available={volunteers.map(volunteerForTransferList)}
                                         />}
@@ -391,7 +392,7 @@ const TeamDialog = (props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions style={{justifyContent: "center"}}>
-                        <Button type="submit" variant="contained" style={{'backgroundColor':'#57C965', 'color':'black'}}>Submit</Button>
+                        <Button type="submit" variant="contained" color="primary">Submit</Button>
                     </DialogActions>
                 </form>
             </FormProvider>
@@ -422,4 +423,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
+    {setTeams}
 )(TeamDialog);

@@ -1,45 +1,41 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import isEmpty from 'is-empty';
 import serverConf from '../../config'
 import MaterialTable from 'material-table';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { AvailabilityDialog } from "../Extras/AvailabilityDialog";
-import { getVolunteers } from '../../actions/volunteerActions';
-import { UserFormDialog } from '../Users/UserFormDialog';
-import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {getVolunteers} from '../../actions/volunteerActions';
+import {UserFormDialog} from '../Users/UserFormDialog';
+import {withStyles} from '@material-ui/core/styles';
+import {Card, CardContent, Grid, Typography, IconButton} from "@material-ui/core"
 import CreateIcon from '@material-ui/icons/Create';
-import { IconButton } from '@material-ui/core';
-import { green, red } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { format, parseISO } from 'date-fns';
+import {red} from '@material-ui/core/colors';
+import {createMuiTheme} from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
+import { AvailabilityDialog } from "../Extras/AvailabilityDialog";
+import {format, parseISO} from "date-fns";
+
 
 const theme = createMuiTheme({
     palette: {
-      primary: {main: '#57C965'}, // For isActive is true
-      secondary: {main: red[600]},// For isActive is false
+        primary: {main: '#57C965'}, // For isActive is true
+        secondary: {main: red[600]},// For isActive is false
     }
-  });
+});
 
 const useStyles = ({
     table: {
-      minWidth: 200,
+        minWidth: 200,
     },
     all: {
         backgroundColor: '#fafafa',
-        height: 322
     },
     card: {
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-        height: 300
+        marginBottom: "0.5rem"
     },
     title: {
         fontSize: 14,
@@ -53,7 +49,7 @@ const useStyles = ({
         fontSize: 13,
         alignItems: 'right'
     }
-  });
+});
 
 class VolunteerTable extends Component {
     constructor(props) {
@@ -65,7 +61,7 @@ class VolunteerTable extends Component {
             edit: false
         }
 
-        this.toggleUserFormDialog= this.toggleUserFormDialog.bind(this);
+        this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
         this.toggleAvailabilityDialog = this.toggleAvailabilityDialog.bind(this);
     }
 
@@ -81,8 +77,7 @@ class VolunteerTable extends Component {
                 selectedVolunteer: {}
             }));
             this.props.getVolunteers();
-        }
-        else {
+        } else {
             this.setState(prevState => ({
                 ...prevState,
                 userFormDialog: true,
@@ -109,11 +104,9 @@ class VolunteerTable extends Component {
     setColor(text) {
         if (text === true) {
             return "primary";
-        }
-        else if (text === false) {
+        } else if (text === false) {
             return "secondary";
-        }
-        else {
+        } else {
             return "textPrimary";
         }
     }
@@ -128,7 +121,7 @@ class VolunteerTable extends Component {
                 name: "firstName",
                 defaultValue: edit ? this.state.selectedVolunteer.firstName : "",
                 type: "text"
-            }, 
+            },
             {
                 label: "Last Name",
                 name: "lastName",
@@ -167,7 +160,7 @@ class VolunteerTable extends Component {
                 defaultValue: edit ? this.state.selectedVolunteer.isActive : true,
                 type: "select",
                 options: [
-                    {value: true, label: "Yes"}, 
+                    {value: true, label: "Yes"},
                     {value: false, label: "No"}
                 ]
             },
@@ -178,7 +171,7 @@ class VolunteerTable extends Component {
                 defaultValue: edit ? this.state.selectedVolunteer.carAvailable : true,
                 type: "select",
                 options: [
-                    {value: true, label: "Yes"}, 
+                    {value: true, label: "Yes"},
                     {value: false, label: "No"}
                 ]
             },
@@ -189,7 +182,7 @@ class VolunteerTable extends Component {
                 defaultValue: edit ? this.state.selectedVolunteer.volunteerStatus : true,
                 type: "select",
                 options: [
-                    {value: true, label: "Approved"}, 
+                    {value: true, label: "Approved"},
                     {value: false, label: "Not Approved"}
                 ]
             },
@@ -207,36 +200,47 @@ class VolunteerTable extends Component {
                     title="Volunteers"
                     columns={
                         [
-                            { title: 'First Name', field: 'firstName',
-                            headerStyle: {
-                              backgroundColor: '#57C965',
-                            } },
-                            { title: 'Last Name', field: 'lastName' ,
-                            headerStyle: {
-                              backgroundColor: '#57C965',
-                            }},
-                            { title: 'Email', field: 'email',
-                            headerStyle: {
-                              backgroundColor: '#57C965',
-                            }},
-                            { title: 'Phone #', field: 'phoneNumber',
-                            headerStyle: {
-                              backgroundColor: '#57C965',
-                            }}
+                            {
+                                title: 'First Name', field: 'firstName',
+                                headerStyle: {
+                                    backgroundColor: '#57C965',
+                                }
+                            },
+                            {
+                                title: 'Last Name', field: 'lastName',
+                                headerStyle: {
+                                    backgroundColor: '#57C965',
+                                }
+                            },
+                            {
+                                title: 'Email', field: 'email',
+                                headerStyle: {
+                                    backgroundColor: '#57C965',
+                                }
+                            },
+                            {
+                                title: 'Phone #', field: 'phoneNumber',
+                                headerStyle: {
+                                    backgroundColor: '#57C965',
+                                }
+                            }
                         ]
                     }
                     data={this.props.volunteers}
                     actions={[
                         {
-                        icon: 'person_add',
-                        tooltip: 'Add Volunteer',
-                        isFreeAction: true,
-                        onClick: this.toggleUserFormDialog
+                            icon: 'person_add',
+                            tooltip: 'Add Volunteer',
+                            isFreeAction: true,
+                            onClick: this.toggleUserFormDialog
                         },
                         {
-                        icon: 'edit',
-                        tooltip: 'Edit Volunteer',
-                        onClick: (event, rowData) => {this.setState({selectedVolunteer: rowData}); this.toggleUserFormDialog()}
+                            icon: 'edit',
+                            tooltip: 'Edit Volunteer',
+                            onClick: (event, rowData) => {
+                                this.setState({selectedVolunteer: rowData});
+                                this.toggleUserFormDialog()
+                            }
                         }
                     ]}
                     options={{
@@ -251,66 +255,76 @@ class VolunteerTable extends Component {
                         cellStyle: {
                             width: 250,
                             maxWidth: 700
-                          },
-                          pageSizeOptions: [10, 20, 50, 100],
-                          pageSize: 10,
-                          paging: true,
-                          exportButton: true,
+                        },
+                        pageSizeOptions: [10, 20, 50, 100],
+                        pageSize: 10,
+                        paging: true,
+                        exportButton: true,
                     }}
-                    detailPanel={rowData => { 
+                    detailPanel={rowData => {
                         return (
                             <ThemeProvider theme={theme}>
-                            <div className={this.props.classes.all} >
-                            <Grid
-                            container
-                            spacing={0}
-                            direction="column"
-                            alignItems="center"
-                            justify="center">
-                                <Card 
-                                className={this.props.classes.card} 
-                                variant="outlined"
-                                justify="center">
-                                    <CardContent>
-                                    {/* PantherID */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Panther ID: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.pantherID}<br/>
-                                    </Typography>
+                                <div className={this.props.classes.all}>
+                                    <Grid
+                                        container
+                                        spacing={0}
+                                        direction="column"
+                                        alignItems="center"
+                                        justify="center">
+                                        <Card
+                                            className={this.props.classes.card}
+                                            variant="outlined"
+                                            justify="center">
+                                            <CardContent>
+                                                {/* PantherID */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Panther ID: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.pantherID}<br/>
+                                                </Typography>
 
-                                    {/* Major */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Major: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.major}<br/>
-                                    </Typography>
+                                                {/* Major */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Major: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.major}<br/>
+                                                </Typography>
 
-                                    {/* Car Available */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Car Available: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.carAvailable ? "Yes": "No"}<br/>
-                                    </Typography>
+                                                {/* Car Available */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Car Available: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.carAvailable ? "Yes" : "No"}<br/>
+                                                </Typography>
 
-                                    {/* Volunteer Status */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Volunteer Status: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.volunteerStatus ? "Approved": "Not yet Approved"}<br/>
-                                    </Typography>
+                                                {/* Volunteer Status */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Volunteer Status: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.volunteerStatus ? "Approved" : "Not yet Approved"}<br/>
+                                                </Typography>
 
-                                    {/* MDCPS ID */}
-                                    <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        MDCPS ID: &nbsp;
-                                    </Typography>
-                                    <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                        {rowData.MDCPS_ID ? rowData.MDCPS_ID : "NA"}<br/>
-                                    </Typography>
+                                                {/* MDCPS ID */}
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    MDCPS ID: &nbsp;
+                                                </Typography>
+                                                <Typography className={this.props.classes.body} color="textPrimary"
+                                                            variant="body1" display="inline" gutterBottom>
+                                                    {rowData.MDCPS_ID ? rowData.MDCPS_ID : "NA"}<br/>
+                                                </Typography>
 
                                      {/* is Active*/}
                                      <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
@@ -321,9 +335,9 @@ class VolunteerTable extends Component {
                                     </Typography>
                                     {/* Availability*/}
                                      <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={this.toggleAvailabilityDialog} size="small"><CreateIcon /></IconButton>}<br/>
+                                        Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={() => this.toggleAvailabilityDialog()} size="small"><CreateIcon /></IconButton>}<br/>
                                     </Typography>
-                                    {rowData.availability.length === 0 ?                                     
+                                    {rowData.availability.length === 0 ?
                                         <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
                                         Availability has not been set.<br/>
                                         </Typography> :
@@ -341,7 +355,7 @@ class VolunteerTable extends Component {
                                                                             value={rowData.availability}
                                                                             endpoint={`${serverConf.uri}${serverConf.endpoints.volunteers.update}/${rowData._id}`}
                                                                           />
-                                        }   
+                                        }
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -354,15 +368,14 @@ class VolunteerTable extends Component {
                     }}
                 />
                 {this.state.userFormDialog && <UserFormDialog
-                                                        open={this.state.userFormDialog} 
-                                                        close={this.toggleUserFormDialog} 
-                                                        endpoint={endpoint}
-                                                        formProps={formProps}
-                                                        title={edit ? "Edit Volunteer" : "Create Volunteer"}
-                                                        description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'
-                                                        : 'To create a  Volunteer, modify the following form and click SUBMIT'}
-                                                />
-                } 
+                    open={this.state.userFormDialog}
+                    close={this.toggleUserFormDialog}
+                    endpoint={endpoint}
+                    formProps={formProps}
+                    title={edit ? "Edit Volunteer" : "Create Volunteer"}
+                    description={edit ? 'To edit a  Volunteer, modify the following form and click SUBMIT'
+                        : 'To create a  Volunteer, modify the following form and click SUBMIT'}
+                />}
             </Fragment>
         );
     }
@@ -379,7 +392,7 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
-    { getVolunteers }  
+    {getVolunteers}
 )(withRouter(withStyles(useStyles)(VolunteerTable)));

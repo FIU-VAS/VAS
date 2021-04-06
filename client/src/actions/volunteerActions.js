@@ -1,6 +1,6 @@
 import axios from 'axios';
 import serverConf from '../config'
-import { GET_ERRORS, SET_VOLUNTEERS, VOLUNTEERS_LOADING,GET_SUCCESS} from './types';
+import { GET_ERRORS, SET_VOLUNTEERS, VOLUNTEERS_LOADING} from './types';
 
 // get volunteers from database
 export const getVolunteers = () => dispatch => {

@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { blueGrey, blue, grey } from '@material-ui/core/colors';
-import isEmpty from 'is-empty';
 import TeamCalendar from "../Teams/TeamCalendar";
 
 const useStyles = {

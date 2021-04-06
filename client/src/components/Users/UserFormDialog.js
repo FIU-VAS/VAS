@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {FormControl, makeStyles, TextField, Select, InputLabel, MenuItem, Chip} from "@material-ui/core";
+import {FormControl, TextField, Select, InputLabel, MenuItem, Chip} from "@material-ui/core";
 import {ThemeProvider} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
@@ -11,7 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {green} from '@material-ui/core/colors';
-import {useForm, FormProvider, useFormContext, Controller, get} from "react-hook-form";
+import {useForm, FormProvider, useFormContext, Controller} from "react-hook-form";
 import axios from "axios";
 import Alert from '@material-ui/lab/Alert';
 import DialogActions from "@material-ui/core/DialogActions";
@@ -188,7 +188,7 @@ export const UserFormDialog = (props) => {
         defaultValues: defaultValues
     });
 
-    const {handleSubmit, errors} = methods;
+    const {handleSubmit} = methods;
 
     const getFormFields = () => {
         return props.formProps.map(properties => {

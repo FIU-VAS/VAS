@@ -66,7 +66,6 @@ async function deleteTeam(req, res) {
     }
 }
 
-
 async function createUpdateTeam(req, res) {
     const {body} = req;
 
@@ -78,18 +77,25 @@ async function createUpdateTeam(req, res) {
             properties[prop] = body[prop];
         }
     }
-    console.log(body._id);
 
-    if (body._id) {
-        result = await Team.updateOne({_id: body._id}, properties)
-    } else {
-        result = await Team.create(properties)
+    try {
+        if (body._id) {
+            await Team.updateOne({_id: body._id}, properties)
+            result = await Team.findById(body._id);
+        } else {
+            result = await Team.create(properties)
+        }
+
+        return res.json({
+            success: true,
+            team: result,
+        })
+    } catch (error) {
+        res.json({
+            success: false,
+            message: "Could not update " + error.toString()
+        });
     }
-
-    return res.json({
-        success: true,
-        team: result,
-    })
 }
 
 function updateTeam(request, response) {
@@ -115,12 +121,24 @@ function updateTeam(request, response) {
             console.log(err);
         } else {
             if (result.n === 1) {
-                return response.send({
-                    success: true,
-                    message: 'Successfully updated team!'
-                });
+                Team.findById(request.params.id)
+                    .then(result => {
+                        return response.send({
+                            success: true,
+                            message: 'Successfully updated team!'
+                        });
+                    })
+                    .catch(error => {
+                        response.json({
+                            success: false,
+                            message: error.toString()
+                        })
+                    })
             } else {
-                response.json('failed')
+                response.json({
+                    success: false,
+                    message: "Could not update"
+                });
             }
         }
     });
@@ -297,7 +315,6 @@ async function teamSuggestions(request, response) {
             query: matchesQuery
         })
     }
-
 }
 
 export default {router};

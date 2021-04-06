@@ -10,16 +10,10 @@ import {getSchoolPersonnels} from '../../actions/schoolPersonnelActions';
 import {getSchools} from '../../actions/schoolActions';
 import {UserFormDialog} from '../Users/UserFormDialog';
 import {withStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
+import {Card, CardContent, Grid, IconButton, Typography, createMuiTheme, ThemeProvider} from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
-import { IconButton } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import {green, red} from '@material-ui/core/colors';
-import {createMuiTheme} from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { format, parseISO } from 'date-fns';
+import {red} from '@material-ui/core/colors';
+import {format, parseISO} from "date-fns";
 
 const theme = createMuiTheme({
     palette: {
@@ -34,13 +28,12 @@ const useStyles = ({
     },
     all: {
         backgroundColor: '#fafafa',
-        height: 322
     },
     card: {
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-        height: 300,
+        marginBottom: "0.5rem"
     },
     title: {
         fontSize: 14,
@@ -283,7 +276,7 @@ class SchoolPersonnelTable extends Component {
                                                 <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
                                                     Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={this.toggleAvailabilityDialog} size="small"><CreateIcon /></IconButton>}<br/>
                                                 </Typography>
-                                                {rowData.availability.length === 0 ?                                     
+                                                {rowData.availability.length === 0 ?
                                                 <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
                                                     Availability has not been set.<br/>
                                                 </Typography> :

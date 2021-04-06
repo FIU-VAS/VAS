@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { blue, blueGrey, yellow } from '@material-ui/core/colors';
+import { blue, blueGrey } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -18,7 +17,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CardActions from '@material-ui/core/CardActions';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { updateVolunteer_Profile } from "../../actions/userActions";
+import { updateVolunteerProfile } from "../../actions/userActions";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
 import SideBar from "../AppBar/SideBar";
@@ -96,7 +95,7 @@ const useStyles = {
   };
 // Login Styling END
 
-class Volunteer_Profile extends Component {
+class VolunteerProfile extends Component {
 
     constructor(props) {
         super(props);
@@ -104,7 +103,7 @@ class Volunteer_Profile extends Component {
             editDisabled: true,
             carAvailable: false,
         }
-        this.updateVolunteer_Profile = this.updateVolunteer_Profile.bind(this);
+        this.updateVolunteer_Profile = this.updateVolunteerProfile.bind(this);
         this.handleInput = this.handleInput.bind(this);
     }
 
@@ -114,10 +113,9 @@ class Volunteer_Profile extends Component {
         })
     }
 
-    updateVolunteer_Profile() {
+    updateVolunteerProfile() {
         const form = this.state
-        console.log(form)
-        this.props.updateVolunteer_Profile(this.props.user.id, form);
+        this.props.updateVolunteerProfile(this.props.user.id, form);
         this.editable();
     }
 
@@ -349,7 +347,7 @@ class Volunteer_Profile extends Component {
 }
 
 // define types
-Volunteer_Profile.propTypes = {
+VolunteerProfile.propTypes = {
   updateVolunteer_Profile: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
@@ -365,5 +363,5 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-  { updateVolunteer_Profile }
-)(withRouter(withStyles(useStyles)(Volunteer_Profile)));
+  { updateVolunteerProfile }
+)(withRouter(withStyles(useStyles)(VolunteerProfile)));

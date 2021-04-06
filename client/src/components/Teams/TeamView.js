@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import {green, red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import {blueGrey, blue, grey} from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import {Sync, Add, ArrowUpward} from '@material-ui/icons';
 import {ButtonGroup, Paper} from "@material-ui/core";
@@ -19,73 +18,6 @@ import axios from "axios";
 import {AppTeamCalendar} from "./TeamCalendar";
 import TeamDialog from "./TeamDialog/TeamDialog";
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {main: green[600]}, // For isActive is true
-        secondary: {main: red[600]},// For isActive is false
-        blue: {main: '#2196f3'},
-    }
-});
-
-const useStyles = ({
-    table: {
-        minWidth: 200,
-    },
-    all: {
-        backgroundColor: '#fafafa',
-        height: 280
-    },
-    card_details: {
-        marginTop: 10,
-        minWidth: 300,
-        maxWidth: 750,
-        height: 255,
-        overflow: 'auto'
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 800,
-        color: grey[900],
-        alignItems: 'right'
-    },
-    subHeading: {
-        fontSize: 15,
-        alignItems: 'right'
-    },
-    body: {
-        fontSize: 13,
-        alignItems: 'right'
-    },
-    buttons: {
-        backgroundColor: blueGrey[700],
-        color: "white",
-        fontWeight: "bold",
-        '&:hover': {
-            backgroundColor: blue[500],
-        }
-    },
-    paper: {
-        marginTop: theme.spacing(1),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    card: {
-        marginTop: 10,
-        minWidth: 800,
-        maxWidth: 1000,
-        height: 210,
-        backgroundColor: 'white'
-    },
-    here: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justify: 'right',
-    }
-});
-
 const teamManagementStyles = makeStyles(theme => ({
     queryWrapper: {
         padding: theme.spacing(2),
@@ -96,12 +28,11 @@ const teamManagementStyles = makeStyles(theme => ({
     queryButton: {}
 }))
 
-const TeamView = (props) => {
+const TeamView = () => {
     const [currentTeams, setCurrentTeams] = useState([])
     const [triedOnce, setTriedOnce] = useState(false);
     const [loading, setLoading] = useState(false)
     const [newTeam, setNewTeam] = useState(false)
-    const [importTeams, setImportTeams] = useState(false)
 
     const classes = teamManagementStyles();
 
@@ -162,12 +93,6 @@ const TeamView = (props) => {
                                     endIcon={<Add/>}
                                     onClick={() => setNewTeam(true)}
                                 >Create Team </Button>
-                                <Button
-                                    style={{marginLeft: "0.5rem",'backgroundColor':'#57C965', 'color':'black'}}
-                                    variant="contained"
-                                    endIcon={<ArrowUpward/>}
-                                    onClick={() => setImportTeams(true)}
-                                >Import Teams</Button>
                             </ButtonGroup>
                         </Grid>
                     </Grid>

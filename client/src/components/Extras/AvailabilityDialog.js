@@ -73,7 +73,6 @@ export const AvailabilityDialog = (props) => {
                         as={<AvailabilityForm/>}
                         name="availability"
                         label=""
-                        defaultValue={value}
                         rules={{
                             required: true,
                             validate: validateAvailability,

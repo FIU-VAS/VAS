@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {withRouter} from 'react-router-dom';
-import Admin_Profile from '../components/Profile/Admin_Profile';
-import Volunteer_Profile from '../components/Profile/Volunteer_Profile';
+import AdminProfile from '../components/Profile/AdminProfile';
+import VolunteerProfile from '../components/Profile/VolunteerProfile';
 import SideBar from "../components/AppBar/SideBar";
-import SchoolPersonnel_Profile from '../components/Profile/SchoolPersonnel_Profile';
+import SchoolPersonnelProfile from '../components/Profile/SchoolPersonnelProfile';
 import { Grid } from '@material-ui/core';
 import config from "../config";
 import '../../src/App.css';
@@ -16,11 +16,13 @@ class Profile extends Component {
         const {auth} = this.props;
         switch (auth.role) {
             case config.userRoles.admin:
-                return (<Admin_Profile user={auth} />)
+                return (<AdminProfile user={auth} />)
             case config.userRoles.volunteer:
-                return (<Volunteer_Profile/>)
+                return (<VolunteerProfile/>)
             case config.userRoles.schoolPersonnel:
-                return (<SchoolPersonnel_Profile/>)
+                return (<SchoolPersonnelProfile/>)
+            default:
+                return "";
         }
     }
 

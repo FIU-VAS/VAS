@@ -18,7 +18,8 @@ const config = {
 		secure: Boolean(parseInt(process.env.SMTP_SECURE)),
 		templates: {
 			resetPassword: path.join(__dirname, '../mail/templates/reset-password.html'),
-			newUser: path.join(__dirname, '../mail/templates/new-account.html')
+			newUser: path.join(__dirname, '../mail/templates/new-account.html'),
+			availabilityChanged: path.join(__dirname, '../mail/templates/availability-changed.html')
 		}
 	},
 	appDomain: process.env.APP_DOMAIN,

@@ -35,12 +35,12 @@ class AdminManagement extends Component{
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item xs={1}>
                         <SideBar/>
-                    </Grid> 
+                    </Grid>
                     <Grid item className={this.props.classes.table}>
                         <AdminTable/>
                         <img className={this.props.classes.blob}
                             src ={require("../images/Ignite_2.png").default}
-                            alt = "Blob" 
+                            alt = "Blob"
                         />
                     </Grid>
                 </Grid>

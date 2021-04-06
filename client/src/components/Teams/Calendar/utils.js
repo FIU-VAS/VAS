@@ -1,4 +1,4 @@
-import {isDate, parseISO} from "date-fns";
+import {parseISO} from "date-fns";
 
 export const REFERENCE_DATE = new Date(2000, 0, 3);
 

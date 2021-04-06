@@ -1,18 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import { Button, Link } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { Redirect, withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import {connect} from "react-redux";
 import {withStyles} from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {blueGrey, blue, grey} from '@material-ui/core/colors';
-import {getTeamRequest} from "../../actions/volunteerRequestActions";
-import {format} from "date-fns";
 import isEmpty from 'is-empty';
-import {TeamDay} from "../Teams/TeamDay";
 import TeamCalendar from "../Teams/TeamCalendar";
 
 const useStyles = {

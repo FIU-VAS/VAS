@@ -13,8 +13,6 @@ import {useForm, FormProvider} from "react-hook-form";
 import axios from "axios";
 import config from "../../../config";
 import {MaterialUIField} from "../../Users/UserFormDialog";
-import Box from '@material-ui/core/Box'
-import CloseIcon from '@material-ui/icons/Close';
 
 
 export const TeamDeleteDialog = (props) => {
@@ -49,14 +47,9 @@ export const TeamDeleteDialog = (props) => {
             <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(submit)}>
                     <DialogTitle style={{padding: "0rem 1rem", borderBottom: "none"}}>
-                        <Box display="flex" alignItems="center">
-                            <Box flexGrow={1}>Delete Team</Box>
-                            <Box>
-                                <IconButton aria-label="close" onClick={close}>
-                                    <CloseIcon/>
-                                </IconButton>
-                            </Box>
-                        </Box>
+                        <IconButton aria-label="close" onClick={close}>
+                            <Close/>
+                        </IconButton>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
