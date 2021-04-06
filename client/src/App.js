@@ -39,7 +39,6 @@ if (localStorage.jwt) {
     // set user
     store.dispatch(setAuth(decoded));
     store.dispatch(getUser());
-    //store.dispatch(setCurrentUser(decoded));
 
     // check for expired token
     // to get in milliseconds divide by 1000

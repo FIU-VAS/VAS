@@ -87,8 +87,6 @@ export const UserProfile = (props) => {
         }
     }
 
-    console.log(methods.errors);
-
     let initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
 
     return (

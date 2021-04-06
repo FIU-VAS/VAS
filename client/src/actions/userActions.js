@@ -33,7 +33,6 @@ export const updateLinks = (id, form) => dispatch => {
 
 export const getUser = () => dispatch => {
     const endpoint = `${serverConf.uri}${serverConf.endpoints.user.me}/`;
-    console.log(endpoint);
 
     axios.get(endpoint)
         .then((res) => {

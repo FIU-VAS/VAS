@@ -122,8 +122,6 @@ const Availability = () => {
         }
     });
 
-    console.log(errors);
-
     return (
         <ThemeProvider theme={theme}>
             <SideBar/>

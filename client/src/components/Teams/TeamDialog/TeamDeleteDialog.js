@@ -34,7 +34,6 @@ export const TeamDeleteDialog = (props) => {
             onSubmit(response.data);
             close()
         } catch (apiError) {
-            console.log(apiError);
         }
         setLoading(false);
     }

@@ -3,6 +3,8 @@ import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import serverConf from '../config'
 import { GET_ERRORS, GET_SUCCESS, SET_USER, USER_LOADING, SET_AUTH, REDIRECT } from './types';
+import store from "../store";
+import {getUser} from "./userActions";
 
 export const loginUser = form => dispatch => {
 
@@ -31,8 +33,8 @@ export const loginUser = form => dispatch => {
             const decoded = jwt_decode(token);
 
             // set current user
+            store.dispatch(getUser());
             dispatch(setAuth(decoded)); // role
-            dispatch(setCurrentUser(decoded)) // add user data
         }
     })
     .catch(err => dispatch({

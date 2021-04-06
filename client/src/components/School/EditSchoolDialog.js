@@ -66,7 +66,6 @@ class EditSchoolDialog extends Component {
             zipCode:this.props.school.zipCode,
             isActive: this.props.school.isActive,
         });
-        console.log(this.state)
     }
 
     editSchool() {
