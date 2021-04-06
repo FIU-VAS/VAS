@@ -96,7 +96,8 @@ const SettingsForm = (props) => {
                             borderRadius="10px"
                             className={props.classes.card}
                             variant="outlined"
-                            justify="center">
+                            margin="0 auto"
+                        >
                             <CardContent>
                                 <Typography className={props.classes.title} color="textSecondary" variant="h2"
                                             gutterBottom>

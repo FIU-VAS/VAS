@@ -26,10 +26,10 @@ export const Day = (props) => {
                 <Typography
                     align="center"
                     style={{
-                        color: today.getDay() === dayIndex ? "#57C965" : "rgba(0, 0, 0, 1)",
+                        color: today.getDay() - 1 === dayIndex ? "#57C965" : "rgba(0, 0, 0, 1)",
                         textTransform: "capitalize",
                         padding: "0.5rem 0",
-                        fontWeight: today.getDay() === dayIndex ? 700 : 400
+                        fontWeight: today.getDay() - 1 === dayIndex ? 700 : 400
                     }}
                 >
                     {day}

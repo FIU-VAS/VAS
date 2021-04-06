@@ -114,6 +114,8 @@ export const MaterialUIField = (props) => {
                     placeholder={fieldProps.placeholder}
                     rules={fieldProps.rules}
                     disabled={fieldProps.disabled}
+                    error={fieldProps.error}
+                    helperText={fieldProps.errorMessage}
                 />
             );
         case "availability":
@@ -130,6 +132,8 @@ export const MaterialUIField = (props) => {
                     as={<AvailabilityForm />}
                     rules={fieldProps.rules}
                     disabled={fieldProps.disabled}
+                    error={fieldProps.error}
+                    helperText={fieldProps.errorMessage}
 
                 />
             )
@@ -150,6 +154,8 @@ export const MaterialUIField = (props) => {
                         rules={fieldProps.rules}
                         multiple={fieldProps.multiple}
                         disabled={fieldProps.disabled}
+                        error={fieldProps.error}
+                        helperText={fieldProps.errorMessage}
                     />
                 </React.Fragment>
             );

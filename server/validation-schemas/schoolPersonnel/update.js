@@ -18,8 +18,13 @@ export const schema = {
         },
     },
     availability: {
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
         custom: {
             options: (value) => {
+                if (!value) return false;
                 return validateAvailability(value);
             },
             errorMessage: "Invalid availability configuration"

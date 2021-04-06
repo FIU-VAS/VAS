@@ -2,13 +2,112 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {withRouter} from 'react-router-dom';
-import AdminProfile from '../components/Profile/AdminProfile';
-import VolunteerProfile from '../components/Profile/VolunteerProfile';
 import SideBar from "../components/AppBar/SideBar";
-import SchoolPersonnelProfile from '../components/Profile/SchoolPersonnelProfile';
-import { Grid } from '@material-ui/core';
+import {Box, Grid} from '@material-ui/core';
 import config from "../config";
 import '../../src/App.css';
+import {UserProfile} from "../components/Profile/UserProfile";
+
+const commonProps = [
+    {
+        type: "text",
+        name: "firstName",
+        label: "First Name",
+        rules: {
+            required: true
+        }
+    },
+    {
+        type: "text",
+        name: "lastName",
+        label: "Last Name",
+        rules: {
+            required: true
+        }
+    },
+    {
+        type: "email",
+        name: "email",
+        label: "Email",
+        rules: {
+            required: true
+        }
+    },
+    {
+        type: "tel",
+        name: "phoneNumber",
+        label: "Phone Number",
+        rules: {
+            required: true
+        }
+    },
+]
+
+const userProps = {
+    admin: commonProps,
+    schoolPersonnel: [
+        ...commonProps,
+        {
+            type: "text",
+            name: "title",
+            label: "Title",
+            rules: {
+                required: true
+            }
+        }
+    ],
+    volunteer: [
+        ...commonProps,
+        {
+            type: "text",
+            name: "pantherID",
+            label: "Panther ID",
+            rules: {
+                required: true
+            }
+        },
+        {
+            type: "text",
+            name: "major",
+            label: "Major",
+            rules: {
+                required: true
+            }
+        },
+        {
+            type: "select",
+            name: "carAvailable",
+            label: "Car Available",
+            options: [
+                {value: true, label: 'Yes'},
+                {value: false, label: 'No'},
+            ],
+            rules: {
+                required: true
+            }
+        },
+        {
+            type: "select",
+            name: "volunteerStatus",
+            label: "Volunteer Status",
+            options: [
+                {value: true, label: 'Approved'},
+                {value: false, label: 'Not yet approved'},
+            ],
+            rules: {
+                required: true
+            }
+        },
+        {
+            type: "text",
+            name: "MDCPS_ID",
+            label: "MDCPS ID",
+            rules: {
+                required: true
+            }
+        }
+    ]
+}
 
 class Profile extends Component {
 
@@ -16,11 +115,29 @@ class Profile extends Component {
         const {auth} = this.props;
         switch (auth.role) {
             case config.userRoles.admin:
-                return (<AdminProfile user={auth} />)
+                return (
+                    <UserProfile
+                        user={this.props.user}
+                        endpoint={`${config.uri}${config.endpoints.admin.update}/${this.props.user._id}`}
+                        fieldProps={userProps[auth.role]}
+                    />
+                )
             case config.userRoles.volunteer:
-                return (<VolunteerProfile/>)
+                return (
+                    <UserProfile
+                        user={this.props.user}
+                        endpoint={`${config.uri}${config.endpoints.volunteers.update}/${this.props.user._id}`}
+                        fieldProps={userProps[auth.role]}
+                    />
+                )
             case config.userRoles.schoolPersonnel:
-                return (<SchoolPersonnelProfile/>)
+                return (
+                    <UserProfile
+                        user={this.props.user}
+                        endpoint={`${config.uri}${config.endpoints.schoolPersonnels.update}/${this.props.user._id}`}
+                        fieldProps={userProps[auth.role]}
+                    />
+                )
             default:
                 return "";
         }
@@ -31,27 +148,29 @@ class Profile extends Component {
             return "Loading"
         }
         return (
-           
-        <Grid className="bg" container>
 
-            <Grid item xs={1}>
-                <SideBar></SideBar>
-            </Grid> 
+            <Grid className="bg" container>
+
+                <Grid item xs={1}>
+                    <SideBar />
+                </Grid>
 
 
-            <Grid
-                item xs={11}
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
+                <Grid
+                    item xs={11}
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
                     justify="center">
-                <Grid item>
-                    {this.getProfile()}
+                    <Grid item>
+                        <Box pb={12}>
+                            {this.getProfile()}
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
-        </Grid>
-            
+
         )
     }
 }

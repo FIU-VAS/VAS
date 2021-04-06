@@ -39,6 +39,10 @@ export const schema = {
         },
     },
     availability: {
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
         custom: {
             options: (value) => {
                 return validateAvailability(value);

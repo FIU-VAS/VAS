@@ -7,7 +7,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Grid,
+    Grid, Snackbar,
     Typography
 } from "@material-ui/core";
 import {connect} from "react-redux";
@@ -269,9 +269,16 @@ const TeamDialog = (props) => {
                 <form onSubmit={handleSubmit(submit)}>
                     <DialogContent>
                         {response && (
-                            <Alert severity={response.severity} style={{marginBottom: "1rem"}}>
-                                {response.message}
-                            </Alert>
+                            <Snackbar
+                                open={true}
+                                onClose={() => setResponse(null)}
+                                autoHideDuration={2000}
+                                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            >
+                                <Alert severity={response.severity} style={{marginBottom: "1rem"}}>
+                                    {response.message}
+                                </Alert>
+                            </Snackbar>
                         )}
                         <Backdrop className={classes.backdrop} open={loading}>
                             <CircularProgress color="inherit"/>
