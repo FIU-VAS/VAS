@@ -29,6 +29,7 @@ export const PersonnelPicker = (props) => {
                                     variant="outlined"
                                     color="primary"
                                     onClick={() => onEditPersonnel(personnel)}
+                                    style={{'color':'black', 'borderColor':'red'}}
                                 >
                                     Set Availability
                                 </Button>
