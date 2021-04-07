@@ -28,7 +28,6 @@ import {PersonnelPicker} from "./PersonnelPicker";
 import {AvailabilityDialog} from "../../Extras/AvailabilityDialog";
 import {parseAvailabilityISO} from "../Calendar/utils";
 import {setTeams} from "../../../actions/volunteerRequestActions";
-import TextField from '@material-ui/core/TextField';
 
 const teamDialogStyles = makeStyles(theme => ({
     backdrop: {

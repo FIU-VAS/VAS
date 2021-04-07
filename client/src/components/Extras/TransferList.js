@@ -87,9 +87,6 @@ export const  TransferList = React.forwardRef((props, ref) => {
     
     const [searchText, setSearchText] = useState('')
 
-    const [searchText, setSearchText] = useState('')
-    
-
     const customList = (items) => (
         <Paper className={classes.paper}>
              
