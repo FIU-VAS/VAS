@@ -41,11 +41,11 @@ const useStyles = {
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: blueGrey[700],
+    backgroundColor: '#57C965',
     color: "white",
     fontWeight: "bold",
     '&:hover': {
-        backgroundColor: blue[500],
+        backgroundColor: '#57C965',
     }
   },
   logo: {
@@ -155,7 +155,7 @@ class ResetPasswordForm extends Component {
 
             <img
             className={this.props.classes.logo}
-            src ={require("../../images/VAS_shadow.png").default}
+            src ={require("../../images/VAS_LOGO.png").default}
             alt = "logo"
             />
 
