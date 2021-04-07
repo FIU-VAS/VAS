@@ -78,14 +78,18 @@ export const AvailabilityForm = React.forwardRef((props, ref) => {
     );
 
     const addSlot = () => {
-        setAvailability([...availability, {dayOfWeek: "", startTime: "", endTime: ""}]);
+        const list = [...availability, {dayOfWeek: "", startTime: "", endTime: ""}]
+        setAvailability(list);
+        onChange(list);
     }
 
     const removeSlot = index => {
         if (availability.length === 1) {
             setAvailability([{dayOfWeek: "", startTime: "", endTime: ""}]);
         } else {
-            setAvailability(availability.filter((value, vIndex) => index !== vIndex));
+            const list = availability.filter((value, vIndex) => index !== vIndex);
+            setAvailability(list);
+            onChange(list);
         }
     }
 
@@ -112,7 +116,7 @@ export const AvailabilityForm = React.forwardRef((props, ref) => {
     const endTimes = [];
 
     while (startTime <= endTime) {
-        if (startTime < subHours(endTime, 1)) {
+        if (startTime <= subHours(endTime, 1)) {
             startTimes.push({
                 value: format(startTime, "HH:mm"),
                 label: format(startTime, "h:mm aa"),

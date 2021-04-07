@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 import {
     Paper,
     Typography,
@@ -105,6 +106,7 @@ const TeamDetails = (props) => {
         return [today.getMonth() > 6 ? "Fall" : "Spring", String(today.getFullYear())]
     })()
 
+    const role = useSelector(state => state.userData.user.role);
 
     return (
         <React.Fragment>
@@ -158,7 +160,7 @@ const TeamDetails = (props) => {
                     </Button>
                 </Grid>
                 <Grid container item xs={4} alignItems="center" justify="flex-end">
-                    {semester === team.semester && year === team.year && (
+                    {role === "admin" && semester === team.semester && year === team.year && (
                         <React.Fragment>
                         <Grid item xs="auto">
                             <IconButton

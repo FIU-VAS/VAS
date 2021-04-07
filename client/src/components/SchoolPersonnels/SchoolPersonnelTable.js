@@ -274,7 +274,7 @@ class SchoolPersonnelTable extends Component {
                                                 </Typography>
                                                 {/* Availability*/}
                                                 <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                                    Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={this.toggleAvailabilityDialog} size="small"><CreateIcon /></IconButton>}<br/>
+                                                    Availability: <IconButton onClick={this.toggleAvailabilityDialog} size="small"><CreateIcon /></IconButton><br/>
                                                 </Typography>
                                                 {rowData.availability.length === 0 ?
                                                 <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>

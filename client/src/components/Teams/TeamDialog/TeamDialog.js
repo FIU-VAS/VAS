@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Backdrop,
     Button,
@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogTitle,
     Grid, Snackbar,
+    TextField,
     Typography
 } from "@material-ui/core";
 import {connect} from "react-redux";
@@ -15,7 +16,8 @@ import {MaterialUIField} from "../../Users/UserFormDialog";
 import {useForm, FormProvider, Controller} from "react-hook-form";
 import axios from "axios";
 import {format, parseISO} from "date-fns";
-import Box from '@material-ui/core/Box'
+import { getSchools } from '../../../actions/schoolActions';
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import config from "../../../config";
@@ -55,8 +57,8 @@ const volunteerForTransferList = (volunteer) => {
                         {volunteer.availability && volunteer.availability.map((available, index) => {
                             const [startTime, endTime] = parseAvailabilityISO(available)
                             return (
-                                <Typography key={`available-${index}`} style={{fontWeight: 600}}>
-                                    {format(startTime, "HH:mm")} – {format(endTime, "HH:mm")}
+                                <Typography key={`available-${index}`} style={{fontWeight: 600, textTransform: "capitalize"}}>
+                                    {available.dayOfWeek}: {format(startTime, "h:mm aa")} – {format(endTime, "h:mm aa")}
                                 </Typography>
                             )
                         })}
@@ -115,6 +117,10 @@ const TeamDialog = (props) => {
 
     const [team, setTeam] = useState(defaultState);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        props.getSchools();
+    }, []);
 
     const updatePersonnel = (schoolCode) => {
         setLoading(true);
@@ -379,7 +385,7 @@ const TeamDialog = (props) => {
                                                 </Grid>
                                             )}
                                             titleRight="Selected Volunteers"
-                                            available={volunteers.map(volunteerForTransferList)}
+                                            available={volunteers.filter(volunteer => volunteer.isActive).map(volunteerForTransferList)}
                                         />}
                                         rules={{
                                             validate: (value) => value.length > 0
@@ -441,5 +447,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {setTeams}
+    {getSchools, setTeams}
 )(TeamDialog);

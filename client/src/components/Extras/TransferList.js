@@ -84,6 +84,8 @@ export const  TransferList = React.forwardRef((props, ref) => {
         // setRight([]);
         onChange([]);
     };
+    
+    const [searchText, setSearchText] = useState('')
 
     const [searchText, setSearchText] = useState('')
     
@@ -118,7 +120,7 @@ export const  TransferList = React.forwardRef((props, ref) => {
     return (
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
             <Grid item xs={5}>
-            <TextField variant="outlined" label="Search Volunteer" type="search" 
+        <TextField variant="outlined" label="Search Volunteer" type="search" 
                 onChange={e => {setSearchText(e.target.value)}} />
                 <Typography variant="h6" className={classes.listTitle}>{titleLeft}</Typography>
                 {customList(left.filter((element)=>{
