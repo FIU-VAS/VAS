@@ -234,8 +234,8 @@ class AddSchoolDialog extends Component {
                     <br></br>
                 </DialogContent>
                 <DialogActions>
-                    <Button className={this.props.classes.bottomButtons} onClick={this.exitDialog} variant="contained" color="primary">Cancel</Button>
-                    <Button className={this.props.classes.bottomButtons} onClick={this.addSchool}  variant="contained" color="primary">Add</Button>
+                    <Button className={this.props.classes.bottomButtons} onClick={this.exitDialog} variant="contained" style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Cancel</Button>
+                    <Button className={this.props.classes.bottomButtons} onClick={this.addSchool}  variant="contained" style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Add</Button>
                 </DialogActions>
             </Dialog>
             </FormProvider>

@@ -238,9 +238,9 @@ export const UserFormDialog = (props) => {
                         </DialogContent>
                         <DialogActions>
                             <Button className={useStyles.bottomButtons} onClick={props.close} variant="contained"
-                                    color="primary">Cancel</Button>
+                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Cancel</Button>
                             <Button className={useStyles.bottomButtons} type="submit" variant="contained"
-                                    color="primary">Submit</Button>
+                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Submit</Button>
                         </DialogActions>
                     </form>
                 </FormProvider>
