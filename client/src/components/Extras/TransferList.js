@@ -9,6 +9,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import {Typography} from "@material-ui/core";
+import TextField from '@material-ui/core/TextField';
+import {useState} from 'react'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function not(a, b) {
-    b = b.map(element => element.value);
+function not(a, b) {   
+    b = b.map(element => element.value); 
     return a.filter((element) => b.indexOf(element.value) === -1);
 }
 
@@ -83,8 +85,13 @@ export const  TransferList = React.forwardRef((props, ref) => {
         onChange([]);
     };
 
+    const [searchText, setSearchText] = useState('')
+    
+
     const customList = (items) => (
         <Paper className={classes.paper}>
+             
+            
             <List dense component="div" role="list">
                 {items.map((element) => {
                     const labelId = `transfer-list-item-${element.value}-label`;
@@ -111,8 +118,12 @@ export const  TransferList = React.forwardRef((props, ref) => {
     return (
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
             <Grid item xs={5}>
+            <TextField variant="outlined" label="Search Volunteer" type="search" 
+                onChange={e => {setSearchText(e.target.value)}} />
                 <Typography variant="h6" className={classes.listTitle}>{titleLeft}</Typography>
-                {customList(left)}
+                {customList(left.filter((element)=>{
+                    return element.searchValue.some(value=>value.toLowerCase().indexOf(searchText.toLowerCase())===0)
+                }))}
             </Grid>
             <Grid item xs={2}>
                 <Grid container direction="column" alignItems="center">
