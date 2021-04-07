@@ -118,6 +118,17 @@ class AdminTable extends Component {
                 name: "phoneNumber",
                 defaultValue: edit ? this.state.selectedAdmin.phoneNumber : "",
                 type: "tel"
+            },
+            {
+                label: "Is Active",
+                name: "isActive",
+                id: "is-active",
+                defaultValue: edit ? this.state.selectedAdmin.isActive : true,
+                type: "select",
+                options: [
+                    {value: true, label: "Yes"},
+                    {value: false, label: "No"}
+                ]
             }
         ];
 
