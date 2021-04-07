@@ -1,10 +1,9 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-import { Grid } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import SideBar from "../components/AppBar/SideBar";
+import {connect} from "react-redux";
 import {withRouter} from 'react-router-dom';
+import {Grid} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 import config from "../config";
 import VolunteerDashboard from "../components/Dashboards/VolunteerDashboard";
 import AdminDashboard from "../components/Admins/AdminDashboard";
@@ -19,7 +18,7 @@ import {logoutUser} from "../actions/authActions";
 import {getVolunteers} from "../actions/volunteerActions";
 import {getSchools} from "../actions/schoolActions";
 import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
-
+import SideBar from "../components/AppBar/SideBar";
 
 const useStyles = {
     cell: {
@@ -91,6 +90,8 @@ const Dashboard = (props) => {
                 return (<VolunteerDashboard/>);
             case config.userRoles.schoolPersonnel:
                 return (<SchoolPersonnelDashboard/>);
+            default:
+                return "";
         }
     }
 

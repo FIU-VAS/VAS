@@ -1,16 +1,22 @@
 import {Days, sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
 import School from "../../models/Schools/school";
 
-const codes = School.aggregate([{$project: {_id: 0, schoolCode: 1}}]).map(x => x.schoolCode);
 const semesters = ['Fall', 'Spring', 'Summer'];
 
-const getSchema = (req) => ({
+export const schema = {
     schoolCode: {
-        custom: (value) => codes.indexOf(value) !== -1,
+        custom: {
+            options: async (value) => {
+                const codes = await School.find({}, "schoolCode");
+                return codes.map(x => x.schoolCode).indexOf(value) !== -1
+            }
+        },
         errorMessage: 'School code has not been registered',
     },
     semester: {
-        custom: (value) => semesters.indexOf(value) !== -1,
+        custom: {
+            options: (value) => semesters.indexOf(value) !== -1
+        },
         errorMessage: 'Invalid school semester',
     },
     year: {
@@ -39,19 +45,29 @@ const getSchema = (req) => ({
         }
     },
     volunteerPIs: {
-        type: Array,
-        required: true,
+        isArray: true,
+        exists: true,
     },
     isActive: {
-        type: Boolean,
-        default: true
+        optional: {
+            checkFalsy: true
+        },
+        isBoolean: true,
     },
     timeStamp: {
-        type: Number,
-        default: 0
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
+        isBoolean: true,
+        isNumeric: true,
     },
     closureNotes: {
-        type: String,
-        default: ''
+        optional: {
+            nullable: true,
+            checkFalsy: true
+        },
+        isBoolean: true,
+        isAlphanumeric: true
     }
-})
+}

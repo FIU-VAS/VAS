@@ -1,6 +1,6 @@
 import axios from 'axios';
 import serverConf from '../config'
-import { GET_ERRORS, GET_SUCCESS, ADMINS_LOADING, SET_ADMINS} from './types';
+import { GET_ERRORS, SET_ADMINS} from './types';
 
 // get admins from database
 export const getAdmins = () => dispatch => {
@@ -16,13 +16,6 @@ export const getAdmins = () => dispatch => {
         type: GET_ERRORS,
         payload: err
     }));
-};
- 
-// admins loading
-export const setAdminsLoading = () => {
-    return {
-        type: ADMINS_LOADING
-    };
 };
 
 // set admins

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ProjectCredits from '../components/Extras/ProjectCredits';
 import NavBar from '../components/AppBar/NavBar';
 import Typography from '@material-ui/core/Typography';
-import { blueGrey, grey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = {
     all: {
@@ -82,14 +82,14 @@ class About extends Component{
                                 school students. Additionally, to celebrate Computer Science Education week, Ignite collaborates with 
                                 KFSCIS every December to host its signature event: CodeFest Miami - a mini-hackathon for students in 
                                 the outreach. For more details, please go to  
-                                <a href="https://www.cis.fiu.edu/codefest-miami-2017-fiu/" target="_blank" style={{'color':'#57C965',textDecoration: 'none'}}> CodeFest Miami - 2017</a>.
+                                <a href="https://www.cis.fiu.edu/codefest-miami-2017-fiu/" target="_blank" rel="noreferrer" style={{'color':'#57C965',textDecoration: 'none'}}> CodeFest Miami - 2017</a>.
                                 <br/><br/>
                                 The program is organized by Upsilon Pi Epsilon (UPE), FIU’s largest student organization for technology, 
                                 and under the guidance of KFSCIS Instructor Cristy Charters. The organization plans the program’s activities, 
                                 and recruits, trains, and manages the volunteers every semester. The Ignite program is also currently sponsored 
                                 by State Farm and has been supported by Google in previous years. To learn more, please visit the Ignite 
                                 program website at 
-                                <a href="https://upe.cs.fiu.edu/google-cs-first/" target="_blank" style={{'color':'#57C965',textDecoration: 'none'}}> UPE Ignite </a> to apply. 
+                                <a href="https://upe.cs.fiu.edu/google-cs-first/" target="_blank" rel="noreferrer" style={{'color':'#57C965',textDecoration: 'none'}}> UPE Ignite </a> to apply.
                         
                             </Typography>
 

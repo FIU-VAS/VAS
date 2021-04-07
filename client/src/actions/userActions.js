@@ -90,7 +90,7 @@ export const updateVolunteer = (id, form) => dispatch => {
     }));
  };
 
- export const updateVolunteer_Profile = (id, form) => dispatch => {
+ export const updateVolunteerProfile = (id, form) => dispatch => {
 
     const endpoint = `${serverConf.uri}${serverConf.endpoints.volunteers.updateProfile}/${id}`;
 

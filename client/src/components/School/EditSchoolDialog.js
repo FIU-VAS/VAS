@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import isEmpty from 'is-empty';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { blueGrey, blue } from '@material-ui/core/colors';
+import { blue } from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';

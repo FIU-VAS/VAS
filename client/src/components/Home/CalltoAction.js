@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-// import LockRoundedIcon from '@material-ui/icons/LockRounded';
-// import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { blueGrey, grey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,8 +9,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
-import Alert from '@material-ui/lab/Alert';
-import { Link } from "react-router-dom";
 
 
 // Login Styling

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {FormControl, makeStyles, TextField, Select, InputLabel, MenuItem} from "@material-ui/core";
+import {FormControl, TextField, Select, InputLabel, MenuItem, Chip} from "@material-ui/core";
 import {ThemeProvider} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
@@ -11,10 +11,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {green} from '@material-ui/core/colors';
-import {useForm, FormProvider, useFormContext, Controller, get} from "react-hook-form";
+import {useForm, FormProvider, useFormContext, Controller} from "react-hook-form";
 import axios from "axios";
 import Alert from '@material-ui/lab/Alert';
 import DialogActions from "@material-ui/core/DialogActions";
+import AvailabilityForm from "../Extras/AvailabilityForm";
 
 const theme = createMuiTheme({
     palette: {
@@ -38,15 +39,42 @@ const useStyles = {
 // @TODO move component to a shared utils folder
 export const MuiSelect = React.forwardRef((props, ref) => {
     const {id, label, name, options} = props;
+    let {value} = props;
+
+    let extraProps = {};
+
+    if (props.multiple && value === "") {
+        value = [];
+        extraProps.renderValue = (selected) => (
+            <div>
+                {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                ))}
+            </div>
+        )
+    }
 
     return (
         <FormControl fullWidth={true} style={{marginBottom: "15px"}} margin="dense">
             <InputLabel id={id}>{label}</InputLabel>
             <Select
                 {...props}
+                value={value}
                 labelId={id}
                 name={name}
                 ref={ref}
+                MenuProps={{
+                    anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "left"
+                    },
+                    transformOrigin: {
+                        vertical: "top",
+                        horizontal: "left"
+                    },
+                    getContentAnchorEl: null
+                }}
+                {...extraProps}
             >
                 {options.map((item) => (
                     <MenuItem key={item.value} value={item.value}>
@@ -84,8 +112,24 @@ export const MaterialUIField = (props) => {
                     defaultValue={fieldProps.defaultValue}
                     type={fieldProps.type}
                     placeholder={fieldProps.placeholder}
+                    rules={fieldProps.rules}
                 />
             );
+        case "availability":
+            return (
+                <Controller
+                    name={fieldProps.name}
+                    inputRef={register}
+                    key={fieldProps.name}
+                    label={fieldProps.label}
+                    defaultValue={fieldProps.defaultValue}
+                    type={fieldProps.type}
+                    placeholder={fieldProps.placeholder}
+                    control={control}
+                    as={<AvailabilityForm />}
+                    rules={fieldProps.rules}
+                />
+            )
         case "select":
             return (
                 <React.Fragment>
@@ -100,6 +144,8 @@ export const MaterialUIField = (props) => {
                         defaultValue={fieldProps.defaultValue}
                         options={fieldProps.options}
                         placeholder={fieldProps.placeholder}
+                        rules={fieldProps.rules}
+                        multiple={fieldProps.multiple}
                     />
                 </React.Fragment>
             );
@@ -142,7 +188,7 @@ export const UserFormDialog = (props) => {
         defaultValues: defaultValues
     });
 
-    const {handleSubmit, errors} = methods;
+    const {handleSubmit} = methods;
 
     const getFormFields = () => {
         return props.formProps.map(properties => {

@@ -1,15 +1,10 @@
-import {addMinutes} from "date-fns";
+import {parseISO} from "date-fns";
 
 export const REFERENCE_DATE = new Date(2000, 0, 3);
 
-export const generateTimeSlots = (startTime, endTime) => {
-    const slots = []
-
-    while (startTime < endTime) {
-        let start, end;
-        slots.push(startTime);
-        startTime = addMinutes(startTime, 60);
-    }
-
-    return slots
+export const parseAvailabilityISO = (availability) => {
+    return [
+        typeof availability.startTime === "string" ? parseISO(availability.startTime) : availability.startTime,
+        typeof availability.endTime === "string" ? parseISO(availability.endTime) : availability.endTime,
+    ]
 }

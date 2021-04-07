@@ -1,13 +1,4 @@
-import {Days, validateTimeDate, REFERENCE_DATE, sanitizeAvailability} from "../../models/Teams/team";
-import {parse} from "date-fns";
-
-const validateAvailability = (values) => {
-    return values.every(value => {
-        value.dayOfWeek.toUpperCase() in Days
-        && validateTimeDate(value.startTime)
-        && validateTimeDate(value.endTime);
-    })
-}
+import {validateAvailability, sanitizeAvailability} from "../../models/Teams/team";
 
 export const schema = {
     email: {

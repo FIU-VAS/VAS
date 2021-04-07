@@ -59,65 +59,63 @@ export const buildQuery = (schoolPersonnel, additionalMatches, role, extraProjec
     ]
 
 }
-//
-// db.users.aggregate([
-//     {
-//         $facet: {
-//             "5e974ff4f3784e2b9a271174": [
-//                 {
-//                     $match: {
-//                         role: "volunteer",
-//                         availability: {
-//                             $elemMatch: {
-//                                 $or: [
-//                                     {
-//                                         $and: [
-//                                             {startTime: {$gte: ISODate("2000-01-06T20:30:00Z")}},
-//                                             {endTime: {$lte: ISODate("2000-01-06T22:45:00Z")}}
-//                                         ],
-//                                     },
-//                                     {
-//                                         $and: [
-//                                             {startTime: {$gte: ISODate("2000-01-03T20:15:00Z")}},
-//                                             {endTime: {$lte: ISODate("2000-01-03T22:45:00Z")}}
-//                                         ]
-//                                     }
-//                                 ]
-//                             }
-//                         }
-//                     }
-//                 },
-//                 {
-//                     $project: {
-//                         role: 1,
-//                         availability: {
-//                             $filter: {
-//                                 input: "$availability",
-//                                 as: "available",
-//                                 cond: {
-//                                     $or: [
-//                                         {
-//                                             $and: [
-//                                                 {$gte: ["$$available.startTime", ISODate("2000-01-06T20:30:00Z")]},
-//                                                 {$gte: ["$$available.endTime", ISODate("2000-01-06T22:45:00Z")]}
-//                                             ]
-//                                         },
-//                                         {
-//                                             $and: [
-//                                                 {$gte: ["$$available.startTime", ISODate("2000-01-03T20:15:00Z")]},
-//                                                 {$gte: ["$$available.endTime", ISODate("2000-01-03T22:45:00Z")]},
-//                                             ]
-//                                         }
-//                                     ]
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 },
-//                 {
-//                     $limit: 3
-//                 }
-//             ]
-//         }
-//     }
-// ])
+
+export const buildVolunteerByAvailability = (semester, year, availability, additionalConditions = {}) => {
+    return [
+        {
+            $match: {
+                role: "volunteer",
+                isActive: true,
+                availability: {
+                    $elemMatch: {
+                        $or: availability.map(available => {
+                            return {
+                                $and: [
+                                    {startTime: {$gte: available.startTime}},
+                                    {endTime: {$lte: available.endTime}}
+                                ]
+                            }
+                        })
+                    }
+                }
+            },
+        },
+        {
+            $lookup: {
+                from: "teams",
+                let: {pantherID: "$pantherID"},
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    {
+                                        $not: {
+                                            $in: ["$$pantherID", "$volunteerPIs"]
+                                        }
+                                    },
+                                    {
+                                        $eq: ["$year", year]
+                                    },
+                                    {
+                                        $eq: ["$semester", semester]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                as: "assignedTeams"
+            }
+        },
+        {
+            $match: {
+                assignedTeams: {
+                    $exists: true,
+                    $eq: []
+                },
+                ...additionalConditions
+            }
+        }
+    ]
+};

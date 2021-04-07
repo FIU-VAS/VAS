@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import { blue, blueGrey, green} from '@material-ui/core/colors';
+import { blue } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import { updateAdmin } from "../../actions/userActions";
-import { ThemeProvider } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import '../../../src/App.css';
 
@@ -29,7 +22,7 @@ const theme = createMuiTheme({
 // Profile Styling
 const useStyles = {
     all: {
-        height: '100vh',
+        height: '100vh'
     },
     card: {
         marginTop: 10,
@@ -53,7 +46,7 @@ const useStyles = {
     title: {
         fontSize: 25,
         fontWeight: "bold",
-        alignItems: 'center',
+        alignItems: 'center'
     },
     pos: {
         marginBottom: 12,
@@ -67,67 +60,17 @@ const useStyles = {
     },
     form: {
         width: '100%',
-    },
-    Button: {
-        marginTop: theme.spacing(1),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    editButton: {
-        backgroundColor: '#000',
-        color: "white",
-        fontWeight: "bold",
-        fontSize: "1rem",
-        '&:hover': {
-            backgroundColor: '#606060',
-        },
-        width: "150px",
-        height: "40px",
-        marginRight: "15px",
-        "&:disabled": {
-            backgroundColor: blueGrey[100],
-            color: "white",
-          }
-    },
-
+    }
   };
 // Login Styling END
 
-class Admin_Profile extends Component {
+class SchoolPersonnelProfile extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             editDisabled: true,
-
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: ""
-
         }
-
-        this.updateAdmin = this.updateAdmin.bind(this);
-        this.handleInput = this.handleInput.bind(this);
-    }
-
-    componentDidMount() {  
-        this.setState({
-            firstName: this.props.user.firstName,
-            lastName: this.props.user.lastName,
-            email: this.props.user.email,
-            phoneNumber: this.props.user.phoneNumber,
-        });
-        console.log(this.props.user)
-
-    }
-
-    updateAdmin() {
-        const form = this.state
-        this.props.updateAdmin(this.props.user.id, form);
-        this.editable();
     }
 
     handleInput = (e) =>{
@@ -135,10 +78,8 @@ class Admin_Profile extends Component {
         const name = e.target.name
 
         this.setState({
-        [name]: value 
+        [name]: value
         })
-
-        console.log(this.state)
     }
 
     editable = () => {
@@ -147,22 +88,26 @@ class Admin_Profile extends Component {
         })
     }
 
-  render(){   
 
-    var initials = (this.state.firstName.substring(0, 1) + this.state.lastName.substring(0, 1)).toUpperCase()
-  
+  render(){
+    const user = this.props.user;
+    var initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase()
+
+
     return (
-        <ThemeProvider theme={theme} >
-        <div className={this.props.classes.all}>
+        <div className={this.props.classes.all}
+                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover' }}>
         <Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justify="center">
-            <Box 
+            <Box
             borderRadius= "10px"
-            className={this.props.classes.card} 
+            className={this.props.classes.card}
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -178,17 +123,16 @@ class Admin_Profile extends Component {
                     </Grid>
                     <div className={this.props.classes.paper}>
                         <Typography className={this.props.classes.title} color="textPrimary" variant="h4" gutterBottom>
-                            {this.props.user.role}
+                            {user.role}
                         </Typography>
                     </div>
-                    <Typography className={this.props.classes.title} color="black" variant="h4" gutterBottom>
+                    <Typography className={this.props.classes.title} color="textSecondary" variant="h4" gutterBottom>
                         Profile Information
                     </Typography>
                     <form className={this.props.classes.form} noValidate>
 
                     {/* First Name */}
-                    <TextField 
-                        classes={{ root: 'text' }}
+                    <TextField
                         variant="standard"
                         //color= "primary"
                         margin="normal"
@@ -200,8 +144,7 @@ class Admin_Profile extends Component {
                         autoComplete="name"
                         autoFocus
                         onChange={this.handleInput}
-                        //value={this.props.admin.firstName}
-                        value={this.state.firstName}
+                        value={user.firstName}
                     />
                     {/* Last Name */}
                     <TextField
@@ -216,14 +159,14 @@ class Admin_Profile extends Component {
                         autoComplete="name"
                         autoFocus
                         onChange={this.handleInput}
-                        value={this.state.lastName}
+                        value={user.lastName}
                     />
                     {/* Email */}
                     <TextField
                         variant="standard"
                         color= "primary"
                         margin="normal"
-                        disabled //={this.state.editDisabled}
+                        disabled={this.state.editDisabled}
                         fullWidth
                         id="email"
                         label="Email Address"
@@ -231,7 +174,7 @@ class Admin_Profile extends Component {
                         autoComplete="email"
                         autoFocus
                         onChange={this.handleInput}
-                        value={this.state.email}
+                        value={user.email}
                     />
                     {/* Phone Number */}
                     <TextField
@@ -246,45 +189,38 @@ class Admin_Profile extends Component {
                         autoComplete="tel"
                         autoFocus
                         onChange={this.handleInput}
-                        value={this.state.phoneNumber}
+                        value={user.phoneNumber}
+                    />
+                     {/* Title */}
+                     <TextField
+                        variant="standard"
+                        color= "primary"
+                        margin="normal"
+                        disabled={this.state.editDisabled}
+                        fullWidth
+                        id="title"
+                        label="Title"
+                        name="title"
+                        autoComplete="name"
+                        autoFocus
+                        onChange={this.handleInput}
+                        value={user.title}
                     />
                     </form>
                 </CardContent>
-                <div className={this.props.classes.Button}>
-                <CardActions>
-                    <Button 
-                    className={this.props.classes.editButton}
-                    onClick={this.editable} 
-                    size="small"
-                    disabled={!this.state.editDisabled}
-                    endIcon={<EditIcon />}>
-                        Edit
-                    </Button>
-                    <Button 
-                    className={this.props.classes.editButton}
-                    onClick={this.editable && this.updateAdmin}
-                    size="small"
-                    disabled={this.state.editDisabled}
-                    endIcon={<SaveIcon />}>
-                        Save
-                    </Button>
-                </CardActions>
-                </div>
             </Box>
-
         </Grid>
         </div>
-        </ThemeProvider>
+
     );
   }
 }
 
 // define types
-Admin_Profile.propTypes = {
-    updateAdmin: PropTypes.func.isRequired,
-    getAdmin: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+SchoolPersonnelProfile.propTypes = {
+  classes: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 // allows us to get our state from Redux and map it to props
@@ -296,5 +232,4 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-  { updateAdmin }
-)(withRouter(withStyles(useStyles)(Admin_Profile)));
+)(withRouter(withStyles(useStyles)(SchoolPersonnelProfile)));

@@ -1,5 +1,5 @@
-import React, {Fragment, useEffect} from 'react';
-import {Switch, withRouter, useRouteMatch, Route} from 'react-router-dom';
+import React, {Fragment} from 'react';
+import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import Grid from '@material-ui/core/Grid';
@@ -96,7 +96,7 @@ const AdminDashboard = (props) => {
                         </Typography>
                     </Grid>
 
-                    <TeamCalendar onlyTeams={true}/>
+                    <TeamCalendar/>
                 </Route>
                 <AdminRoute path={`${path}/volunteer-management`} component={VolunteerManagement}/>
                 <AdminRoute path={`${path}/school-personnel-management`} component={SchoolPersonnelManagement}/>

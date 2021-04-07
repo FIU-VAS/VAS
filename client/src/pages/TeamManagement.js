@@ -14,14 +14,14 @@ const useStyles = {
         maxWidth: 1100,
         height: 900
     }
-}    
+}
 
 class TeamManagement extends Component{
-    
+
     render(){
         return (
             <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_8_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../images/FIU_8_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
                 <Grid container direction="column" alignItems="center" justify="center">
@@ -29,10 +29,10 @@ class TeamManagement extends Component{
                         <SideBar/>
                     </Grid>
                     <Grid item className={this.props.classes.table}>
-                         <TeamView/> 
-                    </Grid>    
+                         <TeamView/>
+                    </Grid>
                 </Grid>
-            </div>    
+            </div>
         )
     }
 }

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { blue, blueGrey, green } from '@material-ui/core/colors';
+import { blue, blueGrey } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -18,7 +17,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CardActions from '@material-ui/core/CardActions';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { updateVolunteer_Profile } from "../../actions/userActions";
+import { updateVolunteerProfile } from "../../actions/userActions";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Box from '@material-ui/core/Box';
 import '../../../src/App.css';
@@ -97,7 +96,7 @@ const useStyles = {
   };
 // Login Styling END
 
-class Volunteer_Profile extends Component {
+class VolunteerProfile extends Component {
 
     constructor(props) {
         super(props);
@@ -105,7 +104,7 @@ class Volunteer_Profile extends Component {
             editDisabled: true,
             carAvailable: false,
         }
-        this.updateVolunteer_Profile = this.updateVolunteer_Profile.bind(this);
+        this.updateVolunteer_Profile = this.updateVolunteerProfile.bind(this);
         this.handleInput = this.handleInput.bind(this);
     }
 
@@ -115,19 +114,18 @@ class Volunteer_Profile extends Component {
         })
     }
 
-    updateVolunteer_Profile() {
+    updateVolunteerProfile() {
         const form = this.state
-        console.log(form)
-        this.props.updateVolunteer_Profile(this.props.user.id, form);
+        this.props.updateVolunteerProfile(this.props.user.id, form);
         this.editable();
     }
 
     handleInput = (e) =>{
         const value = e.target.value
         const name = e.target.name
-        
+
         this.setState({
-        [name]: value 
+        [name]: value
         })
     }
 
@@ -139,16 +137,16 @@ class Volunteer_Profile extends Component {
 
 
 
-  render(){   
+  render(){
     const user = this.props.user;
 
     let initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
-    
-    
+
+
     return (
         <ThemeProvider theme={theme}>
         <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png') + ')',
+                style={{backgroundImage: 'url(' + require('../../images/FIU_9_10.png').default + ')',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover' }}>
         <Grid
@@ -159,7 +157,7 @@ class Volunteer_Profile extends Component {
         justify="center">
             <Box
             borderRadius= "10px"
-            className={this.props.classes.card} 
+            className={this.props.classes.card}
             variant="outlined"
             justify="center">
                 <CardContent>
@@ -289,7 +287,7 @@ class Volunteer_Profile extends Component {
                         <MenuItem value={true}>Yes</MenuItem>
                         <MenuItem value={false}>No</MenuItem>
                     </Select>
-                    
+
                     {/* Volunteer Status */}
                     <TextField
                         variant="standard"
@@ -323,15 +321,15 @@ class Volunteer_Profile extends Component {
                 </CardContent>
                 <div className={this.props.classes.Button}>
                 <CardActions>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
-                    onClick={this.editable} 
+                    onClick={this.editable}
                     size="small"
                     disabled={!this.state.editDisabled}
                     endIcon={<EditIcon />}>
                         Edit
                     </Button>
-                    <Button 
+                    <Button
                     className={this.props.classes.editButton}
                     onClick={this.editable && this.updateVolunteer_Profile}
                     size="small"
@@ -350,7 +348,7 @@ class Volunteer_Profile extends Component {
 }
 
 // define types
-Volunteer_Profile.propTypes = {
+VolunteerProfile.propTypes = {
   updateVolunteer_Profile: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
@@ -366,5 +364,5 @@ const mapStateToProps = state => ({
 
 export default connect (
   mapStateToProps,
-  { updateVolunteer_Profile }
-)(withRouter(withStyles(useStyles)(Volunteer_Profile)));
+  { updateVolunteerProfile }
+)(withRouter(withStyles(useStyles)(VolunteerProfile)));

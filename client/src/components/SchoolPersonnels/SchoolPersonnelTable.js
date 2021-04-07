@@ -13,9 +13,11 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {green, red} from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {ThemeProvider} from '@material-ui/core/styles';
+import {parseAvailabilityISO} from "../Teams/Calendar/utils";
+import {format} from "date-fns";
 
 const theme = createMuiTheme({
     palette: {
@@ -30,13 +32,12 @@ const useStyles = ({
     },
     all: {
         backgroundColor: '#fafafa',
-        height: 127
     },
     card: {
         marginTop: 10,
         minWidth: 300,
         maxWidth: 450,
-        height: 105,
+        marginBottom: "0.5rem"
     },
     title: {
         fontSize: 14,
@@ -256,7 +257,30 @@ class SchoolPersonnelTable extends Component {
                                                             gutterBottom>
                                                     {rowData.isActive ? 'Active' : 'Not Active'}<br/>
                                                 </Typography>
+                                                <Typography className={this.props.classes.subHeading}
+                                                            color="textPrimary" variant="h6" display="inline">
+                                                    Availability: <br/>
+                                                </Typography>
 
+                                                {rowData.availability && !!rowData.availability.length ? (
+                                                    rowData.availability.map(available => {
+                                                        const [startTime, endTime] = parseAvailabilityISO(available)
+                                                        return (
+                                                            <Typography className={this.props.classes.body} variant="h6"
+                                                                        display="inline"
+                                                                        gutterBottom>
+                                                                <span style={{textTransform: "capitalize"}}>{available.dayOfWeek}</span>
+                                                                : {format(startTime, "hh:mm aa")} – {format(endTime, "hh:mm aa")}
+                                                            </Typography>
+                                                        )
+                                                    })
+                                                ) : (
+                                                    <Typography className={this.props.classes.body} variant="h6"
+                                                                display="inline"
+                                                                gutterBottom>
+                                                        No availability defined
+                                                    </Typography>
+                                                )}
                                             </CardContent>
                                         </Card>
                                     </Grid>

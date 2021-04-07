@@ -1,6 +1,8 @@
 import util from "util";
 import crypto from "crypto";
 import User, {UserRoles} from "../models/Users/user_Auth";
+import Admin from "../models/Users/admin_User";
+import Team from "../models/Teams/team";
 import {addHours} from "date-fns";
 import {map} from "lodash";
 import config from "../config/config";
@@ -21,6 +23,32 @@ export const sendNewUserEmail = async (user, resetLink) => {
             resetLink
         }
     );
+};
+
+const sendUserAvailabilityChange = async (user) => {
+    const today = new Date();
+    const result = await Team.find({
+        volunteerPIs: user.pantherID,
+        year: today.getFullYear(),
+        semester: today.getMonth() > 6 ? "Fall" : "Spring"
+    });
+    if (result.length) {
+        const admins = await Admin.find().map(admin => admin.email);
+        await sendMail(
+            {
+                from: "no-reply@cs-first.cs.fiu.edu",
+                to: admins[0],
+                subject: "VAS user changed availability!",
+                text: "User" + user.firstName + " " + user.lastName + "has changed the availability",
+                cc: admins.splice(1, admins.length)
+            },
+            config.mail.templates.availabilityChanged,
+            {
+                userEmail: user.email,
+                fullName: user.firstName + " " + user.lastName
+            }
+        )
+    }
 };
 
 export const createNewUser = (Schema, validationSchema) => {
@@ -120,8 +148,11 @@ export const updateUser = (Schema, validationSchema) => {
         try {
             const updateResult = await Schema.updateOne({_id: userId}, updateProps);
             const newUser = await Schema.findOne({_id: userId});
-            console.log(newUser);
+
             if (updateResult.nModified === 1) {
+                if ("availability" in updateProps) {
+                    await sendUserAvailabilityChange(newUser);
+                }
                 return response.send({
                     success: true,
                     message: "User updated successfully",
