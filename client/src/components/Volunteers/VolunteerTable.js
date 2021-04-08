@@ -59,11 +59,12 @@ class VolunteerTable extends Component {
             selectedVolunteer: {},
             userFormDialog: false,
             availabilityDialog: false,
-            edit: false
+            onlyActive: false
         }
 
         this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
         this.toggleAvailabilityDialog = this.toggleAvailabilityDialog.bind(this);
+        this.toggleOnlyActive = this.toggleOnlyActive.bind(this);
     }
 
     componentDidMount() {
@@ -100,6 +101,13 @@ class VolunteerTable extends Component {
                 availabilityDialog: true,
             }));
         }
+    }
+
+    toggleOnlyActive() {
+        this.setState(prevState => ({
+            ...prevState,
+            onlyActive: !prevState.onlyActive
+        }));
     }
 
     setColor(text) {
@@ -227,8 +235,14 @@ class VolunteerTable extends Component {
                             }
                         ]
                     }
-                    data={this.props.volunteers}
+                    data={this.state.onlyActive ? this.props.volunteers.filter(volunteer => volunteer.isActive) : this.props.volunteers}
                     actions={[
+                        {
+                            icon: this.state.onlyActive ? 'person' : 'person_outline',
+                            tooltip: this.state.onlyActive ? 'Show All Volunteers' : 'Show Active Volunteers',
+                            isFreeAction: true,
+                            onClick: this.toggleOnlyActive
+                        },
                         {
                             icon: 'person_add',
                             tooltip: 'Add Volunteer',

@@ -14,6 +14,7 @@ import './LoginForm.css';
 import {Redirect, withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
 import {loginUser} from "../../actions/authActions";
+import {clearErrors} from "../../actions/server/errorActions";
 import {clearSuccess} from "../../actions/server/successActions";
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
@@ -91,6 +92,8 @@ class LoginForm extends Component {
         if (this.props.auth.isAuthenticated) {
             this.props.history.push("/dashboard");
         }
+
+        this.props.clearErrors();
     }
 
     toggleForgotPasswordDialog() {
@@ -130,11 +133,15 @@ class LoginForm extends Component {
         )
     };
 
-    successMessage = () => {
+    responseMessage = () => {
         if (!isEmpty(this.props.success.message))
             return (
                 <Alert severity="success">{this.props.success.message}</Alert>
             )
+        else if (!isEmpty(this.props.errors))
+                return (
+                    <Alert severity="error">{"Invalid email or password."}</Alert>
+                )
     }
 
     validate = async (e) => {
@@ -184,7 +191,7 @@ class LoginForm extends Component {
                         <Typography component="h1" variant="h5">
                             Login
                         </Typography>
-                        {this.successMessage()}
+                        {this.responseMessage()}
                         <form className={this.props.classes.form} onSubmit={this.submitLogin.bind(this)} noValidate>
                             <div>
                                 <TextField
@@ -258,5 +265,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {loginUser, clearSuccess}
+    {loginUser, clearSuccess, clearErrors}
 )(withRouter(withStyles(useStyles)(LoginForm)));

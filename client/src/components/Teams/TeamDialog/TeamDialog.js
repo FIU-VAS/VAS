@@ -64,7 +64,8 @@ const volunteerForTransferList = (volunteer) => {
                     </Grid>
                 </Grid>
             </Grid>
-        )
+        ),
+        searchValue: [volunteer.firstName, volunteer.lastName]
     }
 }
 

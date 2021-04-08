@@ -59,11 +59,13 @@ class SchoolPersonnelTable extends Component {
         this.state = {
             selectedSchoolPersonnel: {},
             userFormDialog: false,
-            availabilityDialog: false
+            availabilityDialog: false,
+            onlyActive: false
         }
 
         this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
         this.toggleAvailabilityDialog = this.toggleAvailabilityDialog.bind(this);
+        this.toggleOnlyActive = this.toggleOnlyActive.bind(this);
     }
 
     componentDidMount() {
@@ -100,6 +102,13 @@ class SchoolPersonnelTable extends Component {
                 availabilityDialog: true,
             }));
         }
+    }
+
+    toggleOnlyActive() {
+        this.setState(prevState => ({
+            ...prevState,
+            onlyActive: !prevState.onlyActive
+        }));
     }
 
     setColor(text) {
@@ -185,14 +194,19 @@ class SchoolPersonnelTable extends Component {
                             {title: 'Phone #', field: 'phoneNumber'}
                         ]
                     }
-                    data={this.props.schoolPersonnels}
+                    data={this.state.onlyActive ? this.props.schoolPersonnels.filter(personnel => personnel.isActive) : this.props.schoolPersonnels}
                     actions={[
+                        {
+                            icon: this.state.onlyActive ? 'person' : 'person_outline',
+                            tooltip: this.state.onlyActive ? 'Show All Personnel' : 'Show Active Personnel',
+                            isFreeAction: true,
+                            onClick: this.toggleOnlyActive
+                        },
                         {
                             icon: 'person_add',
                             tooltip: 'Add School Personnel',
                             isFreeAction: true,
-                            onClick: this.toggleUserFormDialog,
-                            
+                            onClick: this.toggleUserFormDialog
                         },
                         {
                             icon: 'edit',

@@ -57,10 +57,12 @@ class AdminTable extends Component {
         super(props);
         this.state = {
             selectedAdmin: {},
-            userFormDialog: false
+            userFormDialog: false,
+            onlyActive: false
         }
 
         this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
+        this.toggleOnlyActive = this.toggleOnlyActive.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +81,13 @@ class AdminTable extends Component {
                 userFormDialog: true,
             }));
         }
+    }
+
+    toggleOnlyActive() {
+        this.setState(prevState => ({
+            ...prevState,
+            onlyActive: !prevState.onlyActive
+        }));
     }
 
     setColor(text) {
@@ -144,8 +153,14 @@ class AdminTable extends Component {
                             {title: 'Phone #', field: 'phoneNumber'}
                         ]
                     }
-                    data={this.props.admins}
+                    data={this.state.onlyActive ? this.props.admins.filter(admin => admin.isActive) : this.props.admins}
                     actions={[
+                        {
+                            icon: this.state.onlyActive ? 'person' : 'person_outline',
+                            tooltip: this.state.onlyActive ? 'Show All Admins' : 'Show Active Admins',
+                            isFreeAction: true,
+                            onClick: this.toggleOnlyActive
+                        },
                         {
                             icon: 'person_add',
                             tooltip: 'Add Admin',
