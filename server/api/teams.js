@@ -15,12 +15,12 @@ import validateUpdateTeamInput from '../validation/teams/updateTeam';
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
 import {buildQuery} from "../utils/team-query";
+import {omitBy} from "lodash";
 
 const router = new express.Router();
 
 router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createUpdateTeam);
 router.post('/delete/:id', extendedCheckSchema(teamDeleteSchema), checkAdminRole, deleteTeam);
-router.put('/update/:id', checkAdminRole, updateTeam);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
@@ -42,7 +42,6 @@ router.get('/suggest', checkAdminRole, extendedCheckSchema({
     }
 }), teamSuggestions);
 router.get('/:id', fetchTeamById);
-
 
 async function deleteTeam(req, res) {
     const {id, closureNotes} = req.body;
@@ -69,6 +68,8 @@ async function deleteTeam(req, res) {
 async function createUpdateTeam(req, res) {
     const {body} = req;
 
+    const duplicateProperties = ["schoolPersonnel", "schoolCode"]
+
     let properties = {};
     let result;
 
@@ -83,6 +84,24 @@ async function createUpdateTeam(req, res) {
             await Team.updateOne({_id: body._id}, properties)
             result = await Team.findById(body._id);
         } else {
+            // Try to find a team with the same duplicateProperties
+            const dup = await Team.findOne({
+                schoolPersonnel: properties.schoolPersonnel,
+                schoolCode: properties.schoolCode,
+                $or: properties.availability.map(available => ({
+                    "availability.dayOfWeek": available.dayOfWeek,
+                    "availability.startTime": {$eq: available.startTime},
+                    "availability.endTime": {$eq: available.endTime},
+                }))
+            });
+
+            if (dup) {
+                return res.json({
+                    success: false,
+                    message: "There is already a team with those properties"
+                })
+            }
+
             result = await Team.create(properties)
         }
 
@@ -93,7 +112,7 @@ async function createUpdateTeam(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            message: "Could not update " + error.toString()
+            message: "Could not creat or insert " + error.toString()
         });
     }
 }
@@ -236,8 +255,8 @@ async function getTeamData(request, response) {
         },
         schoolPersonnel: {
             from: "users",
-            localField: "schoolCode",
-            foreignField: "schoolCode",
+            localField: "schoolPersonnel",
+            foreignField: "email",
             as: "schoolPersonnel"
         }
     }
@@ -289,7 +308,6 @@ async function teamSuggestions(request, response) {
     try {
         const schoolPersonnel = await SchoolPersonnel.find({}, "email availability schoolCode");
         matchesQuery = buildQuery(schoolPersonnel, {isActive: true}, "volunteer", {pantherID: 1, email: 1, firstName: 1, lastName: 1}, 3);
-        console.log(matchesQuery);
         const matches = await Volunteer.aggregate(matchesQuery);
         if (matches.length) {
             const teams = schoolPersonnel.map(personnel => {

@@ -132,9 +132,6 @@ export const MaterialUIField = (props) => {
                     as={<AvailabilityForm />}
                     rules={fieldProps.rules}
                     disabled={fieldProps.disabled}
-                    error={fieldProps.error}
-                    helperText={fieldProps.errorMessage}
-
                 />
             )
         case "select":
@@ -180,7 +177,7 @@ export const UserFormDialog = (props) => {
             })
             .catch(err => {
                 console.log(err);
-                setMessage(err.message);
+                setMessage(err.response && err.response.data ? err.response.data.message : err.message);
                 setSuccess(false);
             })
 

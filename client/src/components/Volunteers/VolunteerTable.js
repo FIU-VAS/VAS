@@ -14,7 +14,8 @@ import {red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {ThemeProvider} from '@material-ui/core/styles';
 import { AvailabilityDialog } from "../Extras/AvailabilityDialog";
-import {format, parseISO} from "date-fns";
+import {format} from "date-fns";
+import {fromUTC} from "../../utils/availability";
 
 
 const theme = createMuiTheme({
@@ -341,11 +342,13 @@ class VolunteerTable extends Component {
                                         <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
                                         Availability has not been set.<br/>
                                         </Typography> :
-                                        rowData.availability.map(timeSlot => {
+                                        fromUTC(rowData.availability).map(timeSlot => {
+                                            console.log(rowData.availability);
+                                            console.log(timeSlot)
                                             return(
-                                            <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                            {timeSlot.dayOfWeek}: {format(parseISO(timeSlot.startTime), "h:mm aa")} - {format(parseISO(timeSlot.endTime), "h:mm aa")}<br/>
-                                            </Typography>
+                                                <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
+                                                    {timeSlot.dayOfWeek}: {format(timeSlot.startTime, "h:mm aa")} - {format(timeSlot.endTime, "h:mm aa")}<br/>
+                                                </Typography>
                                             )
                                         })}
                                         {this.state.availabilityDialog && <AvailabilityDialog

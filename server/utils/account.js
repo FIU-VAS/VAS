@@ -90,32 +90,37 @@ export const createNewUser = (Schema, validationSchema) => {
                 response.statusCode = 500
                 return response.send({
                     success: false,
-                    message: "Error: Server error."
+                    message: "Error: " + insertError.toString()
                 });
             }
         }
 
-        try {
-            const emailResponse = await sendNewUserEmail(user, resetLink);
-            if (emailResponse.accepted.indexOf(user.email) !== -1) {
-                response.json({
-                    success: true,
-                    message: `${user.role} created successfully`
-                })
-            } else {
-                response.json({
-                    success: false,
-                    message: "Email could not be sent"
-                })
-            }
-        } catch (emailError) {
-            response.statusCode = 500;
-            response.json({
-                success: false,
-                message: "Error sending email: " + emailError.toString()
-            });
-            user.delete();
-        }
+        response.json({
+            success: true,
+            message: `${user.role} created successfully`
+        })
+
+        // try {
+        //     const emailResponse = await sendNewUserEmail(user, resetLink);
+        //     if (emailResponse.accepted.indexOf(user.email) !== -1) {
+        //         response.json({
+        //             success: true,
+        //             message: `${user.role} created successfully`
+        //         })
+        //     } else {
+        //         response.json({
+        //             success: false,
+        //             message: "Email could not be sent"
+        //         })
+        //     }
+        // } catch (emailError) {
+        //     response.statusCode = 500;
+        //     response.json({
+        //         success: false,
+        //         message: "Error sending email: " + emailError.toString()
+        //     });
+        //     user.delete();
+        // }
     }
 
     return [checkAdminRole, extendedCheckSchema(validationSchema), createUser]

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 import {addDays, isDate, addHours, parse} from "date-fns";
+import {zonedTimeToUtc, getTimezoneOffset} from "date-fns-tz"
 
 export const Days = {
     MONDAY: 'monday',
@@ -27,10 +28,16 @@ export const validateAvailability = (values) => {
 
 export const sanitizeAvailability = (value) => {
     return value.map(available => {
+        let startTime = addDays(parse(available.startTime, "HH:mm", REFERENCE_DATE), Object.values(Days).indexOf(available.dayOfWeek));
+        let endTime = addDays(parse(available.endTime, "HH:mm", REFERENCE_DATE), Object.values(Days).indexOf(available.dayOfWeek));
+
+        startTime = zonedTimeToUtc(startTime, 'America/New_York');
+        endTime = zonedTimeToUtc(endTime, 'America/New_York');
+
         return {
             ...available,
-            startTime: addDays(addHours(parse(available.startTime, "HH:mm", REFERENCE_DATE), 5), Object.values(Days).indexOf(available.dayOfWeek)),
-            endTime: addDays(addHours(parse(available.endTime, "HH:mm", REFERENCE_DATE), 5), Object.values(Days).indexOf(available.dayOfWeek))
+            startTime,
+            endTime
         }
     })
 }
@@ -46,6 +53,10 @@ const Team = new mongoose.Schema({
     },
     year: {
         type: String,
+        required: true
+    },
+    schoolPersonnel: {
+        type: Array,
         required: true
     },
     availability: [{

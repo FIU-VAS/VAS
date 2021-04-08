@@ -18,6 +18,7 @@ import axios from "axios";
 import config from "../../../config";
 import TeamDialog from "../TeamDialog/TeamDialog";
 import {TeamDeleteDialog} from "../TeamDialog/TeamDeleteDialog";
+import {fromUTC} from "../../../utils/availability";
 
 const cardStyles = makeStyles(theme => ({
     box: {
@@ -253,7 +254,7 @@ let TeamCardComponent = (props) => {
     }, []);
 
     // Assuming team is only available once in the day
-    const todayAvailability = team.availability.filter(available => available.dayOfWeek === day)[0];
+    const todayAvailability = fromUTC(team.availability.filter(available => available.dayOfWeek === day))[0];
 
     const classes = cardStyles();
 

@@ -13,7 +13,8 @@ import {withStyles} from '@material-ui/core/styles';
 import {Card, CardContent, Grid, IconButton, Typography, createMuiTheme, ThemeProvider} from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 import {red} from '@material-ui/core/colors';
-import {format, parseISO} from "date-fns";
+import {format} from "date-fns";
+import {fromUTC} from "../../utils/availability";
 
 const theme = createMuiTheme({
     palette: {
@@ -221,7 +222,6 @@ class SchoolPersonnelTable extends Component {
                         exportButton: true,
                     }}
                     detailPanel={rowData => {
-
                         return (
 
                             <ThemeProvider theme={theme}>
@@ -280,10 +280,10 @@ class SchoolPersonnelTable extends Component {
                                                 <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
                                                     Availability has not been set.<br/>
                                                 </Typography> :
-                                                rowData.availability.map(timeSlot => {
+                                                fromUTC(rowData.availability).map(timeSlot => {
                                                     return(
                                                         <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                                            {timeSlot.dayOfWeek}: {format(parseISO(timeSlot.startTime), "h:mm aa")} - {format(parseISO(timeSlot.endTime), "h:mm aa")}<br/>
+                                                            {timeSlot.dayOfWeek}: {format(timeSlot.startTime, "h:mm aa")} - {format(timeSlot.endTime, "h:mm aa")}<br/>
                                                         </Typography>
                                                     )
                                                 })}
