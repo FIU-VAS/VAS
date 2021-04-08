@@ -14,6 +14,7 @@ import './LoginForm.css';
 import {Redirect, withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
 import {loginUser} from "../../actions/authActions";
+import {clearErrors} from "../../actions/server/errorActions";
 import {clearSuccess} from "../../actions/server/successActions";
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
@@ -91,6 +92,8 @@ class LoginForm extends Component {
         if (this.props.auth.isAuthenticated) {
             this.props.history.push("/dashboard");
         }
+
+        this.props.clearErrors();
     }
 
     toggleForgotPasswordDialog() {
@@ -262,5 +265,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {loginUser, clearSuccess}
+    {loginUser, clearSuccess, clearErrors}
 )(withRouter(withStyles(useStyles)(LoginForm)));
