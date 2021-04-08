@@ -57,12 +57,13 @@ class SchoolTable extends Component {
         this.state = {
             selectedSchool: {},
             addSchoolDialog: false,
-            editSchoolDialog: false
+            editSchoolDialog: false,
+            onlyActive: false
         }
 
         this.toggleAddSchoolDialog = this.toggleAddSchoolDialog.bind(this);
         this.toggleEditSchoolDialog = this.toggleEditSchoolDialog.bind(this);
-        //this.clearErrors = this.clearErrors.bind(this);
+        this.toggleOnlyActive = this.toggleOnlyActive.bind(this);
     }
 
     componentDidMount() {
@@ -78,6 +79,13 @@ class SchoolTable extends Component {
     toggleEditSchoolDialog() {
         this.setState(prevState => ({
             editSchoolDialog: !prevState.editSchoolDialog
+        }));
+    }
+
+    toggleOnlyActive() {
+        this.setState(prevState => ({
+            ...prevState,
+            onlyActive: !prevState.onlyActive
         }));
     }
 
@@ -118,8 +126,14 @@ class SchoolTable extends Component {
                             }},
                         ]
                     }
-                    data={this.props.schools}
+                    data={this.state.onlyActive ? this.props.schools.filter(school => school.isActive) : this.props.schools}
                     actions={[
+                        {
+                            icon: this.state.onlyActive ? 'person' : 'person_outline',
+                            tooltip: this.state.onlyActive ? 'Show All Schools' : 'Show Active Schools',
+                            isFreeAction: true,
+                            onClick: this.toggleOnlyActive
+                        },
                         {
                         icon: 'person_add',
                         tooltip: 'Add School',

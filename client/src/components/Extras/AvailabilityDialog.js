@@ -38,7 +38,6 @@ export const AvailabilityDialog = (props) => {
 
     const submitForm = async (data) => {
         try {
-            console.log(data);
             const response = await axios.post(endpoint, {
                 availability: data.availability,
                 email: userEmail

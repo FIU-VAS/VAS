@@ -128,9 +128,9 @@ const Availability = () => {
             <Container component="main" maxWidth="md">
                 <CssBaseline />
                 <img
-                        className={classes.corner}
-                        src={require("../images/Ignite_1.png").default}
-                    />
+                    className={classes.corner}
+                    src={require("../images/Ignite_1.png").default}
+                />
                     
                 <Box className={classes.paper} width="100%">
                      <Typography component="h1" variant="h4" >
