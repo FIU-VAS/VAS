@@ -11,11 +11,10 @@ import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
 import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
 import {schema as teamCreateSchema} from "../validation-schemas/team/create"
 import {schema as teamDeleteSchema} from "../validation-schemas/team/delete"
-import validateUpdateTeamInput from '../validation/teams/updateTeam';
+import {schema as teamSuggestionSchema} from "../validation-schemas/team/suggestion"
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
 import {buildQuery} from "../utils/team-query";
-import {omitBy} from "lodash";
 
 const router = new express.Router();
 
@@ -25,26 +24,12 @@ router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
 router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
-router.get('/suggest', checkAdminRole, extendedCheckSchema({
-    semester: {
-        exists: true,
-        errorMessage: "Term must be defined"
-    },
-    year: {
-        isNumeric: true,
-        isLength: {
-            options: {
-                min: 4,
-                max: 4
-            },
-        },
-        errorMessage: "Year must be a number of 4 digits"
-    }
-}), teamSuggestions);
+router.get('/suggest', checkAdminRole, extendedCheckSchema(teamSuggestionSchema), teamSuggestions);
 router.get('/:id', fetchTeamById);
 
 async function deleteTeam(req, res) {
-    const {id, closureNotes} = req.body;
+    const {closureNotes} = req.body;
+    const {id} = req.params;
 
     let update = {
         isActive: false,
@@ -52,11 +37,20 @@ async function deleteTeam(req, res) {
     }
 
     try {
-        await Team.updateOne({_id: id}, {$set: update})
-        return res.json({
-            success: true,
-            message: "Successfully deleted Team: " + id
-        });
+        const result = await Team.updateOne({_id: id}, {$set: update})
+        const team = await Team.findById(id);
+        if (result.nModified === 1) {
+            return res.json({
+                success: true,
+                message: "Successfully deleted Team: " + id,
+                team
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: "Error deleting team: " + id
+            });
+        }
     } catch (dbError) {
         return res.json({
             success: false,
@@ -117,59 +111,10 @@ async function createUpdateTeam(req, res) {
     }
 }
 
-function updateTeam(request, response) {
-    let {body} = request;
-
-    //deconstruct PIDs into an array
-    body.volunteerPIs = body.volunteerPIs.split(',')
-
-    // form validation
-    const {errors, isValid} = validateUpdateTeamInput(request.body);
-    // check validation
-    if (!isValid) {
-        return response.status(400).json({success: false, errors});
-    }
-
-    //check if team is being deativated to change timestamp
-    if (body.isActive === 'false') {
-        body.timeStamp = Date.now()
-    }
-
-    Team.updateOne({_id: request.params.id}, body, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (result.n === 1) {
-                Team.findById(request.params.id)
-                    .then(result => {
-                        return response.send({
-                            success: true,
-                            message: 'Successfully updated team!'
-                        });
-                    })
-                    .catch(error => {
-                        response.json({
-                            success: false,
-                            message: error.toString()
-                        })
-                    })
-            } else {
-                response.json({
-                    success: false,
-                    message: "Could not update"
-                });
-            }
-        }
-    });
-
-}
-
 function fetchTeams(request, response) {
     let {semester, year} = request.query;
 
-    let conditions = {
-        isActive: true
-    };
+    let conditions = {};
 
     if (semester) {
         conditions.semester = semester;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import serverConf from '../config'
-import { GET_ERRORS, SET_TEAMS, TEAMS_LOADING, GET_SUCCESS} from './types';
+import {GET_ERRORS, SET_TEAMS, TEAMS_LOADING, GET_SUCCESS, UPDATE_TEAMS} from './types';
 import {fromUTC} from "../utils/availability";
 
 // get teams from database
@@ -27,5 +27,12 @@ export const setCurrentTeams = teams => {
     return {
         type: SET_TEAMS,
         payload: teams
+    };
+};
+
+export const updateCurrentTeams = team => {
+    return {
+        type: UPDATE_TEAMS,
+        payload: team
     };
 };

@@ -112,7 +112,7 @@ const TeamDetails = (props) => {
     return (
         <React.Fragment>
             <Collapse in={showDetails}>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{marginTop: "1rem"}}>
                     <Typography variant="h6" style={{fontSize: "1rem"}}>
                         Volunteers
                     </Typography>
@@ -148,6 +148,16 @@ const TeamDetails = (props) => {
                         )
                     })}
                 </Grid>
+                {team.closureNotes !== "" ? (
+                    <Grid item xs={12} style={{marginTop: "1rem"}}>
+                        <Typography variant="h6" style={{fontSize: "1rem"}}>
+                            Notes:
+                        </Typography>
+                        <Typography variant="body2">
+                            {team.closureNotes}
+                        </Typography>
+                    </Grid>
+                ) : ""}
             </Collapse>
             <Grid item container xs={12} justify="space-between" alignItems="center">
                 <Grid item xs={8}>

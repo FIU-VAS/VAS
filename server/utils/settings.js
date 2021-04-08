@@ -72,7 +72,6 @@ export const updateLinks = (Schema, validationSchema) => {
         try {
             const updateResult = await Schema.updateOne({_id: userId}, updateProps);
             const newUser = await Schema.findOne({_id: userId});
-            console.log(newUser);
             if (updateResult.nModified === 1) {
                 return response.send({
                     success: true,
