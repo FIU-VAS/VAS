@@ -130,11 +130,15 @@ class LoginForm extends Component {
         )
     };
 
-    successMessage = () => {
+    responseMessage = () => {
         if (!isEmpty(this.props.success.message))
             return (
                 <Alert severity="success">{this.props.success.message}</Alert>
             )
+        else if (!isEmpty(this.props.errors))
+                return (
+                    <Alert severity="error">{"Invalid email or password."}</Alert>
+                )
     }
 
     validate = async (e) => {
@@ -184,7 +188,7 @@ class LoginForm extends Component {
                         <Typography component="h1" variant="h5">
                             Login
                         </Typography>
-                        {this.successMessage()}
+                        {this.responseMessage()}
                         <form className={this.props.classes.form} onSubmit={this.submitLogin.bind(this)} noValidate>
                             <div>
                                 <TextField
