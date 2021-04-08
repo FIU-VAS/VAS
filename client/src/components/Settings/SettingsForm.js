@@ -136,6 +136,7 @@ const SettingsForm = (props) => {
                                     </Button>
                                     <Button
                                         className={props.classes.editButton}
+                                        onClick={() => setDisabled(true)}
                                         type="submit"
                                         size="small"
                                         disabled={disabled}

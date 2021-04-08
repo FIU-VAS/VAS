@@ -14,7 +14,7 @@ import {extendedCheckSchema} from "../utils/validation";
 const router = new express.Router();
 
 router.post('/', checkAdminRole, extendedCheckSchema(siteSettingsSchema), createOrUpdateLinks);
-router.get('/', checkAdminRole, fetchLinks);
+router.get('/', fetchLinks);
 
 async function fetchLinks(request, response) {
     try {
