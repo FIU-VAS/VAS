@@ -49,7 +49,7 @@ module.exports.up = async (next) => {
     await teams.bulkWrite(updates)
   }
 
-  mongoose.connection.close()
+  await mongoose.connection.close();
   next()
 }
 
@@ -80,6 +80,6 @@ module.exports.down = async (next) => {
     }
   })
 
-  mongoose.connection.close()
+  await mongoose.connection.close();
   next()
 }

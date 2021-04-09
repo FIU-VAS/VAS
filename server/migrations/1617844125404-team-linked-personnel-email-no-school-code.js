@@ -25,7 +25,7 @@ module.exports.up = async function (next) {
 
         teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [teamPersonnel.email]}})
     }
-
+    await mongoose.connection.close();
     next()
 }
 
@@ -36,6 +36,6 @@ module.exports.down = async function (next) {
     const teamCollection = vasDb.collection("teams");
 
     await teamCollection.updateMany({}, {$unset: {schoolPersonnel: ""}});
-
+    await mongoose.connection.close();
     next()
 }

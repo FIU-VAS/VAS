@@ -27,10 +27,12 @@ const run = async (upgrade=true) => {
 
 module.exports.up = async function (next) {
   await run(true)
+  await mongoose.connection.close();
   next()
 }
 
 module.exports.down = async function (next) {
   await run(false);
+  await mongoose.connection.close();
   next()
 }
