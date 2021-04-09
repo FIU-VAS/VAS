@@ -26,19 +26,19 @@ jobs:
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
       - name: Create .env file
         run: |
-          touch .env
-          echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" >> .env
-          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
-          echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
-          echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> .env
-          echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
-          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
-          echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> .env
-          echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> .env
-          echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> .env
-          echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> .env
-          echo "PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }}" >> .env
-          echo "HOST_USER=${{ secrets.HOST_USER }}" >> .env
+          touch ./server/.env
+          echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" >> ./server/.env
+          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> ./server/.env
+          echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> ./server/.env
+          echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> ./server/.env
+          echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> ./server/.env
+          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> ./server/.env
+          echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> ./server/.env
+          echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> ./server/.env
+          echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> ./server/.env
+          echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> ./server/.env
+          echo "PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }}" >> ./server/.env
+          echo "HOST_USER=${{ secrets.HOST_USER }}" >> ./server/.env
       - name: Install PM2
         run: cd ./server && npm i pm2 -g
 
