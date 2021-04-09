@@ -40,7 +40,7 @@ jobs:
           echo PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }} >> .env
           echo HOST_USER=${{ secrets.HOST_USER }} >> .env
       - name: Install PM2
-        run: npm i pm2
+        run: cd ./server && npm i pm2
 
       - name: Deploy
         run: env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
