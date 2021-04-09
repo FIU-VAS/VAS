@@ -21,7 +21,7 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           port: ${{secrets.HOST_PORT}}
           script: |
-            git clone https://github.com/FIU-VAS/VAS || (cd VAS ; git pull)
+            git clone https://github.com/FIU-VAS/VAS || (cd VAS ; git fetch --all && git reset --hard FETCH_HEAD && git clean -df)
             cd ./server
             touch .env
             echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" > .env
