@@ -287,7 +287,7 @@ let TeamCardComponent = (props) => {
                         </Grid>
                         <Grid item xs={4} style={{textAlign: "right"}}>
                             <div className={classes.badge} style={{
-                                background: team.isActive ? "rgb(87, 201, 101)" : "#ff0033"
+                                background: team.isActive ? "#5fdba7" : "#ff0033"
                             }}>
                                 <Typography variant="caption" style={{fontWeight: 700}}>
                                     {team.isActive ? "Active" : "Inactive"}
