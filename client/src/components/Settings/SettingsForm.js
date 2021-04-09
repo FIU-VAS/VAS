@@ -69,6 +69,21 @@ const useStyles = {
             color: "white",
         }
     },
+    saveButton: {
+        backgroundColor: '#000',
+        color: "white",
+        fontSize: "1rem",
+        '&:hover': {
+            backgroundColor: '#606060',
+        },
+        width: "150px",
+        height: "40px",
+        marginRight: "15px",
+        "&:disabled": {
+            backgroundColor: blueGrey[100],
+            color: "white",
+        }
+    },
 
 };
 
@@ -84,6 +99,7 @@ const SettingsForm = (props) => {
     const submit = async (data) => {
         const response = await axios.post(`${config.uri}${config.endpoints.siteSettings.createOrUpdate}`,data);
         props.setCurrentSettings(response.data);
+        setDisabled(true);
     };
 
     return (
@@ -135,7 +151,7 @@ const SettingsForm = (props) => {
                                         Edit
                                     </Button>
                                     <Button
-                                        className={props.classes.editButton}
+                                        className={props.classes.saveButton}
                                         type="submit"
                                         size="small"
                                         disabled={disabled}
