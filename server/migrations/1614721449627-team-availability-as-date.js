@@ -91,6 +91,7 @@ module.exports.up = async (next) => {
 
   await updateSchema(vasDb.collection("teams"));
   await updateSchema(vasDb.collection("users"));
+  await mongoose.connection.close();
   next()
 }
 
@@ -102,5 +103,6 @@ module.exports.down = async function (next) {
 
   await downgradeSchema(vasDb.collection("teams"));
   await downgradeSchema(vasDb.collection("users"));
+  await mongoose.connection.close();
   next()
 }

@@ -150,6 +150,6 @@ module.exports.down = async function (next) {
     await db.connect(dbUri)
 
     await rollbackToDifferentCollections()
-
+    await mongoose.connection.close();
     next()
 }

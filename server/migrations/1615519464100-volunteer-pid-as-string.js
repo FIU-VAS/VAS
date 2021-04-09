@@ -32,7 +32,7 @@ module.exports.up = async function (next) {
   if (updates.length) {
     await userCollection.bulkWrite(updates)
   }
-
+  await mongoose.connection.close();
   next()
 }
 
@@ -63,6 +63,6 @@ module.exports.down = async function (next) {
   if (updates.length) {
     await userCollection.bulkWrite(updates)
   }
-
+  await mongoose.connection.close();
   next()
 }
