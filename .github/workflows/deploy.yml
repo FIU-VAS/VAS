@@ -27,23 +27,23 @@ jobs:
       - name: Create .env file
         run: |
           touch .env
-          echo MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }} >> .env
-          echo MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }} >> .env
-          echo MONGODB_URL=${{ secrets.MONGODB_URL }} >> .env
-          echo MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }} >> .env
-          echo SMTP_HOST=${{ secrets.SMTP_HOST }} >> .env
-          echo SMTP_PORT=${{ secrets.SMTP_PORT }} >> .env
-          echo SMTP_SECURE=${{ secrets.SMTP_SECURE }} >> .env
-          echo MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }} >> .env
-          echo MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }} >> .env
-          echo MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }} >> .env
-          echo PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }} >> .env
-          echo HOST_USER=${{ secrets.HOST_USER }} >> .env
+          echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" >> .env
+          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
+          echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
+          echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> .env
+          echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+          echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> .env
+          echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> .env
+          echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> .env
+          echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> .env
+          echo "PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }}" >> .env
+          echo "HOST_USER=${{ secrets.HOST_USER }}" >> .env
       - name: Install PM2
-        run: cd ./server && npm i pm2 -g
+        run: cd ./server && npm i pm2
 
       - name: Deploy
-        run: env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
+        run: cd ./server && env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
 
       - name: Building app
         uses: appleboy/ssh-action@e59c0ee97a7e5240ed9eb489791adbb9c9ac7f6b
