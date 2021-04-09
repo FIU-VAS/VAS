@@ -35,6 +35,7 @@ jobs:
             echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> .env
             echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> .env
             npm install
+            npm run migrate-up
             pm2 restart ecosystem.config.js --env production
 
             cd ../client
