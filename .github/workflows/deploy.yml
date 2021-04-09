@@ -22,8 +22,7 @@ jobs:
           port: ${{secrets.HOST_PORT}}
           script: |
             git clone https://github.com/FIU-VAS/VAS || (cd VAS ; git fetch --all && git reset --hard FETCH_HEAD && git clean -df)
-            ls .
-            cd ./server
+            cd ./VAS/server
             touch .env
             echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" > .env
             echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
