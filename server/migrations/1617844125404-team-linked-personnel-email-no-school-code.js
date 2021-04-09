@@ -11,19 +11,23 @@ module.exports.up = async function (next) {
     const vasDb = mongoose.connection.client.db("vas");
     const teamCollection = vasDb.collection("teams");
 
-    const teams = await teamCollection.find({}).toArray()
+    const personnel = await SchoolPersonnel.find();
+    const mappedPersonnel = personnel.map(person => ({
+        [person.schoolCode]: person
+    })).reduce((acc, obj) => Object.assign({}, acc, obj));
+
+    const teams = await teamCollection.find({}).toArray();
+
     for (let team of teams)  {
         if (team.schoolPersonnel && team.schoolPersonnel.length) {
             return true;
         }
 
-        const teamPersonnel = await SchoolPersonnel.findOne({schoolCode: team.schoolCode});
-
-        if (!teamPersonnel) {
-            return true
+        if (!(team.schoolCode in mappedPersonnel)) {
+            continue
         }
 
-        await teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [teamPersonnel.email]}})
+        await teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [mappedPersonnel[team.schoolCode].email]}})
     }
     await mongoose.connection.close();
     next()
