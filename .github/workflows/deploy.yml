@@ -40,4 +40,4 @@ jobs:
             cd ../client
             npm install
             npm run build
-            mv -r ./build ~/vasweb
+            mv ./build ~/vasweb
