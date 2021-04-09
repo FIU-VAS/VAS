@@ -11,8 +11,6 @@ module.exports.up = async function (next) {
     const vasDb = mongoose.connection.client.db("vas");
     const teamCollection = vasDb.collection("teams");
 
-    let updates = [];
-
     const teams = await teamCollection.find({}).toArray()
     for (let team of teams)  {
         if (team.schoolPersonnel && team.schoolPersonnel.length) {
@@ -25,22 +23,7 @@ module.exports.up = async function (next) {
             return true
         }
 
-        updates.push({
-            updateOne: {
-                filter: {
-                    _id: team._id,
-                },
-                update: {
-                    $set: {
-                        schoolPersonnel: [teamPersonnel.email]
-                    }
-                }
-            }
-        })
-    }
-
-    if (updates.length) {
-        await teamCollection.bulkWrite(updates)
+        teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [teamPersonnel.email]}})
     }
 
     next()
