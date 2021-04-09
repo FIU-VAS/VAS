@@ -21,6 +21,10 @@ module.exports.up = async function (next) {
 
         const teamPersonnel = await SchoolPersonnel.findOne({schoolCode: team.schoolCode});
 
+        if (!teamPersonnel) {
+            return true
+        }
+
         updates.push({
             updateOne: {
                 filter: {
