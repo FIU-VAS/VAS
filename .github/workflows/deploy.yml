@@ -13,40 +13,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.18.4
-
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ./server/deploy.key
-          sudo chmod 600 ./server/deploy.key
-          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-      - name: Create .env file
-        run: |
-          touch ./server/.env
-          echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" >> ./server/.env
-          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> ./server/.env
-          echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> ./server/.env
-          echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> ./server/.env
-          echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> ./server/.env
-          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> ./server/.env
-          echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> ./server/.env
-          echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> ./server/.env
-          echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> ./server/.env
-          echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> ./server/.env
-          echo "PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }}" >> ./server/.env
-          echo "HOST_USER=${{ secrets.HOST_USER }}" >> ./server/.env
-      - name: Install PM2
-        run: cd ./server && npm i pm2 -g
-
-      - name: Prepare deployment
-        run: cd ./server && env $(cat .env | grep -v \"#\" | xargs) pm2 deploy production setup
-      - name: Deploy
-        run: cd ./server && env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
-
       - name: Building app
         uses: appleboy/ssh-action@e59c0ee97a7e5240ed9eb489791adbb9c9ac7f6b
         with:
@@ -55,7 +21,32 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           port: ${{secrets.PORT}}
           script: |
-            cd ~/VAS/client
+            git clone https://github.com/FIU-VAS/VAS || (cd VAS ; git pull)
+            cd ./server
+            touch .env
+            echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" > .env
+            echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
+            echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
+            echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> .env
+            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+            echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> ./server/.env
+            echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> .env
+            echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> .env
+            echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> .env
+            echo "PROJECT_DIRECTORY=${{ secrets.PROJECT_DIRECTORY }}" >> .env
+            echo "HOST_USER=${{ secrets.HOST_USER }}" >> .env
+            npm install
+            pm2 restart ecosystem.config.js --env production
+
+            cd ../client
             npm install
             npm run build
             mv -r ./build ~/vasclient
+      - name: Install PM2
+        run: cd ./server && npm i pm2 -g
+
+      - name: Prepare deployment
+        run: cd ./server && env $(cat .env | grep -v \"#\" | xargs) pm2 deploy production setup
+      - name: Deploy
+        run: cd ./server && env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
