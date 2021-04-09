@@ -15,12 +15,12 @@ module.exports = {
 
     deploy: {
         production: {
-            user: 'acart068',
+            user: process.env.HOST_USER,
             host: 'cs-first.cs.fiu.edu',
             key: 'deploy.key',
             ref: 'origin/main',
             repo: 'https://github.com/FIU-VAS/VAS',
-            path: '/home/acart068/VAS',
+            path: process.env.PROJECT_DIRECTORY,
             'post-deploy': 'cd ./server && npm install && pm2 reload ecosystem.config.js --env production',
             env: {
                 NODE_ENV: process.env.NODE_ENV,
@@ -34,10 +34,6 @@ module.exports = {
                 SMTP_HOST: process.env.SMTP_HOST,
                 SMTP_PORT: process.env.SMTP_PORT,
                 SMTP_SECURE: process.env.SMTP_SECURE,
-
-                MONGO_INITDB_ROOT_USERNAME: process.env.MONGO_INITDB_ROOT_USERNAME,
-                MONGO_INITDB_ROOT_PASSWORD: process.env.MONGO_INITDB_ROOT_PASSWORD,
-                MONGO_INITDB_DATABASE: process.env.MONGO_INITDB_DATABASE,
             },
         }
     }
