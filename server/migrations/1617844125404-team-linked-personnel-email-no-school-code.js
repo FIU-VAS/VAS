@@ -23,7 +23,7 @@ module.exports.up = async function (next) {
             return true
         }
 
-        teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [teamPersonnel.email]}})
+        await teamCollection.updateOne({_id: team._id}, {$set: {schoolPersonnel: [teamPersonnel.email]}})
     }
     await mongoose.connection.close();
     next()
