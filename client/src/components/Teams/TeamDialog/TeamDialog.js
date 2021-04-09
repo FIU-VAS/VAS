@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Backdrop,
     Button,
@@ -8,22 +8,26 @@ import {
     DialogContent,
     DialogTitle,
     Grid, Snackbar,
+    TextField,
     Typography
 } from "@material-ui/core";
 import {connect} from "react-redux";
 import {MaterialUIField} from "../../Users/UserFormDialog";
 import {useForm, FormProvider, Controller} from "react-hook-form";
 import axios from "axios";
-import {format, parseISO} from "date-fns";
-
+import {format} from "date-fns";
+import {getSchools} from '../../../actions/schoolActions';
+import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import config from "../../../config";
 import {TransferList} from "../../Extras/TransferList";
 import {makeStyles} from "@material-ui/core/styles";
 import {Alert} from "@material-ui/lab";
 import {PersonnelPicker} from "./PersonnelPicker";
 import {AvailabilityDialog} from "../../Extras/AvailabilityDialog";
-import {parseAvailabilityISO} from "../Calendar/utils";
 import {setTeams} from "../../../actions/volunteerRequestActions";
+import {fromUTC, toTimeSlot} from "../../../utils/availability";
 
 const teamDialogStyles = makeStyles(theme => ({
     backdrop: {
@@ -49,18 +53,19 @@ const volunteerForTransferList = (volunteer) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {volunteer.availability && volunteer.availability.map((available, index) => {
-                            const [startTime, endTime] = parseAvailabilityISO(available)
+                        {volunteer.availability && fromUTC(volunteer.availability).map((available, index) => {
                             return (
-                                <Typography key={`available-${index}`} style={{fontWeight: 600}}>
-                                    {format(startTime, "HH:mm")} – {format(endTime, "HH:mm")}
+                                <Typography key={`available-${index}`}
+                                            style={{fontWeight: 600, textTransform: "capitalize"}}>
+                                    {available.dayOfWeek}: {format(available.startTime, "h:mm aa")} – {format(available.endTime, "h:mm aa")}
                                 </Typography>
                             )
                         })}
                     </Grid>
                 </Grid>
             </Grid>
-        )
+        ),
+        searchValue: [volunteer.firstName, volunteer.lastName]
     }
 }
 
@@ -112,6 +117,10 @@ const TeamDialog = (props) => {
     const [team, setTeam] = useState(defaultState);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        props.getSchools();
+    }, []);
+
     const updatePersonnel = (schoolCode) => {
         setLoading(true);
         setSchoolPersonnel([]);
@@ -143,25 +152,7 @@ const TeamDialog = (props) => {
 
         if (availability) {
             params = {
-                availability: availability.map(available => {
-                    const startTime = format(
-                        typeof available.startTime !== "string" ?
-                            available.startTime :
-                            parseISO(available.startTime),
-                        "HH:mm"
-                    );
-                    const endTime = format(
-                        typeof available.startTime !== "string" ?
-                            available.endTime :
-                            parseISO(available.endTime),
-                        "HH:mm"
-                    );
-                    return {
-                        ...available,
-                        startTime: startTime,
-                        endTime: endTime
-                    }
-                }),
+                availability: toTimeSlot(availability),
                 semester: allFields.semester,
                 year: allFields.year,
             }
@@ -202,22 +193,22 @@ const TeamDialog = (props) => {
     }
 
     const submit = (data) => {
+        setLoading(true);
         setResponse(null);
         const teamData = {
             semester: data.semester,
             year: data.year,
             schoolCode: data.schoolCode,
-            availability: data.availability.map(available => {
-                const [startTime, endTime] = parseAvailabilityISO(available)
-
+            availability: fromUTC(data.availability).map(available => {
                 return {
                     dayOfWeek: available.dayOfWeek,
-                    startTime: format(startTime, "HH:mm"),
-                    endTime: format(endTime, "HH:mm")
+                    startTime: format(available.startTime, "HH:mm"),
+                    endTime: format(available.endTime, "HH:mm")
                 }
             }),
             volunteerPIs: data.volunteers.map(volunteer => volunteer.value),
             isActive: true,
+            schoolPersonnel: [data.schoolPersonnel]
         }
 
         if (props.team) {
@@ -235,13 +226,20 @@ const TeamDialog = (props) => {
                         onSubmit(response.data);
                         setTeams([...props.teams.filter(team => team._id !== response.data.team._id), response.data.team]);
                     }
+                } else {
+                    setResponse({
+                        severity: "error",
+                        message: response.data.message
+                    })
                 }
+                setLoading(false);
             })
             .catch(error => {
                 setResponse({
                     severity: "error",
                     message: error.response ? error.response.statusText : error.toString()
                 })
+                setLoading(false);
             })
     }
 
@@ -263,7 +261,14 @@ const TeamDialog = (props) => {
             close();
         }} maxWidth="md" fullWidth={true}>
             <DialogTitle>
-                Create Team
+                <Box display="flex" alignItems="center">
+                    <Box flexGrow={1}>Create Team</Box>
+                    <Box>
+                        <IconButton onClick={props.close}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </Box>
             </DialogTitle>
             <FormProvider {...formMethods}>
                 <form onSubmit={handleSubmit(submit)}>
@@ -273,7 +278,7 @@ const TeamDialog = (props) => {
                                 open={true}
                                 onClose={() => setResponse(null)}
                                 autoHideDuration={2000}
-                                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                             >
                                 <Alert severity={response.severity} style={{marginBottom: "1rem"}}>
                                     {response.message}
@@ -368,7 +373,7 @@ const TeamDialog = (props) => {
                                                 </Grid>
                                             )}
                                             titleRight="Selected Volunteers"
-                                            available={volunteers.map(volunteerForTransferList)}
+                                            available={volunteers.filter(volunteer => volunteer.isActive).map(volunteerForTransferList)}
                                         />}
                                         rules={{
                                             validate: (value) => value.length > 0
@@ -399,7 +404,11 @@ const TeamDialog = (props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions style={{justifyContent: "center"}}>
-                        <Button type="submit" variant="contained" color="primary">Submit</Button>
+                        <Button type="submit" disabled={loading} variant="contained" style={{
+                            'backgroundColor': '#57C965',
+                            'color': 'white',
+                            'fontWeigth': 'bold'
+                        }}>Submit</Button>
                     </DialogActions>
                 </form>
             </FormProvider>
@@ -430,5 +439,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {setTeams}
+    {getSchools, setTeams}
 )(TeamDialog);

@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Button, Grid} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import {format, parseISO, isValid, isDate, isEqual} from "date-fns";
+import {format, isEqual} from "date-fns";
+import {fromUTC} from "../../utils/availability";
 
 export const SelectTimeFrame = React.forwardRef((props, ref) => {
     // @TODO warn on different timeframes selected
@@ -10,15 +11,7 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
 
     const [selected, setSelected] = useState(props.value || []);
 
-    const times = props.times.map(time => {
-        const startTime = typeof time.startTime === "string" ? parseISO(time.startTime) : time.startTime;
-        const endTime = typeof time.endTime === "string" ? parseISO(time.endTime) : time.endTime;
-        return {
-            ...time,
-            startTime,
-            endTime
-        }
-    })
+    const times = fromUTC(props.times);
 
     const addTime = (candidate) => {
         let newSelected;
@@ -54,8 +47,6 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
                 </Typography>
             </Grid>
             {times.map((time, index) => {
-                let startTime = isDate(time.startTime) && isValid(time.startTime) ? time.startTime : parseISO(time.startTime);
-                let endTime = isDate(time.endTime) && isValid(time.endTime) ? time.endTime : parseISO(time.endTime);
                 return (
                     <Grid key={index} item xs={4}>
                         <Button
@@ -70,7 +61,7 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
                                         {time.dayOfWeek}
                                     </Typography>
                                     <Typography align="center" variant="caption" style={{display: "block"}}>
-                                        {format(startTime, "h:mm aa")} - {format(endTime, "h:mm aa")}
+                                        {format(time.startTime, "h:mm aa")} - {format(time.endTime, "h:mm aa")}
                                     </Typography>
                                 </Grid>
                             </Grid>

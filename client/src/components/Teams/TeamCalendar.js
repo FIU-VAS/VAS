@@ -4,7 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import {Day} from "./Calendar/Day";
 import {Grid, Typography} from "@material-ui/core";
-import {isValid, parseISO} from "date-fns";
+import {isValid} from "date-fns";
 
 const calendarStyles = makeStyles(theme => ({
     calendar: {
@@ -35,15 +35,6 @@ export const AppTeamCalendar = (props) => {
         )
     }
 
-    teams = teams.map(team => ({
-        ...team,
-        availability: team.availability.map(av => ({
-            dayOfWeek: av.dayOfWeek,
-            startTime: typeof av.startTime !== "string" && isValid(av.startTime) ? av.startTime : parseISO(av.startTime),
-            endTime: typeof av.endTime !== "string" && isValid(av.endTime) ? av.endTime : parseISO(av.endTime)
-        }))
-    }))
-
     return (
         <Box my={3} style={{overflowX: "scroll"}}>
             <Grid container className={classes.calendar}>
@@ -66,7 +57,7 @@ export const AppTeamCalendar = (props) => {
 AppTeamCalendar.propTypes = {};
 
 const mapStateToProps = state => ({
-    teams: state.calendar.teams,
+    teams: state.teamData.teams,
     volunteers: state.volunteers.volunteers,
     schoolPersonnels: state.schoolPersonnels.schoolPersonnels,
     schools: state.schoolData.schools,

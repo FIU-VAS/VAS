@@ -132,9 +132,6 @@ export const MaterialUIField = (props) => {
                     as={<AvailabilityForm />}
                     rules={fieldProps.rules}
                     disabled={fieldProps.disabled}
-                    error={fieldProps.error}
-                    helperText={fieldProps.errorMessage}
-
                 />
             )
         case "select":
@@ -180,7 +177,7 @@ export const UserFormDialog = (props) => {
             })
             .catch(err => {
                 console.log(err);
-                setMessage(err.message);
+                setMessage(err.response && err.response.data ? err.response.data.message : err.message);
                 setSuccess(false);
             })
 
@@ -248,9 +245,9 @@ export const UserFormDialog = (props) => {
                         </DialogContent>
                         <DialogActions>
                             <Button className={useStyles.bottomButtons} onClick={props.close} variant="contained"
-                                    color="primary">Cancel</Button>
+                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Cancel</Button>
                             <Button className={useStyles.bottomButtons} type="submit" variant="contained"
-                                    color="primary">Submit</Button>
+                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Submit</Button>
                         </DialogActions>
                     </form>
                 </FormProvider>

@@ -1,4 +1,4 @@
-import { SET_TEAMS, TEAMS_LOADING, RESET_STATE} from '../actions/types';
+import {SET_TEAMS, TEAMS_LOADING, RESET_STATE, UPDATE_TEAMS} from '../actions/types';
 
   const initialState = {
     teams: [],
@@ -12,6 +12,15 @@ import { SET_TEAMS, TEAMS_LOADING, RESET_STATE} from '../actions/types';
           ...state,
           teams: action.payload
         };
+      case UPDATE_TEAMS: {
+        return {
+          ...state,
+          teams: [
+              ...state.teams.filter(team => team._id !== action.payload._id),
+              action.payload
+          ]
+        }
+      }
       case TEAMS_LOADING:
         return {
           ...state,

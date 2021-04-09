@@ -26,7 +26,6 @@ router.post('/', )
 async function fetchVolunteers(request, response) {
 
     const {availability, semester, year} = request.query;
-
     if (availability && semester && year && request.account.role === UserRoles.Admin) {
         let aggregation = buildVolunteerByAvailability(semester, year, availability);
         const results = await Volunteer.aggregate(aggregation);

@@ -10,7 +10,6 @@ import AdminDashboard from "../components/Admins/AdminDashboard";
 import SchoolPersonnelDashboard from "../components/Dashboards/SchoolPersonnelDashboard";
 import serverConf from "../config";
 import axios from "axios";
-import {parseISO} from "date-fns";
 import {setSemesterTeams} from "../actions/calendarActions";
 import {setErrors} from "../actions/server/errorActions";
 import {getAdmins} from "../actions/adminActions";
@@ -19,6 +18,8 @@ import {getVolunteers} from "../actions/volunteerActions";
 import {getSchools, setCurrentSchools} from "../actions/schoolActions";
 import {getSchoolPersonnels} from "../actions/schoolPersonnelActions";
 import SideBar from "../components/AppBar/SideBar";
+import {fromUTC} from "../utils/availability";
+import {setCurrentTeams} from "../actions/teamActions";
 
 const useStyles = {
     cell: {
@@ -55,11 +56,7 @@ const Dashboard = (props) => {
 
                 let teams = response.data.map(team => ({
                     ...team,
-                    availability: team.availability.map(av => ({
-                        ...av,
-                        startTime: parseISO(av.startTime),
-                        endTime: parseISO(av.endTime),
-                    }))
+                    availability: fromUTC(team.availability)
                 }));
 
                 let allVolunteers = []
@@ -73,7 +70,7 @@ const Dashboard = (props) => {
                 allVolunteers = allVolunteers.map(String).toString().split(',').map(x=>+x)
 
                 // set current teams
-                props.setSemesterTeams(teams);
+                props.setCurrentTeams(teams);
                 props.getVolunteers(allVolunteers);
 
                 const schools = await axios.get(`${config.uri}${config.endpoints.schools.fetch}`);
@@ -144,7 +141,7 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {
-        setSemesterTeams,
+        setCurrentTeams,
         getVolunteers,
         getSchools,
         setErrors,

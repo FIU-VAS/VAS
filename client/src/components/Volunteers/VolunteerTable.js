@@ -14,7 +14,8 @@ import {red} from '@material-ui/core/colors';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {ThemeProvider} from '@material-ui/core/styles';
 import { AvailabilityDialog } from "../Extras/AvailabilityDialog";
-import {format, parseISO} from "date-fns";
+import {format} from "date-fns";
+import {fromUTC} from "../../utils/availability";
 
 
 const theme = createMuiTheme({
@@ -58,11 +59,12 @@ class VolunteerTable extends Component {
             selectedVolunteer: {},
             userFormDialog: false,
             availabilityDialog: false,
-            edit: false
+            onlyActive: false
         }
 
         this.toggleUserFormDialog = this.toggleUserFormDialog.bind(this);
         this.toggleAvailabilityDialog = this.toggleAvailabilityDialog.bind(this);
+        this.toggleOnlyActive = this.toggleOnlyActive.bind(this);
     }
 
     componentDidMount() {
@@ -99,6 +101,13 @@ class VolunteerTable extends Component {
                 availabilityDialog: true,
             }));
         }
+    }
+
+    toggleOnlyActive() {
+        this.setState(prevState => ({
+            ...prevState,
+            onlyActive: !prevState.onlyActive
+        }));
     }
 
     setColor(text) {
@@ -226,8 +235,14 @@ class VolunteerTable extends Component {
                             }
                         ]
                     }
-                    data={this.props.volunteers}
+                    data={this.state.onlyActive ? this.props.volunteers.filter(volunteer => volunteer.isActive) : this.props.volunteers}
                     actions={[
+                        {
+                            icon: this.state.onlyActive ? 'person' : 'person_outline',
+                            tooltip: this.state.onlyActive ? 'Show All Volunteers' : 'Show Active Volunteers',
+                            isFreeAction: true,
+                            onClick: this.toggleOnlyActive
+                        },
                         {
                             icon: 'person_add',
                             tooltip: 'Add Volunteer',
@@ -335,17 +350,19 @@ class VolunteerTable extends Component {
                                     </Typography>
                                     {/* Availability*/}
                                      <Typography className={this.props.classes.subHeading} color="textPrimary" variant="h6" display="inline" >
-                                        Availability: {rowData.availability && rowData.availability.length === 0 && <IconButton onClick={() => this.toggleAvailabilityDialog()} size="small"><CreateIcon /></IconButton>}<br/>
+                                        Availability: <IconButton onClick={() => this.toggleAvailabilityDialog()} size="small"><CreateIcon /></IconButton><br/>
                                     </Typography>
                                     {rowData.availability.length === 0 ?
                                         <Typography className={this.props.classes.body} color="textPrimary" variant="body1" display="inline" gutterBottom>
                                         Availability has not been set.<br/>
                                         </Typography> :
-                                        rowData.availability.map(timeSlot => {
+                                        fromUTC(rowData.availability).map(timeSlot => {
+                                            console.log(rowData.availability);
+                                            console.log(timeSlot)
                                             return(
-                                            <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
-                                            {timeSlot.dayOfWeek}: {format(parseISO(timeSlot.startTime), "h:mm aa")} - {format(parseISO(timeSlot.endTime), "h:mm aa")}<br/>
-                                            </Typography>
+                                                <Typography className={this.props.classes.body} style={{textTransform: "capitalize"}} color="textPrimary" variant="body1" display="inline" gutterBottom>
+                                                    {timeSlot.dayOfWeek}: {format(timeSlot.startTime, "h:mm aa")} - {format(timeSlot.endTime, "h:mm aa")}<br/>
+                                                </Typography>
                                             )
                                         })}
                                         {this.state.availabilityDialog && <AvailabilityDialog

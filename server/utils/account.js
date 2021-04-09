@@ -90,7 +90,7 @@ export const createNewUser = (Schema, validationSchema) => {
                 response.statusCode = 500
                 return response.send({
                     success: false,
-                    message: "Error: Server error."
+                    message: "Error: " + insertError.toString()
                 });
             }
         }
@@ -152,7 +152,7 @@ export const updateUser = (Schema, validationSchema) => {
 
             if (updateResult.nModified === 1) {
                 if ("availability" in updateProps) {
-                    await sendUserAvailabilityChange(newUser);
+                    // await sendUserAvailabilityChange(newUser);
                 }
                 return response.send({
                     success: true,

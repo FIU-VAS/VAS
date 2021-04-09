@@ -1,5 +1,6 @@
-import {Days, sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
+import {sanitizeAvailability, validateAvailability} from "../../models/Teams/team";
 import School from "../../models/Schools/school";
+import SchoolPersonnel from "../../models/Users/school_User";
 
 const semesters = ['Fall', 'Spring', 'Summer'];
 
@@ -69,5 +70,15 @@ export const schema = {
         },
         isBoolean: true,
         isAlphanumeric: true
+    },
+    schoolPersonnel: {
+        isArray: true,
+        custom: {
+            options: async (values) => {
+                const personnel = await SchoolPersonnel.find({email: {$in: values}})
+                return personnel.length > 0
+            },
+            errorMessage: "Some personnel defined are not registered in the app with that email"
+        }
     }
 }

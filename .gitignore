@@ -34,3 +34,4 @@ yarn-error.log*
 /server/database/**
 db/data
 vas-backup:Zone.Identifier
+deploy.key

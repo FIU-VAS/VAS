@@ -11,7 +11,7 @@ import {schema as teamDataSchema} from "../validation-schemas/team/team-data"
 import {schema as teamFetchSchema} from "../validation-schemas/team/fetch"
 import {schema as teamCreateSchema} from "../validation-schemas/team/create"
 import {schema as teamDeleteSchema} from "../validation-schemas/team/delete"
-import validateUpdateTeamInput from '../validation/teams/updateTeam';
+import {schema as teamSuggestionSchema} from "../validation-schemas/team/suggestion"
 import {checkAdminRole} from "../utils/passport";
 import {extendedCheckSchema} from "../utils/validation";
 import {buildQuery} from "../utils/team-query";
@@ -20,32 +20,16 @@ const router = new express.Router();
 
 router.post('/', extendedCheckSchema(teamCreateSchema), checkAdminRole, createUpdateTeam);
 router.post('/delete/:id', extendedCheckSchema(teamDeleteSchema), checkAdminRole, deleteTeam);
-router.put('/update/:id', checkAdminRole, updateTeam);
 router.get('/getTeamInfo/:pid', fetchTeamByPantherID);
 router.get('/', extendedCheckSchema(teamFetchSchema), fetchTeams);
 router.get('/getTeamInfoSch/:schoolCode', fetchTeamBySchoolCode);
 router.get('/getTeamData/:id', extendedCheckSchema(teamDataSchema), getTeamData)
-router.get('/suggest', checkAdminRole, extendedCheckSchema({
-    semester: {
-        exists: true,
-        errorMessage: "Term must be defined"
-    },
-    year: {
-        isNumeric: true,
-        isLength: {
-            options: {
-                min: 4,
-                max: 4
-            },
-        },
-        errorMessage: "Year must be a number of 4 digits"
-    }
-}), teamSuggestions);
+router.get('/suggest', checkAdminRole, extendedCheckSchema(teamSuggestionSchema), teamSuggestions);
 router.get('/:id', fetchTeamById);
 
-
 async function deleteTeam(req, res) {
-    const {id, closureNotes} = req.body;
+    const {closureNotes} = req.body;
+    const {id} = req.params;
 
     let update = {
         isActive: false,
@@ -53,11 +37,20 @@ async function deleteTeam(req, res) {
     }
 
     try {
-        await Team.updateOne({_id: id}, {$set: update})
-        return res.json({
-            success: true,
-            message: "Successfully deleted Team: " + id
-        });
+        const result = await Team.updateOne({_id: id}, {$set: update})
+        const team = await Team.findById(id);
+        if (result.nModified === 1) {
+            return res.json({
+                success: true,
+                message: "Successfully deleted Team: " + id,
+                team
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: "Error deleting team: " + id
+            });
+        }
     } catch (dbError) {
         return res.json({
             success: false,
@@ -68,6 +61,8 @@ async function deleteTeam(req, res) {
 
 async function createUpdateTeam(req, res) {
     const {body} = req;
+
+    const duplicateProperties = ["schoolPersonnel", "schoolCode"]
 
     let properties = {};
     let result;
@@ -83,6 +78,24 @@ async function createUpdateTeam(req, res) {
             await Team.updateOne({_id: body._id}, properties)
             result = await Team.findById(body._id);
         } else {
+            // Try to find a team with the same duplicateProperties
+            const dup = await Team.findOne({
+                schoolPersonnel: properties.schoolPersonnel,
+                schoolCode: properties.schoolCode,
+                $or: properties.availability.map(available => ({
+                    "availability.dayOfWeek": available.dayOfWeek,
+                    "availability.startTime": {$eq: available.startTime},
+                    "availability.endTime": {$eq: available.endTime},
+                }))
+            });
+
+            if (dup) {
+                return res.json({
+                    success: false,
+                    message: "There is already a team with those properties"
+                })
+            }
+
             result = await Team.create(properties)
         }
 
@@ -93,64 +106,15 @@ async function createUpdateTeam(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            message: "Could not update " + error.toString()
+            message: "Could not creat or insert " + error.toString()
         });
     }
-}
-
-function updateTeam(request, response) {
-    let {body} = request;
-
-    //deconstruct PIDs into an array
-    body.volunteerPIs = body.volunteerPIs.split(',')
-
-    // form validation
-    const {errors, isValid} = validateUpdateTeamInput(request.body);
-    // check validation
-    if (!isValid) {
-        return response.status(400).json({success: false, errors});
-    }
-
-    //check if team is being deativated to change timestamp
-    if (body.isActive === 'false') {
-        body.timeStamp = Date.now()
-    }
-
-    Team.updateOne({_id: request.params.id}, body, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (result.n === 1) {
-                Team.findById(request.params.id)
-                    .then(result => {
-                        return response.send({
-                            success: true,
-                            message: 'Successfully updated team!'
-                        });
-                    })
-                    .catch(error => {
-                        response.json({
-                            success: false,
-                            message: error.toString()
-                        })
-                    })
-            } else {
-                response.json({
-                    success: false,
-                    message: "Could not update"
-                });
-            }
-        }
-    });
-
 }
 
 function fetchTeams(request, response) {
     let {semester, year} = request.query;
 
-    let conditions = {
-        isActive: true
-    };
+    let conditions = {};
 
     if (semester) {
         conditions.semester = semester;
@@ -236,8 +200,8 @@ async function getTeamData(request, response) {
         },
         schoolPersonnel: {
             from: "users",
-            localField: "schoolCode",
-            foreignField: "schoolCode",
+            localField: "schoolPersonnel",
+            foreignField: "email",
             as: "schoolPersonnel"
         }
     }
@@ -289,7 +253,6 @@ async function teamSuggestions(request, response) {
     try {
         const schoolPersonnel = await SchoolPersonnel.find({}, "email availability schoolCode");
         matchesQuery = buildQuery(schoolPersonnel, {isActive: true}, "volunteer", {pantherID: 1, email: 1, firstName: 1, lastName: 1}, 3);
-        console.log(matchesQuery);
         const matches = await Volunteer.aggregate(matchesQuery);
         if (matches.length) {
             const teams = schoolPersonnel.map(personnel => {

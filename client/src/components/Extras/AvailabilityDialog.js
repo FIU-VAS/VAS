@@ -12,16 +12,29 @@ import {
 import {Close} from "@material-ui/icons";
 import {Alert} from "@material-ui/lab";
 import {useForm, Controller} from "react-hook-form";
+import {format} from "date-fns";
 import axios from "axios";
 
 import AvailabilityForm, {validateAvailability} from "./AvailabilityForm";
+import {fromUTC} from "../../utils/availability";
 
 
 export const AvailabilityDialog = (props) => {
 
     const {endpoint, open, close, onSubmit, userEmail, value} = props;
 
-    const {handleSubmit, control, errors} = useForm();
+    const {handleSubmit, control, errors} = useForm({
+        defaultValues: {
+            availability: (value && value.length)
+                ? fromUTC(value).map(available => ({
+                    ...available,
+                    startTime: format(available.startTime, "HH:mm"),
+                    endTime: format(available.endTime, "HH:mm")
+                }))
+                : [{ dayOfWeek: "", startTime: "", endTime: "" }]
+        }
+    });
+
     const [response, setResponse] = useState(null)
 
     const submitForm = async (data) => {

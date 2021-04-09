@@ -7,15 +7,17 @@ import {
     DialogTitle,
     IconButton
 } from "@material-ui/core";
-import {Close} from "@material-ui/icons";
 import React, {useState} from "react";
 import {useForm, FormProvider} from "react-hook-form";
 import axios from "axios";
 import config from "../../../config";
 import {MaterialUIField} from "../../Users/UserFormDialog";
+import Box from '@material-ui/core/Box'
+import CloseIcon from '@material-ui/icons/Close';
+import {connect} from "react-redux";
+import {updateCurrentTeams} from "../../../actions/teamActions";
 
-
-export const TeamDeleteDialog = (props) => {
+const TeamDeleteDialogComponent = (props) => {
     const {open, close, onSubmit, deleteTeam, message} = props;
 
     const methods = useForm({
@@ -32,6 +34,7 @@ export const TeamDeleteDialog = (props) => {
                 closureNotes: data.closureNotes
             });
             onSubmit(response.data);
+            props.updateCurrentTeams(response.data.team);
             close()
         } catch (apiError) {
         }
@@ -45,10 +48,15 @@ export const TeamDeleteDialog = (props) => {
         >
             <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(submit)}>
-                    <DialogTitle style={{padding: "0rem 1rem", borderBottom: "none"}}>
-                        <IconButton aria-label="close" onClick={close}>
-                            <Close/>
-                        </IconButton>
+                    <DialogTitle  style={{padding: "0rem 1rem", borderBottom: "none"}}>
+                    <Box display="flex" alignItems="center">
+                            <Box flexGrow={1}>Make Team Inactive</Box>
+                            <Box>
+                                <IconButton onClick={close}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
+                        </Box>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -75,3 +83,8 @@ export const TeamDeleteDialog = (props) => {
         </Dialog>
     )
 }
+
+export const TeamDeleteDialog = connect(
+    null,
+    {updateCurrentTeams}
+)(TeamDeleteDialogComponent);

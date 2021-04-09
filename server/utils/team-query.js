@@ -90,9 +90,7 @@ export const buildVolunteerByAvailability = (semester, year, availability, addit
                             $expr: {
                                 $and: [
                                     {
-                                        $not: {
-                                            $in: ["$$pantherID", "$volunteerPIs"]
-                                        }
+                                        $in: ["$$pantherID", "$volunteerPIs"]
                                     },
                                     {
                                         $eq: ["$year", year]
