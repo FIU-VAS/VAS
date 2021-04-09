@@ -33,3 +33,4 @@ yarn-error.log*
 # database folder
 /server/database/**
 db/data
+deploy.key
