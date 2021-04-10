@@ -19,8 +19,8 @@ export const PersonnelPicker = (props) => {
                         <React.Fragment>
                             <Grid key={personnel.email} item xs={8}>
                                 <Typography color="error">
-                                    {personnel.firstName} {personnel.lastName}
-                                    has not set an availability. If you'd like to continue set one now
+                                    {personnel.firstName} {personnel.lastName} has
+                                    not set an availability. If you'd like to continue set one now
                                 </Typography>
                             </Grid>
                             <Grid item xs={4} style={{textAlign: "right"}}>
