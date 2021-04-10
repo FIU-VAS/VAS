@@ -115,6 +115,6 @@ export const resetPassword = form => dispatch => {
     })
     .catch(err => dispatch({
         type: GET_ERRORS,
-        payload: err
+        payload: !!err.response ? err.response.data.errors : err
     }));
 };
