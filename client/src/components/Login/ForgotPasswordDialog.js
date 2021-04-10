@@ -75,17 +75,16 @@ class ForgotPasswordDialog extends Component {
         this.props.close();
     }
 
-    successMessage() {
+    responseMessage() {
         if (!isEmpty(this.props.success.message)) {
           return <Alert severity="success">{this.props.success.message}</Alert> 
         }
-        else if (!isEmpty(this.props.errors.message)) {
-            return <Alert severity="error">{this.props.errors.message}</Alert>
+        else if (!isEmpty(this.props.errors)) {
+            return <Alert severity="error">{this.props.errors}</Alert>
         }
     }
 
     render() {
-
         const {open} = this.props
 
         return (
@@ -103,7 +102,7 @@ class ForgotPasswordDialog extends Component {
                   </Box>
                 </Box>                
                 </DialogTitle>
-                { this.successMessage() }
+                { this.responseMessage() }
                 <DialogContent>
                     <DialogContentText>
                     Please enter the email address for your account

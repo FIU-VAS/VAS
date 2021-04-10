@@ -138,10 +138,11 @@ class LoginForm extends Component {
             return (
                 <Alert severity="success">{this.props.success.message}</Alert>
             )
-        else if (!isEmpty(this.props.errors))
+        else if (!isEmpty(this.props.errors)) {
                 return (
-                    <Alert severity="error">{"Invalid email or password."}</Alert>
+                    <Alert severity="error">{this.props.errors}</Alert>
                 )
+        }
     }
 
     validate = async (e) => {

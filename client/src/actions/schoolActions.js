@@ -36,7 +36,7 @@ export const addSchool = form => dispatch => {
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
-        payload: err
+        payload: err.response && err.response.data ? err.response.data.message : err.message
     }));
  };
 
@@ -56,7 +56,7 @@ export const editSchool = (id, form) => dispatch => {
     })
     .catch((err) => dispatch({
         type: GET_ERRORS,
-        payload: err
+        payload: err.response && err.response.data ? err.response.data.message : err.message
     }));
  };
 
