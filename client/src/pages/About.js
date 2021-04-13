@@ -50,9 +50,9 @@ class About extends Component{
 
     render(){
         return (
-        <div className={this.props.classes.all}>
-               <NavBar/>
-            <Fragment>
+        <div >
+            <NavBar/>
+            <Fragment className={this.props.classes.all}>
                 <Grid
             container
             direction="column"

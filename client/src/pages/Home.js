@@ -16,21 +16,26 @@ const theme = createMuiTheme({
 const useStyles = {
     horizontal: {
         marginTop: theme.spacing(8),
+        marginBottom: theme.spacing(8),
+     },
+     picture: {
+        
      }
 };
 
-class Login extends Component{
+class Home extends Component{
     
     render(){
         return (
             <div>
                 <NavBar/>
-                <Grid container  direction="row" align="center" className={this.props.classes.horizontal} >
-                <CalltoAction/>
-                <Grid item md={6} xs={12}>
+                <Grid container   direction="row" align="center" className={this.props.classes.horizontal} >
+                <CalltoAction />
+                <Grid item md={6} xs={12} maxWidth='100vw'>
                 <img 
                 src ={require("../images/kids_home_page.png").default}
-                alt = "Kids Learning" 
+                alt = "Kids Learning"  
+                width= '80%'
                 />
                 </Grid>
                 </Grid>
@@ -39,4 +44,4 @@ class Login extends Component{
     }
 }
 
-export default withStyles(useStyles)(Login);
+export default withStyles(useStyles)(Home);

@@ -25,7 +25,7 @@ const theme = createMuiTheme({
 
 const useStyles = {
     button: {
-        margin: theme.spacing(2, 0, 0, 0),
+        margin: theme.spacing(2, 0, 5, 0),
         backgroundColor: theme.secondary.main,
         color: "white",
         width: '160px',
@@ -35,7 +35,7 @@ const useStyles = {
 
     },
     button1: {
-        margin: theme.spacing(2, 0, 0, 0.5),
+        margin: theme.spacing(2, 0, 5, 0.5),
         backgroundColor: theme.secondary.main,
         color: "white",
         width: '160px',
@@ -76,7 +76,7 @@ class LoginForm extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <Grid item md={6} xs={24} className={this.props.classes.calltoaction} component="main" maxWidth="xs">
+                <Grid item md={6} xs={12} className={this.props.classes.calltoaction} component="main" maxWidth="xs">
                     
                     <h1>Ignite the passion for CS. <br></br>
                         Uplift your community.</h1>
