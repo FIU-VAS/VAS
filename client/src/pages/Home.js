@@ -4,6 +4,7 @@ import { grey } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import NavBar from '../components/AppBar/NavBar';
 import CalltoAction from '../components/Home/CalltoAction';
+import Grid from "@material-ui/core/Grid";
 
 const theme = createMuiTheme({
     palette: {
@@ -13,12 +14,9 @@ const theme = createMuiTheme({
   });
 
 const useStyles = {
-    picture: {
-        marginTop: theme.spacing(16),
-        position: 'absolute',
-        right: '3%',
-        left: '55%',
-    }
+    horizontal: {
+        marginTop: theme.spacing(8),
+     }
 };
 
 class Login extends Component{
@@ -27,11 +25,15 @@ class Login extends Component{
         return (
             <div>
                 <NavBar/>
+                <Grid container  direction="row" align="center" className={this.props.classes.horizontal} >
                 <CalltoAction/>
-                <img className={this.props.classes.picture}
+                <Grid item md={6} xs={12}>
+                <img 
                 src ={require("../images/kids_home_page.png").default}
                 alt = "Kids Learning" 
                 />
+                </Grid>
+                </Grid>
             </div>
         )
     }

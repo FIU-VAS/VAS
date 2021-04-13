@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import {loginUser} from "../../actions/authActions";
 import axios from "axios";
 import config from "../../config";
+import Grid from "@material-ui/core/Grid";
 
 
 // Login Styling
@@ -23,14 +24,6 @@ const theme = createMuiTheme({
 });
 
 const useStyles = {
-    calltoaction: {
-        position: 'absolute',
-        left: '3%',
-        right: '55%',
-        marginTop: theme.spacing(20),
-
-
-    },
     button: {
         margin: theme.spacing(2, 0, 0, 0),
         backgroundColor: theme.secondary.main,
@@ -83,8 +76,8 @@ class LoginForm extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <Container className={this.props.classes.calltoaction} component="main" maxWidth="xs">
-
+                <Grid item md={6} xs={24} className={this.props.classes.calltoaction} component="main" maxWidth="xs">
+                    
                     <h1>Ignite the passion for CS. <br></br>
                         Uplift your community.</h1>
                     <h3>Currently reaching 60+ volunteers, <br></br>
@@ -103,8 +96,8 @@ class LoginForm extends Component {
                         className={this.props.classes.button1}>
                         Volunteer
                     </Button>
-
-                </Container>
+                    
+                </Grid>
 
             </ThemeProvider>
 
