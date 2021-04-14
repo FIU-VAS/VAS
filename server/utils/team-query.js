@@ -1,3 +1,6 @@
+import {addMinutes, subMinutes} from "date-fns";
+
+
 const getAggregationMatchQuery = (personnel, matchingRole, additionalMatches) => {
     return {
         $match: {
@@ -71,8 +74,8 @@ export const buildVolunteerByAvailability = (semester, year, availability, addit
                         $or: availability.map(available => {
                             return {
                                 $and: [
-                                    {startTime: {$gte: available.startTime}},
-                                    {endTime: {$lte: available.endTime}}
+                                    {startTime: {$gte: subMinutes(available.startTime, 30)}},
+                                    {endTime: {$lte: addMinutes(available.endTime, 30)}}
                                 ]
                             }
                         })

@@ -35,7 +35,7 @@ export const Day = (props) => {
                     {day}
                 </Typography>
             </Grid>
-            {dayTeams.map(team => {
+            {dayTeams.sort((a, b) => (a.isActive === b.isActive)? 0 : a.isActive ? -1 : 1).map(team => {
                 return (
                     <TeamCard key={team._id} team={team} day={day} />
                 )

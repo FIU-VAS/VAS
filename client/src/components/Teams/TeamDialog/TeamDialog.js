@@ -28,6 +28,7 @@ import {PersonnelPicker} from "./PersonnelPicker";
 import {AvailabilityDialog} from "../../Extras/AvailabilityDialog";
 import {setTeams} from "../../../actions/volunteerRequestActions";
 import {fromUTC, toTimeSlot} from "../../../utils/availability";
+import {omit} from "lodash";
 
 const teamDialogStyles = makeStyles(theme => ({
     backdrop: {
@@ -102,7 +103,7 @@ const TeamDialog = (props) => {
         })
     });
 
-    const {handleSubmit, watch, control, formState: {isDirty}} = formMethods;
+    const {handleSubmit, watch, control, formState: {isDirty}, reset, setValue} = formMethods;
     const allFields = watch();
 
     const classes = teamDialogStyles();
@@ -170,7 +171,21 @@ const TeamDialog = (props) => {
 
     const updateData = async () => {
         if (!!allFields.schoolCode && allFields.schoolCode !== team.schoolCode) {
-            updatePersonnel(allFields.schoolCode);
+            let schoolCode = allFields.schoolCode
+            updatePersonnel(schoolCode);
+            if (allFields.volunteers) {
+                setVolunteers([]);
+                setValue("volunteers", []);
+            }
+            if (team.availability) {
+                setTeam({
+                    ...team,
+                    ...allFields,
+                    availability: []
+                });
+                setValue("availability", []);
+                return;
+            }
         }
         if (!!allFields.availability && allFields.availability !== team.availability) {
             updateVolunteers(allFields.availability)
