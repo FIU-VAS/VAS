@@ -173,7 +173,7 @@ export const UserFormDialog = (props) => {
         let response = axios.post(props.endpoint, data)
             .then(res => {
                 setResponse(res);
-                setSuccess(true);
+                setSuccess(res.data.success);
             })
             .catch(err => {
                 setResponse(err);
@@ -245,8 +245,9 @@ export const UserFormDialog = (props) => {
                                     </Alert>
                                     : 
                                     <Alert severity="error" style={{ marginBottom: "1rem" }}>
-                                        {response.response.data.message ? response.response.data.message :
-                                        response.response.data.errors ? `${response.response.data.errors[0].param} error: ${response.response.data.errors[0].msg}` :
+                                        {response.response && response.response.data.message ? response.response.data.message :
+                                        response.response && response.response.data.errors ? `${response.response.data.errors[0].param} error: ${response.response.data.errors[0].msg}` :
+                                        response.data ? response.data.message :
                                         response.message}
                                     </Alert>
                                     }
