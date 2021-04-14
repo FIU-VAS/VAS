@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {FormControl, TextField, Select, InputLabel, MenuItem, Chip} from "@material-ui/core";
-import {ThemeProvider} from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { FormControl, TextField, Select, InputLabel, MenuItem, Chip, Snackbar } from "@material-ui/core";
+import { responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
 import IconButton from '@material-ui/core/IconButton';
@@ -9,18 +9,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {createMuiTheme} from '@material-ui/core/styles';
-import {green} from '@material-ui/core/colors';
-import {useForm, FormProvider, useFormContext, Controller} from "react-hook-form";
+import { createMuiTheme } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
+import { useForm, FormProvider, useFormContext, Controller } from "react-hook-form";
+import { Alert } from "@material-ui/lab";
 import axios from "axios";
-import Alert from '@material-ui/lab/Alert';
 import DialogActions from "@material-ui/core/DialogActions";
 import AvailabilityForm from "../Extras/AvailabilityForm";
 
 const theme = createMuiTheme({
     palette: {
         primary: green,
-      }
+    }
 })
 
 const useStyles = {
@@ -38,8 +38,8 @@ const useStyles = {
 
 // @TODO move component to a shared utils folder
 export const MuiSelect = React.forwardRef((props, ref) => {
-    const {id, label, name, options} = props;
-    let {value} = props;
+    const { id, label, name, options } = props;
+    let { value } = props;
 
     let extraProps = {};
 
@@ -55,7 +55,7 @@ export const MuiSelect = React.forwardRef((props, ref) => {
     }
 
     return (
-        <FormControl fullWidth={true} style={{marginBottom: "15px"}} margin="dense">
+        <FormControl fullWidth={true} style={{ marginBottom: "15px" }} margin="dense">
             <InputLabel id={id}>{label}</InputLabel>
             <Select
                 {...props}
@@ -88,8 +88,8 @@ export const MuiSelect = React.forwardRef((props, ref) => {
 
 // @TODO move component to a shared utils folder
 export const MaterialUIField = (props) => {
-    const {register, control} = useFormContext();
-    const {fieldProps} = props;
+    const { register, control } = useFormContext();
+    const { fieldProps } = props;
 
     switch (fieldProps.type) {
         case "text":
@@ -102,7 +102,7 @@ export const MaterialUIField = (props) => {
                 <Controller
                     as={TextField}
                     fullWidth={true}
-                    style={{marginBottom: "15px"}}
+                    style={{ marginBottom: "15px" }}
                     margin="dense"
                     key={fieldProps.name}
                     control={control}
@@ -157,12 +157,12 @@ export const MaterialUIField = (props) => {
                 </React.Fragment>
             );
         default:
-            return <Controller key={fieldProps.name}/>;
+            return <Controller key={fieldProps.name} />;
     }
 }
 
 export const UserFormDialog = (props) => {
-    let [message, setMessage] = useState("");
+    let [response, setResponse] = useState(null);
     let [success, setSuccess] = useState(false);
 
     const submitForm = (data) => {
@@ -172,12 +172,11 @@ export const UserFormDialog = (props) => {
 
         let response = axios.post(props.endpoint, data)
             .then(res => {
-                setMessage(res.data.message);
+                setResponse(res);
                 setSuccess(true);
             })
             .catch(err => {
-                console.log(err);
-                setMessage(err.response && err.response.data ? err.response.data.message : err.message);
+                setResponse(err);
                 setSuccess(false);
             })
 
@@ -195,21 +194,21 @@ export const UserFormDialog = (props) => {
         defaultValues: defaultValues
     });
 
-    const {handleSubmit} = methods;
+    const { handleSubmit } = methods;
 
     const getFormFields = () => {
         return props.formProps.map(properties => {
-                if (!properties.wrapper || !properties.wrapper.component) {
-                    return (<MaterialUIField fieldProps={properties}/>)
-                } else {
-                    let Component = properties.wrapper.component;
-                    return (
-                        <Component {...properties.wrapper.props}>
-                            <MaterialUIField fieldProps={properties}/>
-                        </Component>
-                    )
-                }
+            if (!properties.wrapper || !properties.wrapper.component) {
+                return (<MaterialUIField fieldProps={properties} />)
+            } else {
+                let Component = properties.wrapper.component;
+                return (
+                    <Component {...properties.wrapper.props}>
+                        <MaterialUIField fieldProps={properties} />
+                    </Component>
+                )
             }
+        }
         )
     }
 
@@ -223,17 +222,36 @@ export const UserFormDialog = (props) => {
                     <form onSubmit={handleSubmit((data, event) => {
                         submitForm(data, props.role, props.edit, props.userId);
                     })}><DialogTitle>
-                        <Box display="flex" alignItems="center">
-                            <Box flexGrow={1}>{props.title}</Box>
-                            <Box>
-                                <IconButton onClick={props.close}>
-                                    <CloseIcon/>
-                                </IconButton>
+                            <Box display="flex" alignItems="center">
+                                <Box flexGrow={1}>{props.title}</Box>
+                                <Box>
+                                    <IconButton onClick={props.close}>
+                                        <CloseIcon />
+                                    </IconButton>
+                                </Box>
                             </Box>
-                        </Box>
-                    </DialogTitle>
-                        {message !== "" && <Alert severity={success ? "success" : "error"}>{message}</Alert>}
+                        </DialogTitle>
                         <DialogContent>
+                            {response &&
+                                <Snackbar
+                                    open={true}
+                                    onClose={() => setResponse(null)}
+                                    autoHideDuration={2000}
+                                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                                >
+                                    {success ?
+                                    <Alert severity="success" style={{ marginBottom: "1rem" }}>
+                                        {response.data.message}
+                                    </Alert>
+                                    : 
+                                    <Alert severity="error" style={{ marginBottom: "1rem" }}>
+                                        {response.response.data.message ? response.response.data.message :
+                                        response.response.data.errors ? `${response.response.data.errors[0].param} error: ${response.response.data.errors[0].msg}` :
+                                        response.message}
+                                    </Alert>
+                                    }
+                                </Snackbar>
+                            }
                             <DialogContentText>
                                 {props.description}
                             </DialogContentText>
@@ -245,9 +263,9 @@ export const UserFormDialog = (props) => {
                         </DialogContent>
                         <DialogActions>
                             <Button className={useStyles.bottomButtons} onClick={props.close} variant="contained"
-                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Cancel</Button>
+                                style={{ 'backgroundColor': '#57C965', 'color': 'white', 'fontWeigth': 'bold' }}>Cancel</Button>
                             <Button className={useStyles.bottomButtons} type="submit" variant="contained"
-                                    style={{'backgroundColor':'#57C965','color':'white', 'fontWeigth':'bold'}}>Submit</Button>
+                                style={{ 'backgroundColor': '#57C965', 'color': 'white', 'fontWeigth': 'bold' }}>Submit</Button>
                         </DialogActions>
                     </form>
                 </FormProvider>
