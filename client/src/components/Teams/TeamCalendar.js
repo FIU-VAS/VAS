@@ -25,6 +25,10 @@ const Days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 export const AppTeamCalendar = (props) => {
 
     let {teams} = props;
+    let activeTeams = teams.filter(team => team.isActive).sort((a, b) => (a.availability[0].startTime <= b.availability[0].startTime) ? -1 : 1);
+    let inactiveTeams = teams.filter(team => !team.isActive).sort((a, b) => (a.availability[0].startTime <= b.availability[0].startTime) ? -1 : 1);
+    teams = activeTeams.concat(inactiveTeams);
+
     const classes = calendarStyles();
 
     if (!teams.length) {
