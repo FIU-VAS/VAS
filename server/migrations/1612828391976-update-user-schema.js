@@ -140,7 +140,6 @@ module.exports.up = async function (next) {
         throw assertionError
     }
     console.log("Finished migration, closing connection");
-    await mongoose.connection.close();
     console.log("Connection closed");
     next()
 }

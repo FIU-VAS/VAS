@@ -39,7 +39,7 @@ export const loginUser = form => dispatch => {
     })
     .catch(err => dispatch({
             type: GET_ERRORS,
-            payload: err.response.status === 401 ? "Invalid email or password" : err.response.statusText
+            payload: err
     }));
  };
 
@@ -94,7 +94,7 @@ export const requestPasswordReset = form => dispatch => {
     })
     .catch(err => dispatch({
         type: GET_ERRORS,
-        payload: err.response && err.response.data ? err.response.data.message : err.message
+        payload: err
     }));
 };
 
@@ -115,6 +115,6 @@ export const resetPassword = form => dispatch => {
     })
     .catch(err => dispatch({
         type: GET_ERRORS,
-        payload: err.response && err.response.data ? err.response.data.message : err.message
+        payload: err
     }));
 };

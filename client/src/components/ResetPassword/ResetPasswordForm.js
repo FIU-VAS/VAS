@@ -159,15 +159,11 @@ class ResetPasswordForm extends Component {
                             alt="logo"
                         />
 
-                        {!!this.props.errors && !!this.props.errors.length ? (
+                        {this.props.errors.response && this.props.errors.response.data && 
                             <Alert severity="error" style={{margin: "1rem 0"}}>
-                                {
-                                    this.props.errors.filter(error => error.param === "password").length
-                                        ? this.props.errors.filter(error => error.param === "password")[0].msg
-                                        : ""
-                                }
+                                {this.props.errors.response.data.message}
                             </Alert>
-                        ) : ""}
+                        }
                         <Typography component="h1" variant="h5">
                             Reset Password
                         </Typography>

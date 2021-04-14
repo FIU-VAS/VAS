@@ -79,8 +79,11 @@ class ForgotPasswordDialog extends Component {
         if (!isEmpty(this.props.success.message)) {
           return <Alert severity="success">{this.props.success.message}</Alert> 
         }
-        else if (!isEmpty(this.props.errors)) {
-            return <Alert severity="error">{this.props.errors}</Alert>
+        else if (this.props.errors.response && this.props.errors.response.data) {
+            return <Alert severity="error">{this.props.errors.response.data.message}</Alert>
+        }
+        else if (this.props.errors.response) {
+            return <Alert severity="error">{this.props.errors.response.statusText}</Alert>
         }
     }
 

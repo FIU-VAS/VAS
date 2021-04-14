@@ -138,9 +138,9 @@ class LoginForm extends Component {
             return (
                 <Alert severity="success">{this.props.success.message}</Alert>
             )
-        else if (!isEmpty(this.props.errors)) {
+        else if (!isEmpty(this.props.errors.response)) {
                 return (
-                    <Alert severity="error">{this.props.errors}</Alert>
+                    <Alert severity="error">{this.props.errors.response.statusCode === 401 ? "Invalid username or password" : this.props.errors.response.statusText}</Alert>
                 )
         }
     }
