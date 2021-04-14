@@ -103,7 +103,7 @@ const Dashboard = (props) => {
     }
 
     return ( 
-        <Grid container className={props.classes.all}>
+        <Grid container className={props.classes.all} className="bg1">
             <Grid item xs={1}>
                 <SideBar/>
             </Grid>
@@ -116,10 +116,6 @@ const Dashboard = (props) => {
                 justify="center">
                 <Grid item className={props.classes.cell}>
                     {getPage()}
-                    <img className={props.classes.blob}
-                            src ={require("../images/Ignite_2.png").default}
-                            alt = "Blob" 
-                    />
                 </Grid>
             </Grid>
         </Grid>

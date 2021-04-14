@@ -11,6 +11,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Card, CardActions} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import {map} from "lodash";
+import { PlayCircleFilledWhite } from "@material-ui/icons";
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +44,11 @@ const useStyles = makeStyles(theme => ({
         marginBottom: 12,
     },
     green: {
+        color: 'white',
         backgroundColor: '#72D565',
+        '&:hover': {
+            backgroundColor: '#72D565',
+        }
     },
     Avatar: {
         marginTop: 20,
@@ -99,9 +104,7 @@ export const UserProfile = (props) => {
                     alignItems="center"
                     justify="center">
                     <Card
-                        borderRadius="10px"
                         className={classes.card}
-                        variant="outlined"
                         justify="center">
                         <form className={classes.form} onSubmit={methods.handleSubmit(submit)}>
                             <CardContent>
@@ -161,7 +164,7 @@ export const UserProfile = (props) => {
                             <CardActions>
                                 <Button type="submit" variant="contained" className={classes.green}
                                         disabled={locked}>Submit</Button>
-                                <Button onClick={() => setLocked(!locked)}>
+                                <Button className={classes.green} onClick={() => setLocked(!locked)}>
                                     {locked ? 'Edit' : 'Lock'}
                                 </Button>
                             </CardActions>

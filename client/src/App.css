@@ -5,6 +5,15 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.bg1 {
+    background-image: url("../src/images/background1.png");
+    min-height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .avatar-style {
     width: 130px !important;
     height: 130px !important;

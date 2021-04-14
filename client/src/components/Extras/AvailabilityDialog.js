@@ -98,7 +98,7 @@ export const AvailabilityDialog = (props) => {
                     )}
                 </DialogContent>
                 <DialogActions style={{justifyContent: "flex-start", paddingLeft: "1.5rem"}}>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit" variant="contained" style={{'backgroundColor':'#72D565', 'color':'white'}}>
                         Submit
                     </Button>
                 </DialogActions>

@@ -42,6 +42,7 @@ export const AppTeamCalendar = (props) => {
                     const dayTeams = teams.filter(team => {
                         return team.availability.some(av => av.dayOfWeek === day)
                     });
+                    
 
                     return (
                         <Grid key={day} item xs className={classes.dayColumn}>

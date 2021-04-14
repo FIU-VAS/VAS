@@ -40,7 +40,7 @@ export const PersonnelPicker = (props) => {
                         <Grid key={personnel.email} item container xs={12}>
                             <Grid item xs={12}>
                                 <Controller
-                                    control={control}
+                                    control={control} 
                                     as={<SelectTimeFrame
                                         times={personnel.availability}/>}
                                     name="availability"

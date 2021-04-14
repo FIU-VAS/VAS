@@ -41,6 +41,9 @@ const cardStyles = makeStyles(theme => ({
         fontWeight: "bold",
         background: theme.palette.grey[900],
         "&:focus": {
+            background: '#57C965',
+        },
+        '&:hover': {
             background: theme.palette.grey[900],
         }
     },
@@ -60,6 +63,7 @@ const cardStyles = makeStyles(theme => ({
         color: 'black',
     },
     editButton: {
+        color: '#72D565'
     }
 }));
 
@@ -184,7 +188,7 @@ const TeamDetails = (props) => {
                             </IconButton>
                         </Grid>
                         <Grid item xs="auto">
-                            <IconButton onClick={() => setDeleteTeam(team)}>
+                            <IconButton color="#ff0033" onClick={() => setDeleteTeam(team)}>
                                 <DeleteForeverSharp color="error" />
                             </IconButton>
                         </Grid>
@@ -287,9 +291,9 @@ let TeamCardComponent = (props) => {
                         </Grid>
                         <Grid item xs={4} style={{textAlign: "right"}}>
                             <div className={classes.badge} style={{
-                                background: team.isActive ? "#5fdba7" : "#ff0033"
+                                background: team.isActive ? '#72D565' : "#ff0033"
                             }}>
-                                <Typography variant="caption" style={{fontWeight: 700}}>
+                                <Typography variant="caption" style={{fontWeight: 700, }}>
                                     {team.isActive ? "Active" : "Inactive"}
                                 </Typography>
                             </div>
