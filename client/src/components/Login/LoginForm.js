@@ -236,7 +236,7 @@ class LoginForm extends Component {
 
                         </form>
 
-                        <Button onClick={this.toggleForgotPasswordDialog} color="black">
+                        <Button onClick={this.toggleForgotPasswordDialog}>
                             Forgot Password?
                         </Button>
                     </div>

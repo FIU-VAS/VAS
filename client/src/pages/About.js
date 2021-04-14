@@ -16,20 +16,6 @@ const useStyles = {
         width: '90%',
         //height: 900
     },
-    textContainer:{
-        paddingTop: '2%',
-        display: 'flex',
-        width: '100%',
-    },
-    text:{
-        position: 'flex',
-        paddingLeft: '3%',
-    },
-    blob: {
-        paddingTop: '0px',
-        height : "350px",
-        paddingRight: '2%',
-    },
     regular: {
         fontSize: 18,
         fontWeight: 400,
@@ -50,9 +36,9 @@ class About extends Component{
 
     render(){
         return (
-        <div className={this.props.classes.all}>
-               <NavBar/>
-            <Fragment>
+        <div >
+            <NavBar/>
+            <Fragment className={this.props.classes.all}>
                 <Grid
             container
             direction="column"
@@ -68,9 +54,16 @@ class About extends Component{
                     </Typography>
 
             </Grid>
-            <Grid  >
-                <div className={this.props.classes.textContainer}>
-                    <div className={this.props.classes.text}>
+            <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            >
+
+                <Grid  item md={8} xs={11}>
+        
+                    
                             <Typography
                             className={this.props.classes.regular}>
                                 The <strong>Ignite</strong> program at Florida International University’s Knight Foundation School of Computing 
@@ -90,17 +83,22 @@ class About extends Component{
                                 by State Farm and has been supported by Google in previous years. To learn more, please visit the Ignite 
                                 program website at 
                                 <a href="https://upe.cs.fiu.edu/google-cs-first/" target="_blank" rel="noreferrer" style={{'color':'#57C965',textDecoration: 'none'}}> UPE Ignite </a> to apply.
-                        
+                       
                             </Typography>
 
-                    </div>
-                            <img className={this.props.classes.blob}
-                                src ={require("../images/Ignite_4.png").default}
+                    
+                    </Grid>
+                    <Grid  item md={3} xs={12} maxWidth='100vw' align="center">
+                            <img 
+                                src ={require("../images/VAS_LOGO hq.png").default}
                                 alt = "Blob" 
+                                width = "100%"
                             />
-                </div>
+                    </Grid>
                              
             </Grid>
+
+            
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item className={this.props.classes.view}>
                         <ProjectCredits/>

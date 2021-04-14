@@ -154,7 +154,7 @@ getTitle(){
 render(){
   return (
     <ThemeProvider theme={theme}>
-    <div className={this.props.classes.root} >
+    <div className={this.props.classes.root}  >
       <AppBar position='static'>
         <Toolbar className={this.props.classes.toolbar}>
        

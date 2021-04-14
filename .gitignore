@@ -33,3 +33,6 @@ yarn-error.log*
 # database folder
 /server/database/**
 db/data
+vas-backup:Zone.Identifier
+deploy.key
+server/deploy.key

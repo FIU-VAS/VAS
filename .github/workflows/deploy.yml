@@ -1,0 +1,45 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Adding checkout action
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.18.4
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.18.4
+      - name: Building app
+        uses: appleboy/ssh-action@e59c0ee97a7e5240ed9eb489791adbb9c9ac7f6b
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          port: ${{secrets.HOST_PORT}}
+          script: |
+            git clone https://github.com/FIU-VAS/VAS || (cd VAS ; git fetch --all && git reset --hard FETCH_HEAD && git clean -df)
+            cd ./VAS/server
+            touch .env
+            echo "MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}" > .env
+            echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
+            echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
+            echo "MONGODB_TABLE_NAME=${{ secrets.MONGODB_TABLE_NAME }}" >> .env
+            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+            echo "SMTP_SECURE=${{ secrets.SMTP_SECURE }}" >> .env
+            echo "MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}" >> .env
+            echo "MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}" >> .env
+            echo "MONGO_INITDB_DATABASE=${{ secrets.MONGO_INITDB_DATABASE }}" >> .env
+            npm install
+            npm run migrate-up
+            pm2 restart ecosystem.config.js --env production
+
+            cd ../client
+            rm -rf ~/vasweb
+            npm install
+            npm run build
+            mv ./build ~/vasweb
