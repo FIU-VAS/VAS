@@ -55,11 +55,11 @@ const useStyles = {
 
     },
     editButton: {
-        backgroundColor: '#000',
+        backgroundColor: '#72D565',
         color: "white",
         fontSize: "1rem",
         '&:hover': {
-            backgroundColor: '#606060',
+            backgroundColor: '#72D565',
         },
         width: "150px",
         height: "40px",
@@ -70,11 +70,11 @@ const useStyles = {
         }
     },
     saveButton: {
-        backgroundColor: '#000',
+        backgroundColor: '#72D565',
         color: "white",
         fontSize: "1rem",
         '&:hover': {
-            backgroundColor: '#606060',
+            backgroundColor: '#72D565',
         },
         width: "150px",
         height: "40px",

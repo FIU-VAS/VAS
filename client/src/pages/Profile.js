@@ -5,7 +5,6 @@ import {withRouter} from 'react-router-dom';
 import SideBar from "../components/AppBar/SideBar";
 import {Box, Grid} from '@material-ui/core';
 import config from "../config";
-import '../../src/App.css';
 import {UserProfile} from "../components/Profile/UserProfile";
 
 const commonProps = [

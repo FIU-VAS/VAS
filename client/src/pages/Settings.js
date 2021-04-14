@@ -47,17 +47,14 @@ class Settings extends Component {
 
     render() {
         return (
-            <Grid container spacing={2} >
+            <Grid container spacing={2} className="bg" >
                 <Grid item xs={1}>
                     <SideBar/>
                 </Grid>
                 <Grid item xs={11}>
                     {!this.state.isLoading ? <SettingsForm/> : ""}
                 </Grid>
-                <img className={this.props.classes.blob}
-                     src={require("../images/Ignite_2.png").default}
-                     alt="Blob"
-                />
+        
             </Grid>
         )
     }
