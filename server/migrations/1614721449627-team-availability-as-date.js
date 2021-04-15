@@ -1,4 +1,6 @@
 'use strict'
+import {zonedTimeToUtc} from "date-fns-tz";
+
 const mongoose = require('mongoose');
 import {parse, setDay, format, addHours} from "date-fns";
 
@@ -22,8 +24,8 @@ const updateSchema = async (collection) => {
         let endTime = setDay(parse(av.endTime, "HH:mm", REFERENCE_DATE), days.indexOf(av.dayOfWeek) + 1);
 
         // Add 5 hours because current date is supposed to be in the eastern timezone
-        startTime = addHours(startTime, 5);
-        endTime = addHours(endTime, 5);
+        startTime = zonedTimeToUtc(startTime, 'America/New_York');
+        endTime = zonedTimeToUtc(endTime, 'America/New_York');
 
         return {
           ...av,
