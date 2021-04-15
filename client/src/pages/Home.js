@@ -18,9 +18,6 @@ const useStyles = {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(8),
      },
-     picture: {
-        
-     }
 };
 
 class Home extends Component{
@@ -30,13 +27,14 @@ class Home extends Component{
             <div>
                 <NavBar/>
                 <Grid container   direction="row" align="center" className={this.props.classes.horizontal} >
-                <CalltoAction />
-                <Grid item md={6} xs={12} maxWidth='100vw'>
-                <img 
-                src ={require("../images/kids_home_page.png").default}
-                alt = "Kids Learning"  
-                width= '80%'
-                />
+                <CalltoAction/>
+                <Grid item md={5} xs={12}  maxWidth='100vw'>
+                    <img 
+                    src ={require("../images/Kids home page.svg").default}
+                    alt = "Kids Learning"  
+                    width= '80%'
+                    height='85%'
+                    />
                 </Grid>
                 </Grid>
             </div>

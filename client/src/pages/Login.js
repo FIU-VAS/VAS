@@ -13,12 +13,6 @@ const theme = createMuiTheme({
   });
 
 const useStyles = {
-    picture: {
-        marginTop: theme.spacing(15),
-        position: 'absolute',
-        right: '3%',
-        left: '55%',
-    }
 };
 
 class Login extends Component{

@@ -76,7 +76,7 @@ class LoginForm extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <Grid item md={6} xs={12} className={this.props.classes.calltoaction} component="main" maxWidth="xs">
+                <Grid item md={6} xs={12} component="main" maxWidth="xs">
                     
                     <h1>Ignite the passion for CS. <br></br>
                         Uplift your community.</h1>
