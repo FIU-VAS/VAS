@@ -74,13 +74,6 @@ const useStyles = makeStyles({
         height: '80px',
         marginBottom: '0px'
     },
-    corner:{
-        position: 'absolute',
-        bottom: '0px',
-        right: '0px',
-        height: '400px',
-        width: '400px',
-    },
 });
 
 const Availability = () => {
@@ -128,14 +121,10 @@ const Availability = () => {
             <SideBar/>
             <Container component="main" maxWidth="md">
                 <CssBaseline />
-                <img
-                    className={classes.corner}
-                    src={require("../images/Ignite_1.png").default}
-                />
                     
                 <Box className={classes.paper} width="100%">
                      <Typography component="h1" variant="h4" >
-                        Volunteer Schedule <DateRangeSharpIcon />
+                        {user.role==="volunteer"? "Volunteer Schedule" : "School Personnel Schedule"} <DateRangeSharpIcon />
                     </Typography>
                     {response.message !== "" && <Alert severity={response.success ? "success" : "error"}>{response.message}</Alert>}
                     <form onSubmit={handleSubmit((data) => submitForm(data.availability))}

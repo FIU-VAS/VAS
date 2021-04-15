@@ -20,10 +20,7 @@ class TeamManagement extends Component{
 
     render(){
         return (
-            <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_8_10.png').default + ')',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover' }}>
+            <div className={this.props.classes.all} className="bg1">
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item xs={1}>
                         <SideBar/>

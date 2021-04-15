@@ -27,13 +27,6 @@ const useStyles = {
         minWidth: 200,
         width: '95%',
     },
-    blob: {
-        position: 'absolute',
-        right: '1%',
-        bottom: '6%',
-        height : "300px",
-        zIndex: '-1'
-    }
 }
 
 const Dashboard = (props) => {

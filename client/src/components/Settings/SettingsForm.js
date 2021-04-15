@@ -15,6 +15,7 @@ import {MaterialUIField} from "../Users/UserFormDialog";
 import {FormProvider, useForm} from "react-hook-form";
 import config from "../../config";
 import axios from "axios";
+import Grid from "@material-ui/core/Grid";
 
 const theme = createMuiTheme({
     palette: {
@@ -30,9 +31,6 @@ const useStyles = {
     card: {
         paddingTop: 100,
         marginTop: theme.spacing(12),
-        minWidth: 650,
-        maxWidth: 800,
-        height: 400,
         backgroundColor: 'transparent'
     },
     title: {
@@ -49,9 +47,9 @@ const useStyles = {
     Button: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'left',
         marginBottom: 10,
-        marginTop: 30,
+        marginTop: 20,
 
     },
     editButton: {
@@ -61,9 +59,8 @@ const useStyles = {
         '&:hover': {
             backgroundColor: '#72D565',
         },
-        width: "150px",
+        width: "100px",
         height: "40px",
-        marginRight: "15px",
         "&:disabled": {
             backgroundColor: blueGrey[100],
             color: "white",
@@ -76,7 +73,7 @@ const useStyles = {
         '&:hover': {
             backgroundColor: '#72D565',
         },
-        width: "150px",
+        width: "100px",
         height: "40px",
         marginRight: "15px",
         "&:disabled": {
@@ -105,6 +102,15 @@ const SettingsForm = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <div className={props.classes.all}>
+            <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    minWidth="800px"
+                    >
+                        <Grid item>
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(submit)} className={props.classes.form}
                           noValidate>
@@ -144,18 +150,20 @@ const SettingsForm = (props) => {
                                 <CardActions>
                                     <Button
                                         className={props.classes.editButton}
+                                        variant="contained"
                                         onClick={() => setDisabled(false)}
                                         size="small"
                                         disabled={!disabled}
-                                        endIcon={<EditIcon/>}>
+                                        >
                                         Edit
                                     </Button>
                                     <Button
                                         className={props.classes.saveButton}
+                                        variant="contained"
                                         type="submit"
                                         size="small"
                                         disabled={disabled}
-                                        endIcon={<SaveIcon/>}>
+                                        >
                                         Save
                                     </Button>
                                 </CardActions>
@@ -163,7 +171,9 @@ const SettingsForm = (props) => {
                         </Box>
                     </form>
                 </FormProvider>
-            </div>
+                    </Grid>
+                </Grid>
+            </div>  
         </ThemeProvider>
     );
 }

@@ -28,9 +28,7 @@ class VolunteerManagement extends Component{
     render(){
         return (
             <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_2_10.png') + ')',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover' }}>
+                className="bg1">
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item xs={1}>
                         <SideBar/>

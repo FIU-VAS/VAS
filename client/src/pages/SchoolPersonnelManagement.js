@@ -15,33 +15,19 @@ const useStyles = {
         height: 900,
        
     },
-    blob: {
-        position: 'absolute',
-        right: '1%',
-        bottom: '5%',
-        height : "400px",
-        zIndex: '-1'
-    }
 }    
 
 class SchoolPersonnelManagement extends Component{
     
     render(){
         return (
-            <div className={this.props.classes.all}
-                style={{backgroundImage: 'url(' + require('../images/FIU_3_10.png') + ')',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover' }}>
+            <div className={this.props.classes.all}  className="bg1">
                 <Grid container direction="column" alignItems="center" justify="center">
                     <Grid item xs={1}>
                         <SideBar/>
                     </Grid> 
                     <Grid item className={this.props.classes.table}>
                         <SchoolPersonnelTable/>
-                        <img className={this.props.classes.blob}
-                            src ={require("../images/Ignite_2.png").default}
-                            alt = "Blob" 
-                        />
                     </Grid>    
                 </Grid>
             </div>    

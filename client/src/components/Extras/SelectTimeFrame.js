@@ -3,6 +3,7 @@ import {Button, Grid} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {format, isEqual} from "date-fns";
 import {fromUTC} from "../../utils/availability";
+import {createMuiTheme, ThemeProvider} from "@material-ui/core";
 
 export const SelectTimeFrame = React.forwardRef((props, ref) => {
     // @TODO warn on different timeframes selected
@@ -39,7 +40,14 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
         );
     }
 
+    const theme = createMuiTheme({
+        palette: {
+            primary: {main: '#57C965'}, 
+        }
+    });
+
     return (
+        <ThemeProvider theme={theme}>
         <Grid container>
             <Grid item xs={12}>
                 <Typography variant="h6" style={{fontSize: "1rem"}}>
@@ -70,5 +78,6 @@ export const SelectTimeFrame = React.forwardRef((props, ref) => {
                 )
             })}
         </Grid>
+        </ThemeProvider>
     )
 })

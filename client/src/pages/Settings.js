@@ -18,12 +18,7 @@ const theme = createMuiTheme({
 });
 
 const useStyles = {
-    blob: {
-        position: 'absolute',
-        right: '2%',
-        bottom: '5%',
-        height: "400px",
-    }
+
 };
 
 class Settings extends Component {
@@ -51,7 +46,7 @@ class Settings extends Component {
                 <Grid item xs={1}>
                     <SideBar/>
                 </Grid>
-                <Grid item xs={11}>
+                <Grid item xs={12} >
                     {!this.state.isLoading ? <SettingsForm/> : ""}
                 </Grid>
         
