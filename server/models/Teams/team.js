@@ -14,7 +14,7 @@ export const Days = {
 function createDateAsUTC(date) {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
 }
-export const REFERENCE_DATE = createDateAsUTC(new Date());
+export const REFERENCE_DATE = createDateAsUTC(new Date(2000, 0, 3));
 
 export const validateTimeDate = (value) => {
     return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
