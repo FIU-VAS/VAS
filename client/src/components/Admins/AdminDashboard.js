@@ -57,7 +57,7 @@ const AdminDashboard = (props) => {
 
     return (
         <Fragment>
-            <Grid container>
+            <Grid container alignItems="center" justify="center">
                 <Box
                     style={{textAlign: "center"}}>
                     <Typography

@@ -37,7 +37,7 @@ const Dashboard = (props) => {
         year: now.getFullYear()
     }
 
-    useEffect( () => {
+    useEffect(() => {
         const endpoint = `${serverConf.uri}${serverConf.endpoints.team.fetch}`;
 
         // useEffect does not expect a return so async has to be used like this
@@ -60,7 +60,7 @@ const Dashboard = (props) => {
                     allSchools.push(team.schoolCode)
                 });
 
-                allVolunteers = allVolunteers.map(String).toString().split(',').map(x=>+x)
+                allVolunteers = allVolunteers.map(String).toString().split(',').map(x => +x)
 
                 // set current teams
                 props.setCurrentTeams(teams);
@@ -95,8 +95,8 @@ const Dashboard = (props) => {
         }
     }
 
-    return ( 
-        <Grid container className={props.classes.all} className="bg1">
+    return (
+        <Grid container className="bg1">
             <Grid item xs={1}>
                 <SideBar/>
             </Grid>
@@ -106,10 +106,8 @@ const Dashboard = (props) => {
                 spacing={0}
                 direction="column"
                 alignItems="center"
-                justify="center">
-                <Grid item className={props.classes.cell}>
-                    {getPage()}
-                </Grid>
+                justify="flex-start">
+                {getPage()}
             </Grid>
         </Grid>
 
