@@ -17,8 +17,8 @@ function createDateAsUTC(date) {
 export const REFERENCE_DATE = createDateAsUTC(new Date(2000, 0, 3));
 
 export const validateTimeDate = (value) => {
-    return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 3 && value.getDate() <= 7)
-    && value.getMonth() === 0 && (value.getDay() >= 1 && value.getDay() <= 6)
+    return isDate(value) && value.getFullYear() === 2000 && (value.getDate() >= 2 && value.getDate() <= 6)
+    && value.getMonth() === 0 && (value.getDay() >= 0 && value.getDay() <= 5)
 }
 
 export const validateAvailability = (values) => {
