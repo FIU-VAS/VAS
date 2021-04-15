@@ -63,11 +63,11 @@ const useStyles = makeStyles({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
-        backgroundColor: blueGrey[900],
+        backgroundColor: '#57C965',
         color: "white",
         fontWeight: "bold",
         '&:hover': {
-            backgroundColor: blue[500],
+            backgroundColor: '#57C965',
         }
     },
     logo: {
