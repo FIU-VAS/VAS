@@ -84,7 +84,9 @@ export const createNewUser = (Schema, validationSchema) => {
             if (insertError.code === 11000) {
                 return response.send({
                     success: false,
-                    message: 'Error: Account already exists.'
+                    message: insertError.toString().includes("email") ? "Error: An account with the provided email already exists" :
+                             insertError.toString().includes("pantherID") ? "Error: A volunteer with the provided PantherID already exists" :
+                             "Error: Account already exists"
                 });
             } else {
                 response.statusCode = 500
@@ -161,12 +163,20 @@ export const updateUser = (Schema, validationSchema) => {
                 });
             }
         } catch (insertError) {
-            response.statusCode = 500
-            console.log(insertError);
-            return response.send({
-                success: false,
-                message: "Error: Server error.\n" + insertError.toString()
-            });
+            if (insertError.code === 11000) {
+                return response.send({
+                    success: false,
+                    message: insertError.toString().includes("email") ? "Error: An account with the provided email already exists" :
+                             insertError.toString().includes("pantherID") ? "Error: A volunteer with the provided PantherID already exists" :
+                             "Error: Account already exists"
+                });
+            } else {
+                response.statusCode = 500
+                return response.send({
+                    success: false,
+                    message: "Error: Server error.\n" + insertError.toString()
+                });
+            }
         }
     }
     return [extendedCheckSchema(validationSchema), updateUser]

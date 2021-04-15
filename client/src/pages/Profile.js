@@ -25,9 +25,12 @@ const commonProps = [
         }
     },
     {
-        type: "email",
+        type: "text",
         name: "email",
         label: "Email",
+        inputProps: {
+            readOnly: true
+        },
         rules: {
             required: true
         }
@@ -100,10 +103,7 @@ const userProps = {
         {
             type: "text",
             name: "MDCPS_ID",
-            label: "MDCPS ID",
-            rules: {
-                required: true
-            }
+            label: "MDCPS ID"
         }
     ]
 }

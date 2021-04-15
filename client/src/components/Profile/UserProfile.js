@@ -1,14 +1,13 @@
 import React, {useState} from "react";
 import {useForm, FormProvider} from "react-hook-form";
 import axios from "axios";
-
 import {MaterialUIField} from "../Users/UserFormDialog";
 import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Card, CardActions} from "@material-ui/core";
+import {Button, Card, CardActions, Snackbar} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import {map} from "lodash";
 import { PlayCircleFilledWhite } from "@material-ui/icons";
@@ -38,7 +37,8 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         fontSize: 25,
-        alignItems: 'center'
+        alignItems: 'center',
+        textTransform: 'capitalize'
     },
     pos: {
         marginBottom: 12,
@@ -78,18 +78,19 @@ export const UserProfile = (props) => {
     });
 
     const submit = async (data) => {
-        try {
-            await axios.post(endpoint, data)
+        axios.post(endpoint, data)
+        .then(res => {
             setResponse({
-                severity: "success",
-                message: "User updated successfully"
+                severity: res.data.success ? "success" : "error",
+                message: res.data.message
             });
-        } catch (error) {
+        })
+        .catch(err => {
             setResponse({
                 severity: "error",
-                message: error.response ? error.response.statusText : error.toString()
+                message: err.response ? err.response.message : err.toString()
             });
-        }
+        });
     }
 
     let initials = (user.firstName.substring(0, 1) + user.lastName.substring(0, 1)).toUpperCase();
@@ -109,9 +110,16 @@ export const UserProfile = (props) => {
                         <form className={classes.form} onSubmit={methods.handleSubmit(submit)}>
                             <CardContent>
                                 {response && (
-                                    <Alert severity={response.severity} style={{marginBottom: "1rem"}}>
-                                        {response.message}
-                                    </Alert>
+                                     <Snackbar
+                                     open={true}
+                                     onClose={() => setResponse(null)}
+                                     autoHideDuration={2000}
+                                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                                    >
+                                        <Alert severity={response.severity} style={{marginBottom: "1rem"}}>
+                                            {response.message}
+                                        </Alert>
+                                    </Snackbar>
                                 )}
                                 <Grid
                                     className={classes.Avatar}

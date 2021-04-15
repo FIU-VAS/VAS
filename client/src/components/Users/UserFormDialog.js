@@ -112,6 +112,7 @@ export const MaterialUIField = (props) => {
                     defaultValue={fieldProps.defaultValue}
                     type={fieldProps.type}
                     placeholder={fieldProps.placeholder}
+                    InputProps={fieldProps.inputProps}
                     rules={fieldProps.rules}
                     disabled={fieldProps.disabled}
                     error={fieldProps.error}
