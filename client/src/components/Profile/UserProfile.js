@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 30,
     },
     bullet: {
         display: 'inline-block',
