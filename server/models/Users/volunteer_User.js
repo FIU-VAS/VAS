@@ -18,7 +18,8 @@ const VolunteerSchema = new mongoose.Schema({
     },
     pantherID: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     major: {
         type: String,
@@ -47,17 +48,9 @@ const VolunteerSchema = new mongoose.Schema({
         },
         startTime: {
             type: Date,
-            /* validate: {
-                validator: validateTimeDate,
-                message: "Invalid value for time"
-            } */
         },
         endTime: {
             type: Date,
-            /*validate: {
-                validator: validateTimeDate,
-                message: "Invalid value for time"
-            }*/
         }
     }],
 }, { discriminatorKey: 'role' });
