@@ -2,7 +2,7 @@
 import {zonedTimeToUtc} from "date-fns-tz";
 
 const mongoose = require('mongoose');
-import {parse, setDay, format, addHours} from "date-fns";
+import {parse, setDay, format} from "date-fns";
 
 const db = require("../services/db.js").default;
 const config = require("../config/config.js").default;
