@@ -72,9 +72,6 @@ const userProps = {
             type: "text",
             name: "major",
             label: "Major",
-            rules: {
-                required: true
-            }
         },
         {
             type: "select",
