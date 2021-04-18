@@ -58,6 +58,7 @@ class LoginForm extends Component {
         };
     }
 
+    
     openSchoolForm() {
         axios.get(`${config.uri}${config.endpoints.siteSettings.fetch}`)
             .then((response) => {
