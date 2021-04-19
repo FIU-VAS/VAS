@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from "../config/passport";
 
 import SiteSettings from '../models/Settings/siteSettings';
 
@@ -13,7 +14,7 @@ import {extendedCheckSchema} from "../utils/validation";
 
 const router = new express.Router();
 
-router.post('/', checkAdminRole, extendedCheckSchema(siteSettingsSchema), createOrUpdateLinks);
+router.post('/', passport.authorize('jwt'), checkAdminRole, extendedCheckSchema(siteSettingsSchema), createOrUpdateLinks);
 router.get('/', fetchLinks);
 
 async function fetchLinks(request, response) {
